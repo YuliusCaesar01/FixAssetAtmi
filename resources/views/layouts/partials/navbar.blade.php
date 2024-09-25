@@ -69,7 +69,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img id="profile-img" src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset('/storage/photos/' . $userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 70px; height: 70px;">
+                <img id="profile-img" src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" width="250" height="250" style="object-fit: cover; border-radius: 50%;">
             </div>
             <div class="info">
                 <p>{{ strtoupper(Auth::user()->username) }}</p>
@@ -83,7 +83,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 </button>
             </div>
             <div class="profile-info">
-                <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset('/storage/photos/' . $userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                <img src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
                 <div class="profile-details">
                     <h3>{{ strtoupper(Auth::user()->username) }}</h3>
                     <p>Email: {{ Auth::user()->email }}</p>
@@ -167,31 +167,31 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('managetipe.index') }}" class="nav-link {{ $menu == 'Tipe' ? 'active' : '' }}">
+                            <a href="{{ route('manage-tipe.index') }}" class="nav-link {{ $menu == 'Tipe' ? 'active' : '' }}">
                                 <i class="fas fa-th-large nav-icon"></i>
                                 <p>Tipe</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('managekelompok.index') }}" class="nav-link {{ $menu == 'Kelompok' ? 'active' : '' }}">
+                            <a href="{{ route('manage-kelompok.index') }}" class="nav-link {{ $menu == 'Kelompok' ? 'active' : '' }}">
                                 <i class="fas fa-layer-group nav-icon"></i>
                                 <p>Kelompok</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('managejenis.index') }}" class="nav-link {{ $menu == 'Jenis' ? 'active' : '' }}">
+                            <a href="{{ route('manage-jenis.index') }}" class="nav-link {{ $menu == 'Jenis' ? 'active' : '' }}">
                                 <i class="fas fa-tags nav-icon"></i>
                                 <p>Jenis</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('managelokasi.index') }}" class="nav-link {{ $menu == 'Lokasi' ? 'active' : '' }}">
+                            <a href="{{ route('manage-lokasi.index') }}" class="nav-link {{ $menu == 'Lokasi' ? 'active' : '' }}">
                                 <i class="fas fa-map-marker-alt nav-icon"></i>
                                 <p>Lokasi</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('manageruangan.index') }}" class="nav-link {{ $menu == 'Ruang' ? 'active' : '' }}">
+                            <a href="{{ route('manage-ruang.index') }}" class="nav-link {{ $menu == 'Ruang' ? 'active' : '' }}">
                                 <i class="fas fa-door-open nav-icon"></i>
                                 <p>Ruang</p>
                             </a>
@@ -205,8 +205,110 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 </aside>
 
 
+<!-- Edit User Details and Change Password Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+               
+                <!-- User Details Form -->
+                <form id="editDetailsForm" method="POST" action="{{ route('editprofil', ['id' => $userdetail->id_userdetail]) }}" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $userdetail->id_userdetail }}">
+                    <!-- Display existing photo -->
+                <div class="form-group text-center mb-4">
+                    <center>
+                        <img src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                    </center>
+                    <small>Current Profile Photo</small>
+                </div>
+                <center>
+                <!-- Change Profile Photo Input -->
+                <div class="form-group text-center">
+                    <label for="foto">Change Profile Photo</label>
+                    <input type="file" class="form-control-file mx-auto" id="foto" name="foto" accept="image/*">
+                </div>
+            </center>
+                    <div class="form-group">
+                        <label for="nama_lengkap">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="nama_lengkap" value="{{$userdetail->nama_lengkap ?? 'belum ditambahkan'}}" name="nama_lengkap" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_kelamin">Jenis Kelamin</label>
+                        <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
+                            <option value="" disabled {{ !$userdetail->jenis_kelamin ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
+                            <option value="Laki-laki" {{ ($userdetail->jenis_kelamin ?? '') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                            <option value="Perempuan" {{ ($userdetail->jenis_kelamin ?? '') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="no_induk_karyawan">No Induk Karyawan</label>
+                        <input type="text" class="form-control" value="{{$userdetail->no_induk_karyawan ?? 'belum ditambahkan'}}" id="no_induk_karyawan" name="no_induk_karyawan" required>
+                    </div>
+                    <button type="button" id="showChangePasswordForm" class="btn btn-link">Change Password</button>
+                </form>
+
+                <!-- Change Password Form -->
+                <form id="changePasswordForm" method="POST" action="{{ route('profile.change-password') }}" style="display: none;">
+                    @csrf
+                    <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
+                    <div class="form-group">
+                        <label for="old_password">Old Password</label>
+                        <input type="password" class="form-control" id="old_password" name="old_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">New Password</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password_confirmation">Confirm New Password</label>
+                        <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
+                    </div>
+                    <button type="button" id="showEditForm" class="btn btn-link">Edit User Details</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" id="gantiprofil" form="editDetailsForm" class="btn btn-primary">Save User Details</button>
+                <button type="submit" id="gantipassword" form="changePasswordForm" class="btn btn-primary">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
+@if (session('success'))
+    @once
+    <div class="alert alert-success">
+        <script>
+            var isi = @json(session('notification'));
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil..',
+                text: isi,
+                showConfirmButton: false,
+                timer: 2500
+            });
+        </script>
+    </div>
+    @endonce
+@endif
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -216,31 +318,62 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             return;
         }
     
-        // Open the edit modal when the edit button is clicked
-        document.querySelectorAll('.btn-icon-edit').forEach(button => {
-            button.addEventListener('click', function () {
-                const itemId = this.dataset.id;
-                const itemName = this.dataset.name;
-                const editIdElement = document.getElementById('editId');
-                const editNameElement = document.getElementById('editName');
+ // Open the edit modal when the edit button is clicked
+document.querySelectorAll('.btn-icon-edit').forEach(button => {
+    button.addEventListener('click', function () {
+        const itemId = this.dataset.id;
+        const itemName = this.dataset.name;
+        const editIdElement = document.getElementById('editId');
+        const namaLengkapElement = document.getElementById('nama_lengkap');
+        const jenisKelaminElement = document.getElementById('jenis_kelamin');
+        const noIndukKaryawanElement = document.getElementById('no_induk_karyawan');
+
     
-                if (editIdElement) editIdElement.value = itemId;
-                if (editNameElement) editNameElement.value = itemName;
+
+        // Show the modal
+        $('#editModal').modal('show');
+    });
+});
+
+// Toggle forms for editing user details and changing password
+document.getElementById('showChangePasswordForm').addEventListener('click', function () {
+    // Hide edit details form
+    document.getElementById('editDetailsForm').style.display = 'none';
+    // Show change password form
+    document.getElementById('changePasswordForm').style.display = 'block';
     
-                $('#editModal').modal('show');
-            });
-        });
+    // Hide profile photo
+    document.querySelector('.form-group.text-center').style.display = 'none';  
     
-        // Toggle forms for editing user details and changing password
-        document.getElementById('showChangePasswordForm').addEventListener('click', function () {
-            document.getElementById('editForm').style.display = 'none';
-            document.getElementById('changePasswordForm').style.display = 'block';
-        });
+    // Show change password button, hide save user details button
+    document.getElementById('gantipassword').style.display = 'block';
+    document.getElementById('gantiprofil').style.display = 'none';
+});
+
+document.getElementById('showEditForm').addEventListener('click', function () {
+    // Show edit details form
+    document.getElementById('editDetailsForm').style.display = 'block';
+    // Hide change password form
+    document.getElementById('changePasswordForm').style.display = 'none';
     
-        document.getElementById('showEditForm').addEventListener('click', function () {
-            document.getElementById('editForm').style.display = 'block';
-            document.getElementById('changePasswordForm').style.display = 'none';
-        });
+    // Show profile photo
+    document.querySelector('.form-group.text-center').style.display = 'block'; 
+    
+    // Hide change password button, show save user details button
+    document.getElementById('gantipassword').style.display = 'none';
+    document.getElementById('gantiprofil').style.display = 'block';
+});
+
+// Ensure the correct button visibility when modal opens
+$('#editModal').on('show.bs.modal', function () {
+    document.getElementById('gantipassword').style.display = 'none';
+    document.getElementById('gantiprofil').style.display = 'block';
+    document.getElementById('changePasswordForm').style.display = 'none';
+    document.getElementById('editDetailsForm').style.display = 'block';
+    document.querySelector('.form-group.text-center').style.display = 'block'; 
+});
+
+
     
         // Notification on bell icon click
         const bellIcon = document.getElementById('bell');

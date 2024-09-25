@@ -117,27 +117,48 @@ class ManageUserController extends Controller
      */
     public function edituserdetails(Request $request, $id)
     {
-        // Validate the incoming request data
+        // Validate incoming request data
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
             'no_induk_karyawan' => 'required|string|max:50',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
-
+    
         // Find the user by ID
-        $userDetail = Userdetail::findOrFail($id); // Change this according to your model
-
-        // Update the user's details
+        $userDetail = Userdetail::findOrFail($id);
+    
+        // Handle file upload for the photo
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            // Generate a unique file name with timestamp
+            $fileName = time() . '_' . $file->getClientOriginalName();
+    
+            // Move the file to the public/uploads/photos directory
+            $file->move(public_path('uploads/photos'), $fileName);
+    
+            // Save the file path to the database (relative path)
+            $userDetail->foto = 'uploads/photos/' . $fileName; 
+        }
+    
+        // Update other user details
         $userDetail->nama_lengkap = $validatedData['nama_lengkap'];
         $userDetail->jenis_kelamin = $validatedData['jenis_kelamin'];
         $userDetail->no_induk_karyawan = $validatedData['no_induk_karyawan'];
-
+    
         // Save the changes
         $userDetail->save();
-
+    
         // Redirect back with a success message
         return redirect()->route('manage-user.userdetails', $id)->with('success', 'User details updated successfully.');
     }
+    
+    
+    
+
+    
+
+    
 
     /**
      * Update the specified resource in storage.

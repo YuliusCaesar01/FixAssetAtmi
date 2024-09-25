@@ -13,24 +13,51 @@ class GoogleController extends Controller
     {
         return Socialite::driver('google')->redirect();
     }
+    
     public function handleGoogleCallback(Request $request)
     {
-        $user = Socialite::driver('google')->user();
-        $dataUser = User::where('email', $user->email)->first();
+        try {
+            \Log::info('Google callback received with request: ', $request->all());
+            
+            // Bypass SSL verification
+            $user = Socialite::driver('google')
+                ->setHttpClient(new \GuzzleHttp\Client(['verify' => false])) // Disable SSL verification
+                ->user();
+    
+            // Mencari user berdasarkan email
+            $dataUser = User::where('email', $user->getEmail())->first();
+    
+            // Memeriksa domain email
+            $emailDomain = explode("@", $user->getEmail())[1];
+    
+            // Validasi domain email
+            if (!in_array($emailDomain, ['gmail.com'])) {
+                return redirect(route('login'))->withErrors('Email tidak terdaftar.');
+            }
+    
+            // Validasi apakah user ada di database
+            if (empty($dataUser)) {
+                return redirect(route('login'))->withErrors('Email tidak terdaftar.');
+            }
+    
+             // Login user
+        auth()->login($dataUser);
 
-        $emailDomain = explode("@", $user->email)[1];
-        //dd($dataUser);
-        if ($emailDomain !== 'student.atmi.ac.id' && $emailDomain !== 'atmi.ac.id' && $emailDomain !== 'gmail.com') {
-            return redirect(route('login'))->withErrors('Email tidak terdaftar.');
-        }
-        if (empty($dataUser)) {
-            return redirect(route('login'))->withErrors('Email tidak terdaftar.');
-        }
+        // Regenerate session
+        $request->session()->regenerate();
 
-        // Login user
-        auth()->login($dataUser); //session data 
-
-
+        // Redirect to the dashboard
         return redirect()->route('dashboard');
+
+    
+        } catch (\Exception $e) {
+            \Log::error('Google login error: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
+            return redirect(route('login'))->withErrors('Terjadi kesalahan saat login dengan Google. Detail: ' . $e->getMessage());
+        }
     }
 }
+
+
+    
+

@@ -50,7 +50,7 @@
                             <tr>
                                 <td class="text-center lead" style="vertical-align: middle;">
                                     @if($userDetail->foto && $userDetail->foto !== 'default.png')
-                                        <img src="{{ asset('/storage/photos/' . $userDetail->foto) }}" alt="Profile Photo" class="rounded-circle" style="width: 80px; height: 80px;">
+                                    <img src="{{ asset($userDetail->foto) }}" alt="Profile Photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; border-radius: 50%; object-position: top;">
                                     @else
                                         <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Photo" class="rounded-circle" style="width: 80px; height: 80px;">
                                     @endif

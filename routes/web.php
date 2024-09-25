@@ -44,6 +44,7 @@ Route::prefix('/oauth')->group(function () {
     Route::get('google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 });
 
+
    
 
 Route::redirect('/', '/auth/login'); //link utama langsung mengarahkan ke login
@@ -95,12 +96,11 @@ Route::post('/bast/catat', [ManagePermintaanFAController::class, 'catat'])->name
 // routes/web.php
 // routes/web.php
 Route::get('/main/send-email', [EmailController::class, 'sendEmail'])->name('sendEmail');
-// routes/web.php
-Route::post('/profile/editprofil', [ProfileController::class, 'update'])->name('editprofil');
-// Route for changing password
+// Rute untuk mengedit profil
+Route::post('/profile/editprofil/{id}', [ManageUserController::class, 'edituserdetails'])->name('editprofil');
+
+// Rute untuk mengubah password
 Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
-
-
 
 
 //userEdit

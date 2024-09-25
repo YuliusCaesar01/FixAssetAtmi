@@ -14,17 +14,20 @@ class CreateNotificationsTable extends Migration
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id(); // id column, auto-incrementing primary key
-            $table->string('keterangan'); // column for notification description
-            $table->unsignedBigInteger('user_id'); // foreign key column for user
-            $table->unsignedBigInteger('pengajuan_id'); // foreign key column for user
-            $table->timestamp('tanggal_notif'); // column for notification date
-            
-            $table->timestamps(); // created_at and updated_at timestamps
+            $table->id('notif_id'); // Primary key
+            $table->string('nama_notif'); // Name of the notification
+            $table->enum('jenis_notif', ['email', 'dashboard', 'keduanya']); // Type of notification
+            $table->unsignedBigInteger('id_asal')->nullable(); // Foreign key for the user
+            $table->unsignedBigInteger('id_tujuan')->nullable();  // Foreign key for the role
+            $table->unsignedBigInteger('id_pengajuan'); // Ensure this matches
+            $table->dateTime('notif_periode'); // Notification period
+            $table->dateTime('notif_expired'); // Notification expiration date
+            $table->timestamps(); // Created at and updated at timestamps
 
-            // Foreign key constraint
-            $table->foreign('pengajuan_id')->references('id_permintaan_fa')->on('permintaan_fixed_assets');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // Foreign key constraints
+            $table->foreign('id_asal')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_tujuan')->references('id')->on('roles')->onDelete('cascade'); // Adjusted to reference roles
+            $table->foreign('id_pengajuan')->references('id_permintaan_fa')->on('permintaan_fixed_assets')->onDelete('cascade');
         });
     }
 
@@ -38,4 +41,3 @@ class CreateNotificationsTable extends Migration
         Schema::dropIfExists('notifications');
     }
 }
-
