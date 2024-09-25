@@ -386,7 +386,9 @@
                                                         @case('ditolak')
                                                             <p>Status: <span class="badge bg-red">Ditolak</span></p>
                                                         @break
-                                                
+                                                        @case('delayed')
+                                                        <p>Status: <span class="badge bg-dark">Delayed</span></p>
+                                                        @break
                                                         @default
                                                             <p>Status: Tidak diketahui</p>
                                                     @endswitch

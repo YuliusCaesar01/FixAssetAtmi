@@ -218,9 +218,9 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             <div class="modal-body">
                
                 <!-- User Details Form -->
-                <form id="editDetailsForm" method="POST" action="{{ route('editprofil', ['id' => $userdetail->id_userdetail]) }}" enctype="multipart/form-data">
+                <form id="editDetailsForm" method="POST" action="" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="id" value="{{ $userdetail->id_userdetail }}">
+                    <input type="hidden" name="id" value="{{ $userdetail->id_userdetail ?? '' }}">
                     <!-- Display existing photo -->
                 <div class="form-group text-center mb-4">
                     <center>
@@ -242,9 +242,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     <div class="form-group">
                         <label for="jenis_kelamin">Jenis Kelamin</label>
                         <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required>
-                            <option value="" disabled {{ !$userdetail->jenis_kelamin ? 'selected' : '' }}>Pilih Jenis Kelamin</option>
-                            <option value="Laki-laki" {{ ($userdetail->jenis_kelamin ?? '') === 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                            <option value="Perempuan" {{ ($userdetail->jenis_kelamin ?? '') === 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                           
                         </select>
                     </div>
                     
