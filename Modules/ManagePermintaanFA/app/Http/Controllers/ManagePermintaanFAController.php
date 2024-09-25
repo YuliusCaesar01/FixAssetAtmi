@@ -48,7 +48,9 @@ class ManagePermintaanFAController extends Controller
                     case 14:
                         $item->valid_fixaset = 'setuju';
                         $item->valid_fixaset_timestamp = Carbon::now(); // Set to current time or any appropriate value
-
+                        $item->delay_id = null;
+                        $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
+                        $item->save();
                         break;
                     case 18:
                         $item->valid_dirmanageraset = 'setuju';
@@ -63,7 +65,9 @@ class ManagePermintaanFAController extends Controller
                                 'bulan' => $bulan, // Use the formatted month
                                 'tahun' => $timestamp->year // You might want to use the year as well
                             ]);
-
+                            $item->delay_id = null;
+                            $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
+                            $item->save();
                         break;
                     default:
                         # code...
@@ -71,9 +75,7 @@ class ManagePermintaanFAController extends Controller
                 }
 
 
-                $item->delay_id = null;
-                $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
-                $item->save();
+               
             }
         }
 
@@ -150,20 +152,19 @@ class ManagePermintaanFAController extends Controller
     {
       
         $permintaan = PermintaanFixedAsset::findOrFail($id_permintaanfa);
-
 //pdfPengaju
-        try {
-            $pdf = Crypt::decryptString($permintaan->file_pdf);
-        } catch (\Exception $e) {
-            $pdf = null;
-        }     
+try {
+    $pdf = Crypt::decryptString($permintaan->file_pdf);
+} catch (\Exception $e) {
+    $pdf = null;
+}     
 //pdfbukti1
-        try {
-            $pdfbukti1 = Crypt::decryptString($permintaan->pdf_bukti_1);
-        } catch (\Exception $e) {
-            $pdfbukti1 = null;
-        }
-        return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $this->menu, 'pdf' => $pdf, 'pdfbukti1' => $pdfbukti1]);
+try {
+    $pdfbukti1 = Crypt::decryptString($permintaan->pdf_bukti_1);
+} catch (\Exception $e) {
+    $pdfbukti1 = null;
+}
+return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $this->menu, 'pdf' => $pdf, 'pdfbukti1' => $pdfbukti1]);
     }
 
     /**
@@ -186,64 +187,60 @@ class ManagePermintaanFAController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    // Validasi data
-    $validatedData = $request->validate([
-        'deskripsi_permintaan' => 'required',
-        'alasan_permintaan' => 'required',
-        'id_lokasi' => 'required',
-        'id_ruang' => 'required',
-        'id_tipe' => 'required',
-        'nama_barang' => 'required',
-        'merk_barang' => 'required',
-        'id_kelompok' => 'required',
-        'status_transaksi' => 'required',
-        'id_jenis' => 'required',
-        'file_pdf' => 'nullable|file|mimes:pdf|max:2048', // Tambahkan batas ukuran jika perlu
-
-    ]);
-    $user = Auth::user();
-    $divisi = $user->divisi;
-    // Simpan data ke dalam database
-    $permintaan = PermintaanFixedAsset::create([
-        'deskripsi_permintaan' => strip_tags($validatedData['deskripsi_permintaan']),
-        'alasan_permintaan' => strip_tags($validatedData['alasan_permintaan']),
-        'id_lokasi' => strip_tags($validatedData['id_lokasi']),
-        'id_ruang' => $validatedData['id_ruang'],
-        'id_tipe' => $validatedData['id_tipe'],
-        'tgl_permintaan' => Carbon::now(),
-        'status_permohonan' => $validatedData['status_transaksi'],
-        'id_kelompok' => $validatedData['id_kelompok'],
-        'id_jenis' => $validatedData['id_jenis'], 
-        'unit_pemohon' =>  $request->unit_pemohon, 
-        'unit_tujuan' =>  $request->unit_tujuan,
-        'id_institusi' =>  $divisi->id_institusi,
-        'id_user'      => $user->id  ,
-        'nama_barang'  => $validatedData['nama_barang'],
-        'merk_barang'  => $validatedData['merk_barang'],// Sesuaikan dengan field lainnya yang ada dalam model PermintaanFixedAsset
-    ]);
-
-    // Handle the PDF upload
-    if ($request->file_pdf) {
-        $file = $request->file_pdf;
-        if ($file->isValid()) {
-            $path = $file->store('upload/pdf', 'public'); 
-            $permintaan->file_pdf = Crypt::encryptString($path); 
-            $permintaan->save(); 
-        } else {
-            return redirect()->route('managepermintaanfa.index')->with('error', 'Permintaan gagal.');
+    {
+        // Validasi data
+        $validatedData = $request->validate([
+            'deskripsi_permintaan' => 'required',
+            'alasan_permintaan' => 'required',
+            'id_lokasi' => 'required',
+            'id_ruang' => 'required',
+            'id_tipe' => 'required',
+            'nama_barang' => 'required',
+            'merk_barang' => 'required',
+            'id_kelompok' => 'required',
+            'status_transaksi' => 'required',
+            'id_jenis' => 'required',
+            'file_pdf' => 'nullable|file|mimes:pdf|max:2048', // Tambahkan batas ukuran jika perlu
+        ]);
+    
+        // Ambil pengguna yang sedang login
+        $user = Auth::user();
+        $divisi = $user->divisi;
+    
+        // Simpan data ke dalam database
+        $permintaan = PermintaanFixedAsset::create([
+            'deskripsi_permintaan' => strip_tags($validatedData['deskripsi_permintaan']),
+            'alasan_permintaan' => strip_tags($validatedData['alasan_permintaan']),
+            'id_lokasi' => strip_tags($validatedData['id_lokasi']),
+            'id_ruang' => $validatedData['id_ruang'],
+            'id_tipe' => $validatedData['id_tipe'],
+            'tgl_permintaan' => Carbon::now(),
+            'status_permohonan' => $validatedData['status_transaksi'],
+            'id_kelompok' => $validatedData['id_kelompok'],
+            'id_jenis' => $validatedData['id_jenis'], 
+            'unit_pemohon' => $request->unit_pemohon, 
+            'unit_tujuan' => $request->unit_tujuan,
+            'id_institusi' => $divisi->id_institusi,
+            'id_user' => $user->id,
+            'nama_barang' => $validatedData['nama_barang'],
+            'merk_barang' => $validatedData['merk_barang'],
+        ]);
+    
+        if ($request->hasFile('file_pdf')) {
+            $file = $request->file('file_pdf');
+            if ($file->isValid()) {
+                $path = $file->store('upload/pdf', 'public');
+                $permintaan->file_pdf = Crypt::encryptString($path);
+                $permintaan->save();
+            } else {
+                return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
+            }
         }
-    } else {
+        
+    
         return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
-
     }
     
-    return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
-
-
-    // Redirect ke halaman yang sesuai atau tampilkan pesan sukses
-}
-
 
     /**
      * Show the specified resource.
@@ -290,7 +287,7 @@ class ManagePermintaanFAController extends Controller
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
                 $path = $file->store('upload/pdf', 'public');
-                $model->pdf_bukti_1 = Crypt::encryptString($path);
+                $model->pdf_bukti_1 = $path;
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
@@ -327,17 +324,19 @@ class ManagePermintaanFAController extends Controller
         } else {
             $fileName = 'no_img.png';
         }
+        // Handle PDF upload
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
                 $path = $file->store('upload/pdf', 'public');
-                $model->pdf_bukti_1 = Crypt::encryptString($path);
+                $model->pdf_bukti_1 = $path;
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
         }
         $model->catatan = $request->alasan_delay;
-        $model->foto_barang =  $filePath;
+        $model->foto_barang =  $filePath ?? '';
+
         $model->unit_asal = $request->unitSourceDelay;
         $model->perkiraan_harga = $request->priceEstimateDelay;
         $model->delay_id = auth()->user()->role_id; // Store role_id in delay_id

@@ -47,15 +47,19 @@ $managerasetuser = User::where('role_id', 19)->first();
                                 <!-- Buttons to view/download the PDF -->
                                 <div class="mt-2">
                                     @if($pdf)
-                                        <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-primary" target="_blank">View PDF</a>
-                                        <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-success" download>Download PDF</a>
-                                    @else
-                                        <p class="text-danger">PDF file is not available.</p>
-                                    @endif
-                                </div>
-                            @else
-                                <p>No PDF file available.</p>
-                            @endif
+                                    <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                    <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-success" download>Download PDF</a>
+
+                                @else
+                                    <p class="text-danger">PDF file is not available.</p>
+                                @endif
+                            </div>
+                        @else
+                            <p>No PDF file available.</p>
+                        @endif
+
+                                
+                              
                             
                                 
                                 
@@ -79,20 +83,40 @@ $managerasetuser = User::where('role_id', 19)->first();
                             <hr>
                             <h5>Kategori Barang</h5>
                             <dl class="row">
-                               
+                               @if($permintaan->id_institusi ==  1)
                                 <dt class="col-sm-4">Tipe</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe }} </dd>
+                                <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_yayasan }} </dd>
                                 <dt class="col-sm-4">Kelompok</dt>
                                 <dd class="col-sm-8">
-                                    : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok }}
+                                    : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok_yayasan }}
                                 </dd>
                                 <dt class="col-sm-4">Jenis</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis }}</dd>
+                                <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_yayasan }}</dd>
                                 <dt class="col-sm-4">Lokasi</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi }}</dd>
+                                <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_yayasan }}</dd>
                                 <dt class="col-sm-4">Ruang</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang }}</dd>
-                               
+                                <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_yayasan }}</dd>
+                               @elseif($permintaan->id_institusi ==  2)
+                               <dt class="col-sm-4">Tipe</dt>
+                                <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_yayasan }} </dd>
+                                <dt class="col-sm-4">Kelompok</dt>
+                                <dd class="col-sm-8">
+                                    : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok_yayasan }}
+                                </dd>
+                                <dt class="col-sm-4">Jenis</dt>
+                                <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_mikael }}</dd>
+                                <dt class="col-sm-4">Lokasi</dt>
+                                <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_mikael }}</dd>
+                                <dt class="col-sm-4">Ruang</dt>
+                                <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_mikael }}</dd>
+                               @else
+                               <dt class="col-sm-4">Jenis</dt>
+                               <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_politeknik }}</dd>
+                               <dt class="col-sm-4">Lokasi</dt>
+                               <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_politeknik }}</dd>
+                               <dt class="col-sm-4">Ruang</dt>
+                               <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_politeknik }}</dd>
+                               @endif
                             </dl>
                         </div>
                     </div>
@@ -252,22 +276,28 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                       
                                                 
                                                     </p>                                                      </div>
-                                                    @if($permintaan->delay_id == 14)
+                                            @if($permintaan->delay_id == 14)
                                                     <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #333;">
                                                         Delayed &nbsp;
                                                         <i class="fas fa-clock"></i> <!-- Ikon jam sebagai tanda belum ditindak -->
                                                     </span>
+                                                    <!-- Tampilkan tanggal delay -->
+                                                    <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #444;">
+                                                        {{ \Carbon\Carbon::parse($permintaan->delay_timestamp)->translatedFormat('d F Y') }}
+                                                    </span>
+                                                
+                                                    <!-- Countdown Timer -->
                                                     <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #6a6a6a;" id="countdown" class="countdown">
                                                         <span id="timer"></span>
                                                     </span>
-                                                   
                                                 @endif
                                                 
+                                                
                                                 <div class="note">
-                                                    @if($permintaan->perkiraan_harga != null)
+                                                    @if($permintaan->perkiraan_harga != null && $permintaan->delay_id != 14)
                                                     <p>Harga Perkiraan :<br> Rp. <strong>{{ number_format($permintaan->perkiraan_harga, 0, ',', '.') }}</strong></p>
                                                     @endif
-                                                    @if($permintaan->unit_asal != null)
+                                                    @if($permintaan->unit_asal != null && $permintaan->delay_id != 14)
                                                     <p>Unit asal aset : <strong>{{ $permintaan->unit_asal }}</strong></p>
                                                     @endif
                                                     @if($permintaan->valid_fixaset === 'tolak' || $permintaan->delay_id === 14)
@@ -277,8 +307,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 @if($permintaan->pdf_bukti_1 != null && auth()->user()->role_id != 5 )
 
                                                 <center>
-                                                    <a href="{{ asset('storage/' . $pdfbukti1) }}" class="btn btn-primary" target="_blank">View PDF</a>
-                                                </center>
+                                                    <a href="{{ asset('storage/' . $permintaan->pdf_bukti_1) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                                    <a href="{{ asset('storage/' . $permintaan->pdf_bukti_1) }}" class="btn btn-success" download>Download PDF</a>                                                </center>
                                                 @endif
 
                                             </div>
@@ -595,14 +625,19 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                     </p>            
                                                </div>
                                                @if($permintaan->delay_id == 18)
-                                               <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #333;">
-                                                   Delayed &nbsp;
-                                                   <i class="fas fa-clock"></i> <!-- Ikon jam sebagai tanda belum ditindak -->
-                                               </span>
-                                               <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #6a6a6a;" id="countdown" class="countdown">
-                                                   <span id="timer"></span>
-                                               </span>
-                                              
+                                            <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #333;">
+                                                Delayed &nbsp;
+                                                <i class="fas fa-clock"></i> <!-- Ikon jam sebagai tanda belum ditindak -->
+                                            </span>
+                                            <!-- Tampilkan tanggal delay -->
+                                            <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #444;">
+                                                {{ \Carbon\Carbon::parse($permintaan->delay_timestamp)->translatedFormat('d F Y') }}
+                                            </span>
+                                        
+                                            <!-- Countdown Timer -->
+                                            <span style="display: block; width: 100%; padding: 0.5rem; text-align: center; color: white; background-color: #6a6a6a;" id="countdown" class="countdown">
+                                                <span id="timer"></span>
+                                            </span>
                                               @endif
                                               @if($permintaan->valid_dirmanageraset === 'tolak' || $permintaan->delay_id === 18)
                                               <p>Catatan : <strong>{{ ucfirst($permintaan->catatan) }}</strong></p>

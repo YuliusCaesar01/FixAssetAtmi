@@ -89,6 +89,7 @@
                             
                             
                             </h3>
+                            
                             <div class="card-tools">
                                 @if(auth()->check() && auth()->user()->role_id == 1 || auth()->user()->role_id == 5 )
                                 <a href="{{ route('managepermintaanfa.create') }}" class="btn btn-sm btn-info float-right" id="btn-create-aset">
@@ -479,60 +480,83 @@
 <!-- Modal HTML -->
 <div class="modal fade" id="delayModal" tabindex="-1" aria-labelledby="delayModalLabel" aria-hidden="true">
   <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="delayModalLabel">Select Delay Date</h5>
-              <small class="text-muted">*Delay will automatically approve the request.</small>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>  
-          <div class="modal-body">
-              <form id="delayForm" action="{{ route('managepermintaanfa.approve') }}" method="POST" enctype="multipart/form-data" >
-                  @csrf
-                  <input type="hidden" name="id" id="delayId">
-                  <input type="hidden" name="status" value="delayed">
-                  <div id="unitSourceContainerDelay" class="d-none">
-                    <label for="unitSourceDelay">Unit Asal</label>
-                    <input type="text" id="unitSourceDelay" name="unitSourceDelay" class="form-control">
-                </div>
-                <div id="priceEstimateContainerDelay" class="d-none">
-                    <label for="priceEstimateDelay">Perkiraan Harga</label>
-                    <input type="number" id="priceEstimateDelay" name="priceEstimateDelay" class="form-control" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                  <label>Status Kondisi Barang</label>
-                  <select id="status_barang" class="form-control" name="status_barang" style="width: 100%;" required>
-                      <option value="baik(100%)">baik(100%)</option>
-                      <option value="cukup(50%)">cukup(50%)</option>
-                      <option value="rusak">rusak</option>
-                  </select>
-              </div>
-              <div class="form-group mt-3">
-                <label for="image_file">Upload Image</label>
-                <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
-                <small class="text-muted">(*File kurang dari 1 MB)</small>
-                <div id="image-upload-feedback" class="mt-2"></div>
-            </div>        
-            <div class="form-group">
-              <label for="pdf_file">Upload PDF (Opsional)</label>
-              <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
-              <small class="text-muted">(*Opsional upload pdf)</small>
-              <div id="file-upload-feedback" class="mt-2"></div>
-            </div>
-                  <div class="form-group">
-                      <label for="alasanDelay">Alasan Delay</label>
-                      <input type="text" name="alasan_delay" class="form-control" required>
-                      <label for="delayDate">Select Date</label>
-                      <input type="text" id="delayDate" name="delay_date" class="form-control" required>
-                      <small class="text-muted">Date must not be today.</small>
-                  </div>
-                  <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
-              </form>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="delayModalLabel">Select Delay Date</h5>
+        <small class="text-muted">*Delay will automatically approve the request.</small>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-  </div></div>
+      <div class="modal-body">
+        <form id="delayForm" action="{{ route('managepermintaanfa.approve') }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          <input type="hidden" name="id" id="delayId">
+          <input type="hidden" name="status" value="delayed">
+          <div id="unitSourceContainerDelay" class="d-none">
+            <label for="unitSourceDelay">Unit Asal</label>
+            <input type="text" id="unitSourceDelay" name="unitSourceDelay" class="form-control">
+          </div>
+          <div id="priceEstimateContainerDelay" class="d-none">
+            <label for="priceEstimateDelay">Perkiraan Harga</label>
+            <input type="number" id="priceEstimateDelay" name="priceEstimateDelay" class="form-control" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Status Kondisi Barang</label>
+            <select id="status_barang" class="form-control" name="status_barang" style="width: 100%;" required>
+              <option value="baik(100%)">baik(100%)</option>
+              <option value="cukup(50%)">cukup(50%)</option>
+              <option value="rusak">rusak</option>
+            </select>
+          </div>
+
+          <div class="form-group mt-3">
+            <label>Pilih Jenis File</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="file_type" id="uploadImage" value="image" checked>
+              <label class="form-check-label" for="uploadImage">
+                Upload Gambar
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="file_type" id="uploadPDF" value="pdf">
+              <label class="form-check-label" for="uploadPDF">
+                Upload PDF
+              </label>
+            </div>
+          </div>
+
+          <div id="imageUploadContainer" class="form-group mt-3">
+            <label for="image_file">Upload File</label>
+            <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
+            <small class="text-muted">(*File kurang dari 1 MB)</small>
+            <div id="image-upload-feedback" class="mt-2"></div>
+          </div>
+
+          <div id="pdfUploadContainer" class="form-group mt-3 d-none">
+            <label for="pdf_file">Upload File</label>
+            <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
+            <small class="text-muted">(*Opsional upload pdf)</small>
+            <div id="file-upload-feedback" class="mt-2"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="alasanDelay">Alasan Delay</label>
+            <input type="text" name="alasan_delay" class="form-control" required>
+            <label for="delayDate">Select Date</label>
+            <input type="text" id="delayDate" name="delay_date" class="form-control" required>
+            <small class="text-muted">Date must not be today.</small>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
 
@@ -572,19 +596,35 @@
               </select>
           </div>
           <div class="form-group mt-3">
-            <label for="image_file">Upload Image</label>
+            <label>Pilih Jenis File</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="file_type2" id="uploadImage2" value="image" checked>
+              <label class="form-check-label" for="uploadImage">
+                Upload Gambar
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="file_type2" id="uploadPDF2" value="pdf">
+              <label class="form-check-label" for="uploadPDF">
+                Upload PDF
+              </label>
+            </div>
+          </div>
+
+          <div id="imageUploadContainer2" class="form-group mt-3">
+            <label for="image_file">Upload File</label>
             <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
             <small class="text-muted">(*File kurang dari 1 MB)</small>
             <div id="image-upload-feedback" class="mt-2"></div>
-        </div>        
-          
-            <div class="form-group">
-                <label for="pdf_file">Upload PDF (Opsional)</label>
-                <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
-                <small class="text-muted">(*Opsional upload pdf)</small>
-                <div id="file-upload-feedback" class="mt-2"></div>
-            </div>
-           
+          </div>
+
+          <div id="pdfUploadContainer2" class="form-group mt-3 d-none">
+            <label for="pdf_file">Upload File</label>
+            <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
+            <small class="text-muted">(*Opsional upload pdf)</small>
+            <div id="file-upload-feedback" class="mt-2"></div>
+          </div>
+
          
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -622,6 +662,33 @@
 @endsection
 
 @section('scripttambahan')
+<script>
+  // Script to toggle between file upload options
+  document.querySelectorAll('input[name="file_type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      if (this.value === 'image') {
+        document.getElementById('imageUploadContainer').classList.remove('d-none');
+        document.getElementById('pdfUploadContainer').classList.add('d-none');
+      } else {
+        document.getElementById('imageUploadContainer').classList.add('d-none');
+        document.getElementById('pdfUploadContainer').classList.remove('d-none');
+      }
+    });
+  });
+    // Script to toggle between file upload options
+    document.querySelectorAll('input[name="file_type2"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      if (this.value === 'image') {
+        document.getElementById('imageUploadContainer2').classList.remove('d-none');
+        document.getElementById('pdfUploadContainer2').classList.add('d-none');
+      } else {
+        document.getElementById('imageUploadContainer2').classList.add('d-none');
+        document.getElementById('pdfUploadContainer2').classList.remove('d-none');
+      }
+    });
+  });
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Flatpickr on the delay date input
