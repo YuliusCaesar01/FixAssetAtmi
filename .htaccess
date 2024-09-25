@@ -1,0 +1,5 @@
+# Allow access to storage directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^storage/ - [L]
+</IfModule>
