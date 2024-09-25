@@ -44,6 +44,13 @@ Route::prefix('/oauth')->group(function () {
     Route::get('google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('oauth.google.callback');
 });
 
+// Route for displaying the password reset form
+Route::get('password/reset/{token}', function ($token) {
+    return view('oauth.resetpassword', ['token' => $token]);
+})->name('password.reset');
+
+// Route to handle the password reset form submission
+Route::post('password/reset', [ManageUserController::class, 'reset'])->name('password.update');
 
    
 
@@ -54,6 +61,7 @@ Route::prefix('auth')->middleware('guest')->group(function () {
 });
 
 Route::get('logout', [LoginController::class, 'logout'])->middleware('auth')->name('logout');
+Route::post('/password', [ManageUserController::class, 'sendResetLinkEmail'])->name('password');
 
 Route::redirect('/main', '/main/dashboard');
 
@@ -113,5 +121,7 @@ Route::group(['middleware' => ['checkRole:superadmin']], function () {
 //notif
 Route::get('/notifprofile', [ManageUserController::class, 'notifprofil'])->name('notifprofile');
 
+// Route to show the forgot password form
 
+// Route to handle the password reset link request
 });

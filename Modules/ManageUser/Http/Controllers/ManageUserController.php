@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Userdetail;
 use App\Models\User;
+use Illuminate\Support\Str; // Import Str class
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ResetPasswordMail; // Import your mailable class
 
 class ManageUserController extends Controller
 {
@@ -49,10 +52,68 @@ class ManageUserController extends Controller
      * Show the form for creating a new resource.
      * @return Renderable
      */
-    public function create()
+    public function lupapassword()
     {
-        return view('manageuser::create');
+        return view('manageuser::forgot_password'); // Optionally, you can just use the modal in your existing view.
     }
+
+    // Handle the password reset link request
+    public function sendResetLinkEmail(Request $request)
+{
+    // Validasi email input
+    $request->validate([
+        'email' => 'required|email',
+    ]);
+
+    // Cek apakah email ada di database
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user) {
+        // Jika tidak ada, kembalikan error
+        return back()->withErrors(['email' => 'Email tidak ditemukan.']);
+    }
+
+    // Generate a random token
+    $token = mt_rand(1000, 9999);
+    
+    // Simpan token ke kolom remember_token
+    $user->remember_token = $token;
+    $user->save();
+
+    // Kirim email reset password dengan token
+    Mail::to($user->email)->send(new ResetPasswordMail($user, $token));
+
+    // Kembalikan dengan pesan sukses
+    return back()->with('status', 'Link reset password telah dikirim ke email Anda.');
+}
+    
+public function reset(Request $request)
+{
+    // Validate the request
+    $request->validate([
+        'password' => 'required|confirmed|min:8',
+        'token' => 'required'
+    ]);
+
+    // Find the user associated with the token
+    $userdata = User::where('remember_token', $request->token)->first();
+
+    // If user not found, return an error
+    if (!$userdata) {
+        return back()->withErrors(['token' => __('Invalid token or user not found.')]);
+    }
+
+    // Update the user's password
+    $userdata->password = bcrypt($request->password);
+    $userdata->remember_token = null; // Clear the remember_token
+    $userdata->save();
+
+    // Redirect with success message
+    return redirect()->route('login')->with('status', __('Password has been reset!'));
+}
+
+
+
 
     /**
      * Store a newly created resource in storage.

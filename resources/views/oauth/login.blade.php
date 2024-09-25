@@ -69,37 +69,70 @@
 
                 <div class="text-center">
                     <p class="mb-1">
-                        <a href="#" data-toggle="modal" data-target="#forgotPasswordModal">I forgot my password</a>
-                    </p>
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#forgotPasswordModal">
+                            Forgot Password?
+                        </button>
+                                        </p>
                 </div>
             </div>
         </div>
     </div>
 
+
+
     <!-- Modal for Forgot Password -->
-    <div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="forgotPasswordModalLabel">Reset Password</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="">
-                        @csrf
-                        <div class="form-group">
-                            <label for="resetEmail">Email</label>
-                            <input type="email" id="resetEmail" class="form-control" name="email" placeholder="Enter your email" required>
-                        </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary btn-block">Send Password Reset Link</button>
-                        </div>
-                    </form>
-                </div>
+<div class="modal fade" id="forgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgotPasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="forgotPasswordModalLabel">Reset Password</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ route('password') }}">
+                    @csrf
+                    <div class="form-group">
+                        <label for="resetEmail">Email</label>
+                        <input type="email" id="resetEmail" class="form-control" name="email" placeholder="Enter your email" required>
+                        
+                        <!-- Cek apakah ada error untuk email -->
+                        @error('email')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary btn-block">Send Password Reset Link</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+</div>
+
+@if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
+
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+<script>
+    $(document).ready(function() {
+    @if ($errors->any())
+        $('#forgotPasswordModal').modal('show'); // Membuka kembali modal jika ada error
+    @endif
+});
+</script>
 
 @endsection
