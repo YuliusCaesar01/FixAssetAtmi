@@ -47,8 +47,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                 <!-- Buttons to view/download the PDF -->
                                 <div class="mt-2">
                                     @if($pdf)
-                                    <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-primary" target="_blank">View PDF</a>
-                                    <a href="{{ asset('storage/' . $pdf) }}" class="btn btn-success" download>Download PDF</a>
+                                    <a href="{{ asset($pdf) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                    <a href="{{ asset($pdf) }}" class="btn btn-success" download>Download PDF</a>
 
                                 @else
                                     <p class="text-danger">PDF file is not available.</p>
@@ -307,8 +307,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 @if($permintaan->pdf_bukti_1 != null && auth()->user()->role_id != 5 )
 
                                                 <center>
-                                                    <a href="{{ asset('storage/' . $permintaan->pdf_bukti_1) }}" class="btn btn-primary" target="_blank">View PDF</a>
-                                                    <a href="{{ asset('storage/' . $permintaan->pdf_bukti_1) }}" class="btn btn-success" download>Download PDF</a>                                                </center>
+                                                    <a href="{{ asset($permintaan->pdf_bukti_1) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                                    <a href="{{ asset($permintaan->pdf_bukti_1) }}" class="btn btn-success" download>Download PDF</a>                                                </center>
                                                 @endif
 
                                             </div>

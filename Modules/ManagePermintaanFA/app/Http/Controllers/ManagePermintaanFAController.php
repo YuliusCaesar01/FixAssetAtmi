@@ -229,13 +229,25 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
-                $path = $file->store('upload/pdf', 'public');
-                $permintaan->file_pdf = Crypt::encryptString($path);
+                // Tentukan nama file yang unik agar tidak bentrok
+                $fileName = time() . '_' . $file->getClientOriginalName();
+        
+                // Pindahkan file ke direktori public/uploads/pdfs
+                $file->move(public_path('uploads/pdfs'), $fileName);
+        
+                // Simpan path file ke database dengan enkripsi
+                $permintaan->file_pdf = Crypt::encryptString('uploads/pdfs/' . $fileName);
                 $permintaan->save();
+        
+                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
+        } else {
+            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
         }
+        
+        
         
     
         return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
@@ -286,12 +298,24 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
-                $path = $file->store('upload/pdf', 'public');
-                $model->pdf_bukti_1 = $path;
+                // Tentukan nama file yang unik agar tidak bentrok
+                $fileName = time() . '_' . $file->getClientOriginalName();
+        
+                // Pindahkan file ke direktori public/uploads/pdfs
+                $file->move(public_path('uploads/pdfs'), $fileName);
+        
+                // Simpan path file ke database dengan enkripsi
+                $permintaan->file_pdf = Crypt::encryptString('uploads/pdfs/' . $fileName);
+                $permintaan->save();
+        
+                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
+        } else {
+            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
         }
+        
 
         if ($request->hasFile('file_image')) {
             $file = $request->file('file_image');
@@ -328,12 +352,23 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
-                $path = $file->store('upload/pdf', 'public');
-                $model->pdf_bukti_1 = $path;
+                // Tentukan nama file yang unik agar tidak bentrok
+                $fileName = time() . '_' . $file->getClientOriginalName();
+        
+                // Pindahkan file ke direktori public/uploads/pdfs
+                $file->move(public_path('uploads/pdfs'), $fileName);
+        
+                // Simpan path file ke database dengan enkripsi
+                $model->pdf_bukti_1 = Crypt::encryptString('uploads/pdfs/' . $fileName);
+        
+                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
+        } else {
+            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
         }
+        
         $model->catatan = $request->alasan_delay;
         $model->foto_barang =  $filePath ?? '';
 
@@ -342,6 +377,7 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         $model->delay_id = auth()->user()->role_id; // Store role_id in delay_id
         $model->delay_timestamp = $request->delay_date; // Ensure this column exists in your database
         $model->status = 'delayed'; // Update status to 'delayed'
+        
     
     } elseif ($request->status === 'ditolak') {
         // Handle rejection
@@ -352,12 +388,24 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
             if ($file->isValid()) {
-                $path = $file->store('upload/pdf', 'public');
-                $model->pdf_bukti_1 = Crypt::encryptString($path);
+                // Tentukan nama file yang unik agar tidak bentrok
+                $fileName = time() . '_' . $file->getClientOriginalName();
+        
+                // Pindahkan file ke direktori public/uploads/pdfs
+                $file->move(public_path('uploads/pdfs'), $fileName);
+        
+                // Simpan path file ke database dengan enkripsi
+                $model->pdf_bukti_1 = Crypt::encryptString('uploads/pdfs/' . $fileName);
+               
+        
+                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
             } else {
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
+        } else {
+            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
         }
+        
     }
 
     // Save the model
@@ -516,19 +564,26 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         
 
           // Handle the PDF upload
-    if ($request->file_pdf) {
-        $file = $request->file_pdf;
-        if ($file->isValid()) {
-            $path = $file->store('upload/pdf', 'public'); 
-            $permintaan->pdf_bukti_1 = Crypt::encryptString($path); 
-            $permintaan->save(); 
+          if ($request->hasFile('file_pdf')) {
+            $file = $request->file('file_pdf');
+            if ($file->isValid()) {
+                // Tentukan nama file yang unik agar tidak bentrok
+                $fileName = time() . '_' . $file->getClientOriginalName();
+        
+                // Pindahkan file ke direktori public/uploads/pdfs
+                $file->move(public_path('uploads/pdfs'), $fileName);
+        
+                // Simpan path file ke database dengan enkripsi
+                $model->pdf_bukti_1 = Crypt::encryptString('uploads/pdfs/' . $fileName);
+               
+        
+                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
+            } else {
+                return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
+            }
         } else {
-            return redirect()->route('managepermintaanfa.index')->with('error', 'Permintaan gagal.');
+            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
         }
-    } else {
-        return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
-
-    }
 
         // Simpan perubahan
         $permintaan->save();
