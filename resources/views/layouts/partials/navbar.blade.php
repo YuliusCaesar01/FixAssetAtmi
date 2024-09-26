@@ -69,7 +69,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
     <div class="sidebar">
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img id="profile-img" src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" width="250" height="250" style="object-fit: cover; border-radius: 50%;">
+                <img id="profile-img" src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" width="250" height="250" style="object-fit: cover; border-radius: 50%;">
             </div>
             <div class="info">
                 <p>{{ strtoupper(Auth::user()->username) }}</p>
@@ -83,7 +83,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 </button>
             </div>
             <div class="profile-info">
-                <img src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
                 <div class="profile-details">
                     <h3>{{ strtoupper(Auth::user()->username) }}</h3>
                     <p>Email: {{ Auth::user()->email }}</p>
@@ -216,15 +216,17 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 </button>
             </div>
             <div class="modal-body">
-               
+               @php
+               $null = 0;
+               @endphp
                 <!-- User Details Form -->
-                <form id="editDetailsForm" method="POST" action="{{ route('editprofil', $userdetail->id_userdetail ?? '') }}" enctype="multipart/form-data">
+                <form id="editDetailsForm" method="POST" action="{{ route('editprofil', $userdetail->id_userdetail ?? $null) }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $userdetail->id_userdetail ?? '' }}">
                     <!-- Display existing photo -->
                 <div class="form-group text-center mb-4">
                     <center>
-                        <img src="{{ $userdetail && $userdetail->foto ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                        <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
                     </center>
                     <small>Current Profile Photo</small>
                 </div>
@@ -243,7 +245,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         <label for="jenis_kelamin">Jenis Kelamin</label>
                         <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required aria-label="Pilih Jenis Kelamin">
                             <option value="" disabled selected>Pilih Jenis Kelamin</option>
-                            <option value="laki_laki">Laki-laki</option>
+                            <option value="laki-laki">Laki-laki</option>
                             <option value="perempuan">Perempuan</option>
                         </select>
                     </div>
@@ -318,6 +320,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             console.error('jQuery is not loaded');
             return;
         }
+    });
     
  // Open the edit modal when the edit button is clicked
 document.querySelectorAll('.btn-icon-edit').forEach(button => {
@@ -426,23 +429,8 @@ $('#editModal').on('show.bs.modal', function () {
             sidebar.classList.remove('hidden-sidebar');
         });
     
-        // Shake badge animation
-        const badge = document.querySelector('.nav-item .badge');
+      
     
-        function shakeBadge() {
-            badge.classList.add('shake');
-            setTimeout(() => badge.classList.remove('shake'), 500);
-        }
-    
-        let shakeCount = 5;
-        const shakeInterval = setInterval(() => {
-            if (shakeCount > 0) {
-                shakeBadge();
-                shakeCount--;
-            } else {
-                clearInterval(shakeInterval);
-            }
-        }, 1000);
-    });
+       
     </script>
     

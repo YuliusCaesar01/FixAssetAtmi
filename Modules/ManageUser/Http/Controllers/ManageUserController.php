@@ -181,13 +181,20 @@ public function reset(Request $request)
         // Validate incoming request data
         $validatedData = $request->validate([
             'nama_lengkap' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
+            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
             'no_induk_karyawan' => 'required|string|max:50',
             'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
-        // Find the user by ID
-        $userDetail = Userdetail::findOrFail($id);
+        // Check if the user is being created or updated
+        if ($id == 0) {
+            // Create a new user detail
+            $userDetail = new Userdetail();
+            $userDetail->id_user = auth()->user()->id; // Get the authenticated user's ID
+        } else {
+            // Find the user by ID
+            $userDetail = Userdetail::findOrFail($id);
+        }
     
         // Handle file upload for the photo
         if ($request->hasFile('foto')) {
@@ -202,7 +209,7 @@ public function reset(Request $request)
             $userDetail->foto = 'uploads/photos/' . $fileName; 
         }
     
-        // Update other user details
+        // Update user details
         $userDetail->nama_lengkap = $validatedData['nama_lengkap'];
         $userDetail->jenis_kelamin = $validatedData['jenis_kelamin'];
         $userDetail->no_induk_karyawan = $validatedData['no_induk_karyawan'];
@@ -211,8 +218,12 @@ public function reset(Request $request)
         $userDetail->save();
     
         // Redirect back with a success message
-        return redirect()->route('manage-user.userdetails', $id)->with('success', 'User details updated successfully.');
+        // Redirect to the user's details only if the user detail exists
+   
+            return redirect()->route('manage-user.userdetails', $userDetail->id_userdetail)->with('success', 'User details updated successfully.');
+        
     }
+    
     
     
     

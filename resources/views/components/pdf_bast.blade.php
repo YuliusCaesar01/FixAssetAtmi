@@ -40,6 +40,26 @@
     </script>
 </head>
 <body class="font-sans">
+    @php
+    if($pfa->id_institusi == 1){
+       $tipe = $pfa->tipe->nama_tipe_yayasan;
+       $kelompok = $pfa->kelompok->nama_kelompok_yayasan;
+       $jenis = $pfa->jenis->nama_jenis_yayasan;
+       $ruang = $pfa->ruang->nama_ruang_yayasan;
+    }elseif($pfa->id_institusi == 2){
+       $tipe = $pfa->tipe->nama_tipe_mikael;
+       $kelompok = $pfa->kelompok->nama_kelompok_mikael;
+       $jenis = $pfa->jenis->nama_jenis_mikael;
+       $ruang = $pfa->ruang->nama_ruang_mikael;
+
+    }else{
+        $tipe = $pfa->tipe->nama_tipe_politeknik;
+       $kelompok = $pfa->kelompok->nama_kelompok_politeknik;
+       $jenis = $pfa->jenis->nama_jenis_politeknik;
+       $ruang = $pfa->ruang->nama_ruang_politeknik;
+
+    }
+    @endphp
 
     <div class="max-w-3xl mx-auto p-6">
         <!-- Header -->
@@ -74,7 +94,7 @@
                 </tr>
                 <tr>
                     <td>Hal</td>
-                    <td>: &nbsp;&nbsp;&nbsp; Serah terima {{ $pfa->jenis->nama_jenis }}</td>
+                    <td>: &nbsp;&nbsp;&nbsp; Serah terima {{ $jenis }}</td>
                 </tr>
             </table>
         </div>
@@ -85,7 +105,7 @@
             <table class="w-full text-sm mb-6">
                 <tr>
                     <td style="text-align: left; ">Jenis aset</td>
-                    <td >: {{ $pfa->jenis->nama_jenis }} </td>
+                    <td >: {{ $jenis }} </td>
                 </tr>
                 <tr>
                     <td style="text-align: left; ;">Merk</td>
@@ -105,7 +125,7 @@
                 </tr>
                 <tr>
                     <td style="text-align: left; ">Sifat</td>
-                    <td>: {{ ucfirst($pfa->tipe->nama_tipe) }}</td>
+                    <td>: {{ ucfirst($tipe) }}</td>
                 </tr>
             </table>
             
@@ -128,7 +148,7 @@
                     <p>Dir. Manajemen Aset</p>
                 </div>
                 <div class="text-center">
-                    <p >L Sumadi</p>
+                    <p >{{ ucfirst($pfa->userdetails->nama_lengkap) }}</p>
                     <p>{{ ucfirst($pfa->user->username) }}</p>
                 </div>
             </div>

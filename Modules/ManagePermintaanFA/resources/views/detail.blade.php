@@ -40,8 +40,10 @@ $managerasetuser = User::where('role_id', 19)->first();
                                
                                 @if($permintaan->file_pdf)
                                 <!-- Use a placeholder PDF image -->
-                                <img src="http://www.newdesignfile.com/postpic/2014/04/adobe-pdf-icon-transparent-background_247974.png" class="product-image" alt="Foto Barang Aset">
-                                
+                                <img src="http://www.newdesignfile.com/postpic/2014/04/adobe-pdf-icon-transparent-background_247974.png" 
+                                class="product-image" 
+                                alt="Foto Barang Aset" 
+                                style="width: 680px; height: 750px;">                                
                                 <p class="float-right">Diajukan Oleh: {{ ucfirst($permintaan->user->username) }} <b></b></p>
                                 
                                 <!-- Buttons to view/download the PDF -->
@@ -110,6 +112,11 @@ $managerasetuser = User::where('role_id', 19)->first();
                                 <dt class="col-sm-4">Ruang</dt>
                                 <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_mikael }}</dd>
                                @else
+                               <dt class="col-sm-4">Tipe</dt>
+                               <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_politeknik }} </dd>
+                               <dt class="col-sm-4">Kelompok</dt>
+                               <dd class="col-sm-8">
+                                   : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok_politeknik }}
                                <dt class="col-sm-4">Jenis</dt>
                                <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_politeknik }}</dd>
                                <dt class="col-sm-4">Lokasi</dt>
@@ -190,8 +197,7 @@ $managerasetuser = User::where('role_id', 19)->first();
                                     <dd class="col-sm-8">: {{ ucfirst($permintaan->unit_tujuan) }}</dd>
                                     <dt class="col-sm-4">Tindak Lanjut</dt>
                                     <dd class="col-sm-8">: {{ ucfirst($permintaan->tindak_lanjut) }}</dd>
-                                    <dt class="col-sm-4">Serah Terima BAST</dt>
-                                    <dd class="col-sm-8">: TTD disini</dd>
+                              
                                     @endif
                                    
                                     
@@ -210,12 +216,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                             </div>
                                              <!-- Validation Time -->
                                             <div class="profile-status">
-                                                @if($fixasetuser->userdetail !== null && $fixasetuser->userdetail->foto !== null && $fixasetuser->userdetail->foto !== 'default.png')
+                                                <img id="profile-img" src="{{ $fixasetuser->userdetail && $fixasetuser->userdetail->foto && $fixasetuser->userdetail->foto !== 'default.png' ? asset($fixasetuser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
 
-                                                    <img id="profile-img" src="{{ asset('/storage/photos/' . $fixasetuser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                                @else
-                                                    <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img"  style="width: 95px; height: 95px;">
-                                                @endif
                                                 @switch($permintaan->valid_fixaset)
                                                     @case('setuju')
                                                     <div class="status-indicator approved">
@@ -307,8 +309,9 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 @if($permintaan->pdf_bukti_1 != null && auth()->user()->role_id != 5 )
 
                                                 <center>
-                                                    <a href="{{ asset($permintaan->pdf_bukti_1) }}" class="btn btn-primary" target="_blank">View PDF</a>
-                                                    <a href="{{ asset($permintaan->pdf_bukti_1) }}" class="btn btn-success" download>Download PDF</a>                                                </center>
+                                                    
+                                                    <a href="{{ asset($pdfbukti1) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                                    <a href="{{ asset($pdfbukti1) }}" class="btn btn-success" download>Download PDF</a>                                                </center>
                                                 @endif
 
                                             </div>
@@ -323,12 +326,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 {{ $permintaan->valid_ketuayayasan_timestamp ? \Carbon\Carbon::parse($permintaan->valid_ketuayayasan_timestamp)->diffForHumans() : '' }}
                                             </div>                                            
                                             <div class="profile-status">
-                                            @if($ketuayayasanuser->userdetail !== null && $ketuayayasanuser->userdetail->foto !== null && $ketuayayasanuser->userdetail->foto !== 'default.png')
-
-                                                <img id="profile-img" src="{{ asset('/storage/photos/' . $ketuayayasanuser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @else
-                                                <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @endif                                                <div class="status-indicator default">
+                                                <img id="profile-img" src="{{ $ketuayayasanuser->userdetail && $ketuayayasanuser->userdetail->foto && $ketuayayasanuser->userdetail->foto !== 'default.png' ? asset($ketuayayasanuser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
+                                                <div class="status-indicator default">
                                                     @switch($permintaan->valid_ketuayayasan)
                                                     @case('setuju')
                                                     <div class="status-indicator approved">
@@ -396,12 +395,9 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 {{ $permintaan->valid_karyausaha_timestamp ? \Carbon\Carbon::parse($permintaan->valid_karyausaha_timestamp)->diffForHumans() : '' }}
                                             </div>                                                 
                                             <div class="profile-status">
-                                            @if($unitkaryauser->userdetail !== null && $unitkaryauser->userdetail->foto !== null && $unitkaryauser->userdetail->foto !== 'default.png')
-
-                                                <img id="profile-img" src="{{ asset('/storage/photos/' . $unitkaryauser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @else
-                                                <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @endif                                                 <div class="status-indicator default">
+                                                <img id="profile-img" src="{{ $unitkaryauser->userdetail && $unitkaryauser->userdetail->foto &&  $unitkaryauser->userdetail->foto !== 'default.png' ? asset($unitkaryauser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
+                                                                       
+                                                              <div class="status-indicator default">
                                                     @switch($permintaan->valid_karyausaha)
                                                     @case('setuju')
                                                     <div class="status-indicator approved">
@@ -486,12 +482,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 {{ $permintaan->valid_dirkeuangan_timestamp ? \Carbon\Carbon::parse($permintaan->valid_dirkeuangan_timestamp)->diffForHumans() : '' }}
                                             </div>                                                  
                                             <div class="profile-status">
-                                            @if($dirkeuanganuser->userdetail !== null && $dirkeuanganuser->userdetail->foto !== null && $dirkeuanganuser->userdetail->foto !== 'default.png')
-
-                                                <img id="profile-img" src="{{ asset('/storage/photos/' . $dirkeuanganuser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @else
-                                                <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @endif                                                 {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
+                                                <img id="profile-img" src="{{  $dirkeuanganuser->userdetail &&  $dirkeuanganuser->userdetail->foto &&  $dirkeuanganuser->userdetail->foto !== 'default.png' ? asset($dirkeuanganuser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
+                                                {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
                                                 @switch($permintaan->valid_dirkeuangan)
                                                 @case('setuju')
                                                 <div class="status-indicator approved">
@@ -561,12 +553,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 {{ $permintaan->valid_dirmanageraset_timestamp ? \Carbon\Carbon::parse($permintaan->valid_dirmanageraset_timestamp)->diffForHumans() : '' }}
                                             </div>                                            
                                             <div class="profile-status">
-                                            @if($dirmanagerasetuser->userdetail !== null && $dirmanagerasetuser->userdetail->foto !== null && $dirmanagerasetuser->userdetail->foto !== 'default.png')
-
-                                                <img id="profile-img" src="{{ asset('/storage/photos/' . $dirmanagerasetuser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @else
-                                                <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @endif                                                 {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
+                                                <img id="profile-img" src="{{ $dirmanagerasetuser->userdetail && $dirmanagerasetuser->userdetail->foto ? asset($dirmanagerasetuser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
+                                                {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
                                                 <div class="status-indicator default">
                                                     @switch($permintaan->valid_dirmanageraset)
                                                     @case('setuju')
@@ -657,12 +645,8 @@ $managerasetuser = User::where('role_id', 19)->first();
                                             <div class="validation-time">
                                                 {{ $permintaan->valid_manageraset_timestamp ? \Carbon\Carbon::parse($permintaan->valid_manageraset_timestamp)->diffForHumans() : '' }}
                                             </div>                                               <div class="profile-status">
-                                            @if($managerasetuser->userdetail !== null && $managerasetuser->userdetail->foto !== null && $managerasetuser->userdetail->foto !== 'default.png')
-
-                                                <img id="profile-img" src="{{ asset('/storage/photos/' . $managerasetuser->userdetail->foto) }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @else
-                                                <img id="profile-img" src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Default Image" class="profile-img" style="width: 95px; height: 95px;">
-                                            @endif                                                                 {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
+                                                <img id="profile-img" src="{{ $managerasetuser->userdetail && $managerasetuser->userdetail->foto && $managerasetuser->userdetail->foto !== 'default.png' ? asset($managerasetuser->userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="width: 95px; height: 95px;">
+                                                {{-- <img src="https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg" alt="Profile Picture" class="profile-pic"> --}}
                                                 <div class="status-indicator default">
                                                     @switch($permintaan->valid_manageraset)
                                                     @case('setuju')

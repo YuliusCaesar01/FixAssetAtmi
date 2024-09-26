@@ -141,8 +141,10 @@
                                                     <button class="btn btn-primary approve-btn" data-id="{{ $pfa->id_permintaan_fa }}" data-status="{{ $pfa->status_permohonan }}">Approve</button>
                                                     <button class="btn btn-secondary delay-btn" data-id="{{ $pfa->id_permintaan_fa }}" data-status="{{ $pfa->status_permohonan }}" data-bs-toggle="modal" data-bs-target="#delayModal">Delay</button>
                                                     <button class="btn btn-danger reject-btn" data-id="{{ $pfa->id_permintaan_fa }}">Reject</button>
+                                                    @elseif($pfa->valid_fixaset == 'tolak')
+                                                    <button class="btn btn-danger" disabled>Di{{ $pfa->valid_fixaset}}</button>
                                                     @else
-                                                    <button class="btn btn-primary" disabled>{{ ucfirst($pfa->valid_fixaset)}}</button>
+                                                    <button class="btn btn-primary" disabled>Di{{ $pfa->valid_fixaset}}i</button>
                                                     @endif
                                               @else
                                                     <button class="btn btn-secondary" disabled>{{ ucfirst($pfa->status)}}&nbsp;<i class="fas fa-clock"></i> </button>
@@ -169,7 +171,7 @@
                       @if ($pfa->valid_karyausaha === 'setuju' || $pfa->valid_ketuayayasan === 'setuju')
                       <button class="btn btn-primary" disabled>Disetujui</button>
                       @elseif ($pfa->valid_karyausaha === 'menunggu' && $pfa->valid_ketuayayasan === 'menunggu')
-                     <button id="tindakan" class="btn btn-secondary" data-bs-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-bs-target="#tindakanModal">Tindakan</button>
+                     <button id="tindakan" class="btn btn-info" data-bs-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-bs-target="#tindakanModal">Tindakan</button>
                      @else
                      <button class="btn btn-danger" disabled>Ditolak</button>
 
@@ -187,6 +189,7 @@
 <!-- Tombol Reject -->
 <button id="dirmantolak" class="btn btn-danger" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#rejectModal">Reject</button>
 
+
 <!-- Modal Approve -->
 <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -199,19 +202,45 @@
       </div>
       <div class="modal-body">
         Penyerahan Berita Acara Serah Terima Aset
+        <!-- Informasi jika userdetail tidak lengkap -->
+        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
+            <div class="alert alert-warning mt-3">
+                <strong>Perhatian!</strong> Data user detail <strong>Pengaju</strong> belum lengkap. Silakan lengkapi data sebelum membuat BAST.
+            </div>
+        @endif
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
         <!-- Tombol Generate PDF -->
         <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-primary" id="generatePdf">Membuatkan BAST</button>
+            <button type="submit" 
+        class="btn btn-primary" 
+        id="generatePdf"
+        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
+            disabled
+            style="background-color: #2a5988; border-color: #2a5988; opacity: 0.7; cursor: not-allowed;"
+            title="Tidak dapat membuat BAST karena data detail User Pengaju belum lengkap."
+        @endif
+          >Membuatkan BAST</button>
+
         </form>
         
+        <!-- Tombol Kirim Notifikasi -->
+        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap))
+            <form action="" method="POST" style="margin-left: 10px;">
+                @csrf
+                <button type="submit" class="btn btn-warning">
+                    Kirim Notifikasi
+                </button>
+            </form>
+        @endif
       </div>
     </div>
   </div>
 </div>
+
+
 
 <!-- Modal Reject -->
 <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
@@ -527,16 +556,16 @@
           <div id="imageUploadContainer" class="form-group mt-3">
             <label for="image_file">Upload File</label>
             <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
-            <small class="text-muted">(*File kurang dari 1 MB)</small>
+            <small class="text-muted">(*File kurang dari 2 MB)</small>
             <div id="image-upload-feedback" class="mt-2"></div>
-          </div>
-
-          <div id="pdfUploadContainer" class="form-group mt-3 d-none">
+        </div>
+        
+        <div id="pdfUploadContainer" class="form-group mt-3 d-none">
             <label for="pdf_file">Upload File</label>
             <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
-            <small class="text-muted">(*Opsional upload pdf)</small>
+            <small class="text-muted">(*Opsional upload pdf, kurang dari 2 MB)</small>
             <div id="file-upload-feedback" class="mt-2"></div>
-          </div>
+        </div>
 
           <div class="form-group">
             <label for="alasanDelay">Alasan Delay</label>
@@ -612,19 +641,18 @@
           </div>
 
           <div id="imageUploadContainer2" class="form-group mt-3">
-            <label for="image_file">Upload File</label>
-            <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
-            <small class="text-muted">(*File kurang dari 1 MB)</small>
-            <div id="image-upload-feedback" class="mt-2"></div>
-          </div>
-
-          <div id="pdfUploadContainer2" class="form-group mt-3 d-none">
-            <label for="pdf_file">Upload File</label>
-            <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
-            <small class="text-muted">(*Opsional upload pdf)</small>
-            <div id="file-upload-feedback" class="mt-2"></div>
-          </div>
-
+            <label for="image_file2">Upload File</label>
+            <input type="file" class="form-control-file" id="image_file2" name="file_image2" accept="image/*">
+            <small class="text-muted">(*File kurang dari 2 MB)</small>
+            <div id="image-upload-feedback2" class="mt-2"></div>
+        </div>
+        
+        <div id="pdfUploadContainer2" class="form-group mt-3 d-none">
+            <label for="pdf_file2">Upload File</label>
+            <input type="file" class="form-control-file" id="pdf_file2" name="file_pdf2" accept="application/pdf">
+            <small class="text-muted">(*Opsional upload pdf, kurang dari 2 MB)</small>
+            <div id="file-upload-feedback2" class="mt-2"></div>
+        </div>
          
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -662,6 +690,18 @@
 @endsection
 
 @section('scripttambahan')
+<script>
+  $(document).ready(function() {
+      $('#tbl_permintaanfa').DataTable({
+          // Optional configurations
+          paging: true,
+          pageLength: 10, // Show 10 records per page
+          searching: true,
+          ordering: true,
+          order: [[0, 'asc']], // Sort by first column
+      });
+  });
+</script>
 <script>
   // Script to toggle between file upload options
   document.querySelectorAll('input[name="file_type"]').forEach(radio => {
@@ -900,6 +940,62 @@ document.getElementById('confirmReject').addEventListener('click', function() {
     </div>
     @endonce
 @endif
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+      const maxSize = 2 * 1024 * 1024; // 2 MB dalam bytes
+
+      // Fungsi untuk menampilkan feedback
+      function showFileInfo(inputElement, feedbackElement, maxSize) {
+          const file = inputElement.files[0];
+          feedbackElement.textContent = ''; // Reset feedback
+
+          if (file) {
+              const fileSize = (file.size / 1024 / 1024).toFixed(2); // Menghitung ukuran file dalam MB dengan dua desimal
+              const fileName = file.name; // Mendapatkan nama file
+
+              // Pesan untuk file yang valid atau tidak
+              if (file.size > maxSize) {
+                  feedbackElement.innerHTML = `File <strong>${fileName}</strong> terlalu besar (${fileSize} MB). Maksimum 2 MB.`;
+                  inputElement.value = ''; // Reset input
+              } else {
+                  feedbackElement.innerHTML = `File <strong>${fileName}</strong> valid (${fileSize} MB).`;
+              }
+          }
+      }
+
+      // Validasi untuk file image pertama
+      const imageFileInput = document.getElementById('image_file');
+      const imageFeedback = document.getElementById('image-upload-feedback');
+
+      imageFileInput.addEventListener('change', function () {
+          showFileInfo(imageFileInput, imageFeedback, maxSize);
+      });
+
+      // Validasi untuk file PDF pertama
+      const pdfFileInput = document.getElementById('pdf_file');
+      const pdfFeedback = document.getElementById('file-upload-feedback');
+
+      pdfFileInput.addEventListener('change', function () {
+          showFileInfo(pdfFileInput, pdfFeedback, maxSize);
+      });
+
+      // Validasi untuk file image kedua
+      const imageFileInput2 = document.getElementById('image_file2');
+      const imageFeedback2 = document.getElementById('image-upload-feedback2');
+
+      imageFileInput2.addEventListener('change', function () {
+          showFileInfo(imageFileInput2, imageFeedback2, maxSize);
+      });
+
+      // Validasi untuk file PDF kedua
+      const pdfFileInput2 = document.getElementById('pdf_file2');
+      const pdfFeedback2 = document.getElementById('file-upload-feedback2');
+
+      pdfFileInput2.addEventListener('change', function () {
+          showFileInfo(pdfFileInput2, pdfFeedback2, maxSize);
+      });
+  });
+</script>
 
 
     @if (session('notification'))
