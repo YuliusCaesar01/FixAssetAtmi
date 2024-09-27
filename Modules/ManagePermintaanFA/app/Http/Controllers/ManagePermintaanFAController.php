@@ -678,7 +678,7 @@ public function catat(Request $request)
             'id_lokasi' => $pfa->id_lokasi,
             'no_permintaan' => $pfa->id_permintaan_fa,
             'tahun_diterima' => $bast->tahun,
-            'foto_barang' => Crypt::decryptString($pfa->foto_barang),
+            'foto_barang' => $pfa->foto_barang ?? '',
             'file_pdf' => $pdfFilePath ?? '',
             'nama_barang' => $pfa->nama_barang,
             'des_barang' => $pfa->deskripsi_permintaan,

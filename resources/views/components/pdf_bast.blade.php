@@ -41,6 +41,8 @@
 </head>
 <body class="font-sans">
     @php
+    use App\Models\User;
+    $datadirmanaset = User::where('role_id', 18)->first();
     if($pfa->id_institusi == 1){
        $tipe = $pfa->tipe->nama_tipe_yayasan;
        $kelompok = $pfa->kelompok->nama_kelompok_yayasan;
@@ -143,15 +145,16 @@
 <br>
             <!-- Signature Section -->
             <div class="flex justify-between mt-12">
-                <div class="text-center">
-                    <p >Ig Joko Suprayitno</p>
-                    <p>Dir. Manajemen Aset</p>
+                <div class="text-center mx-6"> <!-- Adjusted margin -->
+                    <p>{{ $datadirmanaset->userdetail->nama_lengkap }}</p>
+                    <p>{{ $datadirmanaset->username }}</p>
                 </div>
-                <div class="text-center">
-                    <p >{{ ucfirst($pfa->userdetails->nama_lengkap) }}</p>
+                <div class="text-center mx-6"> <!-- Adjusted margin -->
+                    <p>{{ ucfirst($pfa->user->userdetail->nama_lengkap) }}</p>
                     <p>{{ ucfirst($pfa->user->username) }}</p>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

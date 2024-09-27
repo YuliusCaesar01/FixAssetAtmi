@@ -10,6 +10,8 @@ use App\Models\User;
 use Illuminate\Support\Str; // Import Str class
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail; // Import your mailable class
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class ManageUserController extends Controller
 {
@@ -244,6 +246,47 @@ public function reset(Request $request)
 
     }
 
+
+    public function changeEmail(Request $request)
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'old_email' => 'required|email|exists:users,email',
+            'new_email' => 'required|email|unique:users,email',
+            'ttd' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // optional signature upload
+        ]);
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+    
+        // Update email
+        $user = Auth::user();
+        $user->email = $request->new_email;
+    
+        // Optionally, handle the uploaded signature
+        if ($request->hasFile('ttd')) {
+            // Define the path where you want to save the uploaded file
+            $destinationPath = public_path('signatures'); // Public directory
+            
+            // Generate a unique file name for the uploaded file
+            $fileName = time() . '_' . $request->file('ttd')->getClientOriginalName();
+            
+            // Move the uploaded file to the public directory
+            $request->file('ttd')->move($destinationPath, $fileName);
+            
+            // Save the file path to the user's record
+            $user->ttd = 'signatures/' . $fileName; // Assuming you want to store the relative path
+        }
+    
+        $user->save();
+    
+        return redirect()->back()->with('success', 'Email has been changed successfully!');
+    }
+    
+    
     /**
      * Remove the specified resource from storage.
      * @param int $id

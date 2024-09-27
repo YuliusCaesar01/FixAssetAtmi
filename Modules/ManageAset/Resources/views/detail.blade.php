@@ -40,20 +40,20 @@
                             <h5>Kategori Barang</h5>
                             <dl class="row">
                                 <dt class="col-sm-4">Lokasi</dt>
-                                <dd class="col-sm-8">{{ $fa->lokasi->kode_lokasi . ' - ' . $fa->lokasi->nama_lokasi }}</dd>
+                                <dd class="col-sm-8">{{ $fa->lokasi->kode_lokasi . ' - ' . $fa->lokasi->nama_lokasi_yayasan }}</dd>
                                 <dt class="col-sm-4">Institusi</dt>
                                 <dd class="col-sm-8">
                                     {{ $fa->institusi->kode_institusi . ' - ' . $fa->institusi->nama_institusi }}</dd>
                                 <dt class="col-sm-4">Kelompok</dt>
                                 <dd class="col-sm-8">
-                                        {{ $fa->kelompok->kode_kelompok . ' - ' . $fa->kelompok->nama_kelompok }}
+                                        {{ $fa->kelompok->kode_kelompok . ' - ' . $fa->kelompok->nama_kelompok_yayasan }}
                                 </dd>
                                 <dt class="col-sm-4">Jenis</dt>
-                                <dd class="col-sm-8">{{ $fa->jenis->kode_jenis . ' - ' . $fa->jenis->nama_jenis }}</dd>
+                                <dd class="col-sm-8">{{ $fa->jenis->kode_jenis . ' - ' . $fa->jenis->nama_jenis_yayasan }}</dd>
                                 <dt class="col-sm-4">Ruang</dt>
-                                <dd class="col-sm-8">{{ $fa->ruang->kode_ruang . ' - ' . $fa->ruang->nama_ruang }}</dd>
+                                <dd class="col-sm-8">{{ $fa->ruang->kode_ruang . ' - ' . $fa->ruang->nama_ruang_yayasan }}</dd>
                                 <dt class="col-sm-4">Tipe</dt>
-                                <dd class="col-sm-8">{{ $fa->tipe->kode_tipe . ' - ' . $fa->tipe->nama_tipe }}</dd>
+                                <dd class="col-sm-8">{{ $fa->tipe->kode_tipe . ' - ' . $fa->tipe->nama_tipe_yayasan }}</dd>
                                 
                                 @if ($fa->no_permintaan)
                                     <dt class="col-sm-4">No Surat Permintaan (SPA)</dt>
@@ -72,9 +72,7 @@
                                 </center>
                                 <div class="button-group">
                                     <a href="data:image/png;base64,{{ $barcode }}" download="barcode.png">
-                                        <form action="{{ route('sendEmail') }}" method="GET">
-                                            <button type="submit" class="btn btn-primary">Send Email</button>
-                                        </form>
+                                            <button type="submit" class="btn btn-primary">Download QR Code</button>
                                         
                                         
                                                                             </a>

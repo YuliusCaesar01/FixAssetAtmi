@@ -120,6 +120,7 @@ Route::group(['middleware' => ['checkRole:superadmin']], function () {
 });
 //notif
 Route::get('/notifprofile', [ManageUserController::class, 'notifprofil'])->name('notifprofile');
+Route::post('/change-email', [ManageUserController::class, 'changeEmail'])->name('change.email');
 
 // Route to show the forgot password form
 

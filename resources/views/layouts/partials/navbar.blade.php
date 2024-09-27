@@ -204,11 +204,15 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
     </div>
 </aside>
 
-
 <!-- Edit User Details and Change Password Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit User Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -216,27 +220,26 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 </button>
             </div>
             <div class="modal-body">
-               @php
-               $null = 0;
-               @endphp
+                @php $null = 0; @endphp
+
                 <!-- User Details Form -->
                 <form id="editDetailsForm" method="POST" action="{{ route('editprofil', $userdetail->id_userdetail ?? $null) }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $userdetail->id_userdetail ?? '' }}">
                     <!-- Display existing photo -->
-                <div class="form-group text-center mb-4">
+                    <div class="form-group text-center mb-4">
+                        <center>
+                            <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                        </center>
+                        <small>Current Profile Photo</small>
+                    </div>
                     <center>
-                        <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                    <!-- Change Profile Photo Input -->
+                    <div class="form-group text-center">
+                        <label for="foto">Change Profile Photo</label>
+                        <input type="file" class="form-control-file mx-auto" id="foto" name="foto" accept="image/*">
+                    </div>
                     </center>
-                    <small>Current Profile Photo</small>
-                </div>
-                <center>
-                <!-- Change Profile Photo Input -->
-                <div class="form-group text-center">
-                    <label for="foto">Change Profile Photo</label>
-                    <input type="file" class="form-control-file mx-auto" id="foto" name="foto" accept="image/*">
-                </div>
-            </center>
                     <div class="form-group">
                         <label for="nama_lengkap">Nama Lengkap</label>
                         <input type="text" class="form-control" id="nama_lengkap" value="{{$userdetail->nama_lengkap ?? 'belum ditambahkan'}}" name="nama_lengkap" required>
@@ -249,13 +252,20 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                             <option value="perempuan">Perempuan</option>
                         </select>
                     </div>
-                    
-                    
                     <div class="form-group">
                         <label for="no_induk_karyawan">No Induk Karyawan</label>
                         <input type="text" class="form-control" value="{{$userdetail->no_induk_karyawan ?? 'belum ditambahkan'}}" id="no_induk_karyawan" name="no_induk_karyawan" required>
                     </div>
-                    <button type="button" id="showChangePasswordForm" class="btn btn-link">Change Password</button>
+                   <!-- Change Password Button -->
+                    <button type="button" class="btn btn-primary btn-block show-form" data-target="changePasswordForm">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+
+                    <!-- Change User Data Button -->
+                    <button type="button" class="btn btn-warning btn-block show-form" data-target="changeEmailForm">
+                        <i class="fas fa-user"></i> Change User Data
+                    </button>
+                   
                 </form>
 
                 <!-- Change Password Form -->
@@ -274,34 +284,61 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         <label for="new_password_confirmation">Confirm New Password</label>
                         <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
                     </div>
-                    <button type="button" id="showEditForm" class="btn btn-link">Edit User Details</button>
+                                        <!-- Edit User Details Button -->
+                        <button type="button" class="btn btn-info show-form" data-target="editDetailsForm">
+                            <i class="fas fa-id-badge"></i> Edit User Details
+                        </button>
+
+                                            <!-- Change UserData Button -->
+                        <button type="button" class="btn btn-warning show-form" data-target="changeEmailForm">
+                            <i class="fas fa-user"></i> Change UserData
+                        </button>
+
+
+
                 </form>
+
+                <!-- Change Email Form -->
+                <form id="changeEmailForm" method="POST" action="{{ route('change.email') }}" style="display: none;" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
+                    <div class="form-group">
+                        <label for="old_email">Old Email</label>
+                        <input type="email" class="form-control" id="old_email" name="old_email" value="{{ Auth::user()->email }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_email">New Email</label>
+                        <input type="email" class="form-control" id="new_email" name="new_email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ttd">Upload TTD</label>
+                        <input type="file" class="form-control-file mx-auto" id="ttd" name="ttd" accept="image/*">
+                        <small>Upload your signature. Background will be automatically removed if white.</small>
+                    </div>
+             <!-- Edit User Details Button -->
+            <button type="button" class="btn btn-info show-form" data-target="editDetailsForm">
+                <i class="fas fa-id-badge"></i> Edit User Details
+            </button>
+               <!-- Edit Password Button -->
+            <button type="button" class="btn btn-primary show-form" data-target="changePasswordForm">
+                <i class="fas fa-key"></i> Change Password
+            </button>               
+         </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" id="gantiprofil" form="editDetailsForm" class="btn btn-primary">Save User Details</button>
-                <button type="submit" id="gantipassword" form="changePasswordForm" class="btn btn-primary">Change Password</button>
+                <button type="submit" id="gantiprofil" form="editDetailsForm" class="btn btn-primary" style="display: none;">Save User Details</button>
+                <button type="submit" id="gantipassword" form="changePasswordForm" class="btn btn-primary" style="display: none;">Change Password</button>
+                <button type="submit" id="gantiemail" form="changeEmailForm" class="btn btn-primary" style="display: none;">Change UserData</button>
             </div>
         </div>
     </div>
 </div>
 
-
 @if (session('success'))
-    @once
     <div class="alert alert-success">
-        <script>
-            var isi = @json(session('notification'));
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil..',
-                text: isi,
-                showConfirmButton: false,
-                timer: 2500
-            });
-        </script>
+        {{ session('success') }}
     </div>
-    @endonce
 @endif
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -314,69 +351,65 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 @endif
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Ensure jQuery is loaded before using it
-        if (typeof $ === 'undefined') {
-            console.error('jQuery is not loaded');
-            return;
-        }
-    });
-    
- // Open the edit modal when the edit button is clicked
-document.querySelectorAll('.btn-icon-edit').forEach(button => {
-    button.addEventListener('click', function () {
-        const itemId = this.dataset.id;
-        const itemName = this.dataset.name;
-        const editIdElement = document.getElementById('editId');
-        const namaLengkapElement = document.getElementById('nama_lengkap');
-        const jenisKelaminElement = document.getElementById('jenis_kelamin');
-        const noIndukKaryawanElement = document.getElementById('no_induk_karyawan');
+   document.addEventListener('DOMContentLoaded', function () {
+    // Ensure jQuery is loaded before using it
+    if (typeof $ === 'undefined') {
+        console.error('jQuery is not loaded');
+        return;
+    }
 
-    
-
-        // Show the modal
-        $('#editModal').modal('show');
-    });
-});
-
-// Toggle forms for editing user details and changing password
-document.getElementById('showChangePasswordForm').addEventListener('click', function () {
-    // Hide edit details form
-    document.getElementById('editDetailsForm').style.display = 'none';
-    // Show change password form
-    document.getElementById('changePasswordForm').style.display = 'block';
-    
-    // Hide profile photo
-    document.querySelector('.form-group.text-center').style.display = 'none';  
-    
-    // Show change password button, hide save user details button
-    document.getElementById('gantipassword').style.display = 'block';
-    document.getElementById('gantiprofil').style.display = 'none';
-});
-
-document.getElementById('showEditForm').addEventListener('click', function () {
-    // Show edit details form
-    document.getElementById('editDetailsForm').style.display = 'block';
-    // Hide change password form
-    document.getElementById('changePasswordForm').style.display = 'none';
-    
-    // Show profile photo
-    document.querySelector('.form-group.text-center').style.display = 'block'; 
-    
-    // Hide change password button, show save user details button
+    // Set initial state of buttons and forms
     document.getElementById('gantipassword').style.display = 'none';
     document.getElementById('gantiprofil').style.display = 'block';
-});
-
-// Ensure the correct button visibility when modal opens
-$('#editModal').on('show.bs.modal', function () {
-    document.getElementById('gantipassword').style.display = 'none';
-    document.getElementById('gantiprofil').style.display = 'block';
+    document.getElementById('gantiemail').style.display = 'none';
     document.getElementById('changePasswordForm').style.display = 'none';
+    document.getElementById('changeEmailForm').style.display = 'none';
     document.getElementById('editDetailsForm').style.display = 'block';
-    document.querySelector('.form-group.text-center').style.display = 'block'; 
-});
+    document.querySelector('.form-group.text-center').style.display = 'block';
 
+    // Open the edit modal when the edit button is clicked
+    document.querySelectorAll('.btn-icon-edit').forEach(button => {
+        button.addEventListener('click', function () {
+            // Retrieve necessary data from the clicked button if needed
+            // const itemId = this.dataset.id;
+            // const itemName = this.dataset.name;
+            // Update any modal input fields with item data here if needed
+
+            // Show the modal
+            $('#editModal').modal('show');
+        });
+    });
+
+    // Toggle forms based on the clicked link
+    document.querySelectorAll('.show-form').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const targetFormId = btn.getAttribute('data-target');
+            document.querySelectorAll('form').forEach(function (form) {
+                form.style.display = 'none';
+            });
+            document.getElementById(targetFormId).style.display = 'block';
+            
+            // Hide/Show buttons based on form
+            document.getElementById('gantiprofil').style.display = (targetFormId === 'editDetailsForm') ? 'block' : 'none';
+            document.getElementById('gantipassword').style.display = (targetFormId === 'changePasswordForm') ? 'block' : 'none';
+            document.getElementById('gantiemail').style.display = (targetFormId === 'changeEmailForm') ? 'block' : 'none';
+
+            // Hide profile photo form-group on email/password form
+            document.querySelector('.form-group.text-center').style.display = (targetFormId === 'editDetailsForm') ? 'block' : 'none';
+        });
+    });
+
+    // When the modal is shown, ensure the correct initial state
+    $('#editModal').on('show.bs.modal', function () {
+        document.getElementById('gantipassword').style.display = 'none';
+        document.getElementById('gantiprofil').style.display = 'block';
+        document.getElementById('gantiemail').style.display = 'none';
+        document.getElementById('changePasswordForm').style.display = 'none';
+        document.getElementById('changeEmailForm').style.display = 'none';
+        document.getElementById('editDetailsForm').style.display = 'block';
+        document.querySelector('.form-group.text-center').style.display = 'block';
+    });
+});
 
     
         // Notification on bell icon click
@@ -396,22 +429,24 @@ $('#editModal').on('show.bs.modal', function () {
             setTimeout(() => document.body.removeChild(notificationDiv), 3000);
         });
     
-        // Handle dropdown menu items
         document.querySelectorAll('.nav-item').forEach(item => {
-            const dropdown = item.querySelector('.nav-treeview');
-            const arrowIcon = item.querySelector('.nav-link .right');
-    
-            if (dropdown) {
-                dropdown.style.display = item.classList.contains('menu-open') ? 'block' : 'none';
-                item.addEventListener('click', () => {
-                    const isOpen = dropdown.style.display === 'block';
-                    dropdown.style.display = isOpen ? 'none' : 'block';
-                    if (arrowIcon) {
-                        arrowIcon.classList.toggle('active', !isOpen);
-                    }
-                });
+    const dropdown = item.querySelector('.nav-treeview');
+    const arrowIcon = item.querySelector('.nav-link .right');
+
+    item.addEventListener('click', (event) => {
+        // Prevents the click from bubbling up to parent elements
+        event.stopPropagation();
+
+        if (dropdown) {
+            const isOpen = dropdown.style.display === 'block';
+            dropdown.style.display = isOpen ? 'none' : 'block';
+            if (arrowIcon) {
+                arrowIcon.classList.toggle('active', !isOpen);
             }
-        });
+        }
+    });
+});
+
     
         // Profile image click handling
         const profileImg = document.getElementById('profile-img');
