@@ -29,12 +29,12 @@
         }
 
         .email-header img {
-            max-width: 180px; /* Slightly larger logo width */
-            height: auto;
-            margin-bottom: 10px;
-            filter: brightness(1.2); /* Increase brightness */
-            border-radius: 4px; /* Optional: add slight rounding */
-        }
+                max-width: 180px; /* Slightly larger logo width */
+                height: auto;
+                margin-bottom: 10px;
+                border-radius: 4px; /* Optional: add slight rounding */
+            }
+
 
         .email-header h1 {
             margin: 10px 0; /* Increased margin for better spacing */
@@ -146,11 +146,7 @@
         </div>
         <div class="email-body">
             <h2>Halo, {{ $user->name }}!</h2>
-            <p>Untuk memverifikasi akun Anda, silakan gunakan token berikut:</p>
-        
-            <div class="token">{{ $token }}</div> <!-- Highlighted token -->
-        
-            <p>Gunakan token ini untuk menyelesaikan proses pendaftaran atau reset password Anda.</p>
+            <p>Untuk memverifikasi akun Anda, silakan verifikasi berikut:</p>
         
             <a href="{{ url('password/reset', $token) }}" class="btn">Verifikasi Sekarang</a>
             

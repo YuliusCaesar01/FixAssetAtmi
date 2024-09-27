@@ -23,7 +23,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-12 col-sm-6">
-                            <h3 class="d-inline-block">{{ $fa->nama_barang }}</h3>
+                            <h3 class="d-inline-block"> <b>Fix Asset {{ ucfirst($fa->nama_barang) }} </b></h3>
                             <div class="col-12">
                                 <img src="{{ $fa->foto_barang ? asset($fa->foto_barang) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
                                 
@@ -90,7 +90,7 @@
                                     aria-selected="true">Description</a>
                                 <a class="nav-item nav-link" id="product-history-tab" data-toggle="tab"
                                     href="#product-history" role="tab" aria-controls="product-history"
-                                    aria-selected="false">History</a>
+                                    aria-selected="false">History Ajuan</a>
                               
                             </div>
                         </nav>

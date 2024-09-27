@@ -103,11 +103,10 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 <li class="nav-header">FIXED ASSET</li>
 
                 <li class="nav-item has-treeview {{ $menu == 'Aset' || $menu == 'Tambah Aset' ? 'menu-open' : '' }}">
-                    @if(auth()->user()->role_id == 19 || auth()->user()->role_id == 1)
                     <a href="#" class="nav-link {{ $menu == 'Aset' || $menu == 'Tambah Aset' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-folder"></i>
                         <p>
-                            Pencatatan Fix Aset
+                            Data Fixed Aset
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -115,24 +114,27 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         <li class="nav-item">
                             <a href="{{ route('manageaset.index') }}" class="nav-link {{ $menu == 'Aset' ? 'active' : '' }}">
                                 <i class="fas fa-cubes nav-icon"></i>
-                                <p>Aset</p>
+                                <p>Fix Aset</p>
                             </a>
                         </li>
+                        @if(auth()->user()->role_id == 19 || auth()->user()->role_id == 1)
+
                         <li class="nav-item">
                             <a href="{{ route('manageaset.create') }}" class="nav-link {{ $menu == 'Tambah Aset' ? 'active' : '' }}">
                                 <i class="fas fa-plus nav-icon"></i>
                                 <p>Tambah Aset</p>
                             </a>
                         </li>
+                        @endif
+
                     </ul>
-                    @endif
                 </li>
 
                 <li class="nav-item has-treeview {{ $menu == 'PermintaanFA' || $menu == 'ApprovalAset' ? 'menu-open' : '' }}">
                     <a href="#" class="nav-link {{ $menu == 'PermintaanFA' || $menu == 'ApprovalAset' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-folder"></i>
                         <p>
-                            Permintaan Fixaset
+                            Permintaan Fix Aset
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
