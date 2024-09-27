@@ -83,7 +83,7 @@ $managerasetuser = User::where('role_id', 19)->first();
                             @endif
                             </h4>
                             <hr>
-                            <h5>Kategori Barang</h5>
+                            <h5 class="font-weight-bold text-uppercase">Kategori Barang</h5>
                             <dl class="row">
                                @if($permintaan->id_institusi ==  1)
                                 <dt class="col-sm-4">Tipe</dt>

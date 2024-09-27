@@ -54,14 +54,16 @@
                                 <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
                                 <p class="text-muted">{{ auth()->user()->email }}</p>
                                 <hr>
-                                <strong><i class="fas fa-user-tag mr-1"></i> User Role</strong>
+                                <strong><i class="fas fa-users mr-1"></i> User Role</strong>
                                 <p class="text-muted">{{ ucfirst(auth()->user()->getRoleNames()->first()) }}</p>
                                 <hr>
                                 <strong><i class="fas fa-id-badge mr-1"></i> No Induk Karyawan</strong>
                                 <p class="text-muted">{{ ucfirst(auth()->user()->userDetail->no_induk_karyawan ?? 'userdetail belum terinput') }}</p>
                                 <hr>
-                                <strong><i class="fas fa-sticky-note mr-1"></i> Notes</strong>
-                                <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam fermentum enim neque.</p>
+                                <button class="btn-icon btn-icon-edit btn-primary btn-block" style="border-radius: 0%;" data-id="{{ Auth::user()->id }}" data-name="{{ Auth::user()->username }}" title="Edit">
+                                    <span class="text-bold">Edit Profile</span> &nbsp;<i class="fas fa-edit"></i>
+                                </button>
+                                
                             </div>
                         </div>
                     </div>

@@ -101,13 +101,10 @@
                             </div>
                         </div><!-- /.card-header -->
                         <div class="card-body">
-                            @if (session('error'))
-                                <div class="alert alert-danger" role="alert">
-                                    {{ session('error') }}
-                                </div>
-                            @endif
+                           
                             <table id="tbl_permintaanfa" class="table table-sm table-bordered table-hover">
                                 <thead>
+                                 
                                     <tr>
                                         <th>#</th>
                                         <th>Unit Pemohon</th>
@@ -486,7 +483,9 @@
                                         <th>Permohonan</th>
                                         <th>Tgl Permintaan</th>
                                         <th>Tindakan</th>
-                                        <th><i class="far fa-folder-open"></i></th>
+                                        <th>
+                                          <i class="far fa-folder-open"></i>
+                                        </th>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -496,6 +495,15 @@
                 </div>
             </div>
             <!-- /.content -->
+            @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
         </div>
     </div>
 
@@ -908,15 +916,7 @@ document.getElementById('confirmReject').addEventListener('click', function() {
 
     </script>
 <!-- Tampilkan pesan kesalahan jika ada -->
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+
 
 
 

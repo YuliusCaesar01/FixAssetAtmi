@@ -179,52 +179,51 @@ public function reset(Request $request)
      * @return Renderable
      */
     public function edituserdetails(Request $request, $id)
-    {
-        // Validate incoming request data
-        $validatedData = $request->validate([
-            'nama_lengkap' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
-            'no_induk_karyawan' => 'required|string|max:50',
-            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
-        // Check if the user is being created or updated
-        if ($id == 0) {
-            // Create a new user detail
-            $userDetail = new Userdetail();
-            $userDetail->id_user = auth()->user()->id; // Get the authenticated user's ID
-        } else {
-            // Find the user by ID
-            $userDetail = Userdetail::findOrFail($id);
-        }
-    
-        // Handle file upload for the photo
-        if ($request->hasFile('foto')) {
-            $file = $request->file('foto');
-            // Generate a unique file name with timestamp
-            $fileName = time() . '_' . $file->getClientOriginalName();
-    
-            // Move the file to the public/uploads/photos directory
-            $file->move(public_path('uploads/photos'), $fileName);
-    
-            // Save the file path to the database (relative path)
-            $userDetail->foto = 'uploads/photos/' . $fileName; 
-        }
-    
-        // Update user details
-        $userDetail->nama_lengkap = $validatedData['nama_lengkap'];
-        $userDetail->jenis_kelamin = $validatedData['jenis_kelamin'];
-        $userDetail->no_induk_karyawan = $validatedData['no_induk_karyawan'];
-    
-        // Save the changes
-        $userDetail->save();
-    
-        // Redirect back with a success message
-        // Redirect to the user's details only if the user detail exists
-   
-            return redirect()->route('manage-user.userdetails', $userDetail->id_userdetail)->with('success', 'User details updated successfully.');
-        
+{
+    // Validate incoming request data
+    $validatedData = $request->validate([
+        'nama_lengkap' => 'required|string|max:255',
+        'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+        'no_induk_karyawan' => 'required|string|max:50|unique:userdetails,no_induk_karyawan,' . $id . ',id_userdetail', // Unique validation
+        'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Check if the user is being created or updated
+    if ($id == 0) {
+        // Create a new user detail
+        $userDetail = new Userdetail();
+        $userDetail->id_user = auth()->user()->id; // Get the authenticated user's ID
+    } else {
+        // Find the user by ID using the correct primary key
+        $userDetail = Userdetail::where('id_userdetail', $id)->firstOrFail();
     }
+
+    // Handle file upload for the photo
+    if ($request->hasFile('foto')) {
+        $file = $request->file('foto');
+        // Generate a unique file name with timestamp
+        $fileName = time() . '_' . $file->getClientOriginalName();
+
+        // Move the file to the public/uploads/photos directory
+        $file->move(public_path('uploads/photos'), $fileName);
+
+        // Save the file path to the database (relative path)
+        $userDetail->foto = 'uploads/photos/' . $fileName; 
+    }
+
+    // Update user details
+    $userDetail->nama_lengkap = $validatedData['nama_lengkap'];
+    $userDetail->jenis_kelamin = $validatedData['jenis_kelamin'];
+    $userDetail->no_induk_karyawan = $validatedData['no_induk_karyawan'];
+
+    // Save the changes
+    $userDetail->save();
+
+    // Redirect back with a success message
+    return redirect()->route('manage-user.userdetails', $userDetail->id_userdetail)->with('success', 'User details updated successfully.');
+}
+
+    
     
     
     

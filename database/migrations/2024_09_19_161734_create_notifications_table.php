@@ -14,20 +14,42 @@ class CreateNotificationsTable extends Migration
     public function up()
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id('notif_id'); // Primary key
-            $table->string('nama_notif'); // Name of the notification
-            $table->enum('jenis_notif', ['email', 'dashboard', 'keduanya']); // Type of notification
-            $table->unsignedBigInteger('id_asal')->nullable(); // Foreign key for the user
-            $table->unsignedBigInteger('id_tujuan')->nullable();  // Foreign key for the role
-            $table->unsignedBigInteger('id_pengajuan'); // Ensure this matches
-            $table->dateTime('notif_periode'); // Notification period
-            $table->dateTime('notif_expired'); // Notification expiration date
-            $table->timestamps(); // Created at and updated at timestamps
+            $table->bigIncrements('id'); // ID utama tabel, tipe BigInteger auto-increment
 
-            // Foreign key constraints
-            $table->foreign('id_asal')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('id_tujuan')->references('id')->on('roles')->onDelete('cascade'); // Adjusted to reference roles
-            $table->foreign('id_pengajuan')->references('id_permintaan_fa')->on('permintaan_fixed_assets')->onDelete('cascade');
+            // Kolom foreign key ke tabel users
+            $table->unsignedBigInteger('id_user_pengirim'); // ID pengguna pengirim
+            $table->unsignedBigInteger('id_user_penerima'); // ID pengguna penerima
+            
+            // Foreign key untuk pengajuan permintaan fixed asset
+            $table->unsignedBigInteger('id_pengajuan')->nullable(); // ID pengajuan dari tabel permintaan_fixed_assets
+
+            // Jenis notifikasi, misal: system, user
+            $table->string('jenis_notif', 50)->default('user'); 
+            
+            // Keterangan notifikasi yang bisa berisi teks panjang
+            $table->text('keterangan_notif'); 
+            
+            // Tipe notifikasi: apakah dikirim lewat email, sistem, atau keduanya
+            $table->enum('tipe_notif', ['email', 'system', 'keduanya'])->default('system');
+            
+            // Kolom opsional untuk periode aktif notifikasi dan tanggal kadaluarsa
+            $table->dateTime('notif_periode')->nullable(); 
+            $table->dateTime('notif_expired')->nullable(); 
+
+            // Timestamps otomatis untuk mencatat waktu pembuatan dan pembaruan
+            $table->timestamps(); 
+
+            // Indeks untuk mempercepat pencarian berdasarkan pengguna penerima dan pengirim
+            $table->index('id_user_penerima');
+            $table->index('id_user_pengirim');
+            $table->index('id_pengajuan'); // Index untuk id_pengajuan
+
+            // Foreign key constraints untuk menjaga referensialitas data
+            $table->foreign('id_user_pengirim')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_user_penerima')->references('id')->on('users')->onDelete('cascade');
+
+            // Foreign key untuk menghubungkan dengan tabel permintaan_fixed_assets
+            $table->foreign('id_pengajuan')->references('id')->on('permintaan_fixed_assets')->onDelete('cascade');
         });
     }
 
@@ -38,6 +60,7 @@ class CreateNotificationsTable extends Migration
      */
     public function down()
     {
+        // Jika ingin rollback, tabel notifications akan dihapus
         Schema::dropIfExists('notifications');
     }
 }

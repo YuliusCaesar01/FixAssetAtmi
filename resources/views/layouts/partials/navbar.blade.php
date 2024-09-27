@@ -20,9 +20,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <li class="nav-item icon-button">
-            <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                <i class="fas fa-search"></i>
-            </a>
+            
             <div class="navbar-search-block">
                 <form class="form-inline">
                     <div class="input-group input-group-sm">
@@ -174,7 +172,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manage-kelompok.index') }}" class="nav-link {{ $menu == 'Kelompok' ? 'active' : '' }}">
-                                <i class="fas fa-layer-group nav-icon"></i>
+                                <i class="fas fa-cube  nav-icon" ></i>
                                 <p>Kelompok</p>
                             </a>
                         </li>
@@ -192,7 +190,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('manage-ruang.index') }}" class="nav-link {{ $menu == 'Ruang' ? 'active' : '' }}">
-                                <i class="fas fa-door-open nav-icon"></i>
+                                <i class="fas fa-building nav-icon"></i>
                                 <p>Ruang</p>
                             </a>
                         </li>
@@ -326,7 +324,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
          </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button type="submit" id="gantiprofil" form="editDetailsForm" class="btn btn-primary" style="display: none;">Save User Details</button>
                 <button type="submit" id="gantipassword" form="changePasswordForm" class="btn btn-primary" style="display: none;">Change Password</button>
                 <button type="submit" id="gantiemail" form="changeEmailForm" class="btn btn-primary" style="display: none;">Change UserData</button>
@@ -379,7 +376,11 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             $('#editModal').modal('show');
         });
     });
-
+    document.querySelectorAll('.close-modal, .close').forEach(function (button) {
+        button.addEventListener('click', function () {
+            $('#editModal').modal('hide');
+        });
+    });
     // Toggle forms based on the clicked link
     document.querySelectorAll('.show-form').forEach(function (btn) {
         btn.addEventListener('click', function () {

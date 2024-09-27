@@ -7,6 +7,23 @@ use App\Models\User;
 $userdata = User::where('remember_token', $token)->first();
 @endphp
 
+<script>
+    // Redirect ke route login jika userdata null
+    @if (!$userdata)
+        // Gunakan SweetAlert2 untuk notifikasi
+        Swal.fire({
+            title: 'Invalid Token!',
+            text: 'Please request a new password reset link.',
+            icon: 'error',
+            confirmButtonText: 'Back to Login'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('login') }}";
+            }
+        });
+    @endif
+</script>
+
 <div class="login-box">
     <div class="login-logo">
         <a href="#">
@@ -22,6 +39,10 @@ $userdata = User::where('remember_token', $token)->first();
                 <div class="alert alert-success">{{ session('status') }}</div>
             @endif
 
+            @if (session('error'))
+                <div class="alert alert-danger">{{ session('error') }}</div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul class="mb-0">
@@ -33,7 +54,7 @@ $userdata = User::where('remember_token', $token)->first();
             @endif
             
             <label for="email" class="form-label">Email</label>
-            <input type="email" id="email" class="form-control" placeholder="Enter your email" value="{{ $userdata->email }}" name="email" required autocomplete="off" disabled>
+            <input type="email" id="email" class="form-control" placeholder="Enter your email" value="{{ $userdata ? $userdata->email : '' }}" name="email" required autocomplete="off" disabled>
             
             <form method="POST" action="{{ url('password/reset') }}">
                 @csrf
@@ -76,3 +97,5 @@ $userdata = User::where('remember_token', $token)->first();
 </div>
 
 @endsection
+
+

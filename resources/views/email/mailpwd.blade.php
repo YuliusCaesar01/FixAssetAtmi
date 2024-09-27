@@ -106,6 +106,12 @@
             text-decoration: underline;
         }
 
+        .contact-info {
+            font-size: 14px;
+            color: #555; /* Slightly darker for better visibility */
+            margin-top: 10px;
+        }
+
         small {
             display: block; /* Small text in its own line */
             margin-top: 10px;
@@ -144,16 +150,21 @@
         
             <div class="token">{{ $token }}</div> <!-- Highlighted token -->
         
-            <p>Anda dapat menggunakan token ini untuk menyelesaikan proses pendaftaran atau reset password Anda.</p>
+            <p>Gunakan token ini untuk menyelesaikan proses pendaftaran atau reset password Anda.</p>
         
             <a href="{{ url('password/reset', $token) }}" class="btn">Verifikasi Sekarang</a>
             
             <small>Jika Anda tidak melakukan permintaan ini, Anda dapat mengabaikan email ini.</small>
-            <small>Tim IT ATMI,</small>
+            <small>Salam hangat, Tim IT ATMI</small>
         </div>
         <div class="email-footer">
-            <p><a href="#" class="unsubscribe">Jika email ini mengganggu, silakan unsubscribe.</a></p>
+            <div class="contact-info d-flex justify-content-between">
+                <p class="mb-0">Email: <a href="mailto:itatmicorp@gmail.com">itatmicorp@gmail.com</a></p>
+                <p class="mb-0">Staff Email: <a href="mailto:daniel@atmi.co.id">daniel@atmi.co.id</a></p>
+                <p class="mb-0">No. Telp: +(62) 271-714466</p>
+            </div>
         </div>
+        
     </div>
 </body>
 </html>

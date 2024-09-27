@@ -25,123 +25,12 @@
             <!-- /.content-header -->
             <div class="content">
                 <div class="container-fluid">
-                    <div class="card card-info card-outline collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title">Pilih Kategori Aset Tetap (Fixed Asset)</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse"><i
-                                        cltaass="fas fa-search"></i>
-                                </button>
-                            </div>
+                    <div class="card card-info  collapsed-card">
+                        <div class="card-header" style="width: 100%;">
+                            <center><h3 class="card-title">Kategori Aset Tetap (Fixed Asset)</h3></center>
+                          
                         </div>
-                        <div class="card-body">
-                            <form action="{{ route('manageaset.index') }}" method="GET">
-                                @csrf
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Institusi</label>
-                                            <select id="institusi" name="id_institusi" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value="">- Pilih Institusi -</option>
-                                                @foreach ($institusi as $ins)
-                                                    <option value="{{ $ins->id_institusi }}">
-                                                        {{ $ins->nama_institusi }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Divisi</label>
-                                            <select id="divisi" name="id_divisi" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value=''>- Pilih Divisi -</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Lokasi</label>
-                                            <select id="lokasi" name="id_lokasi" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value="">- Pilih Lokasi -</option>
-                                                @foreach ($lokasi as $lk)
-                                                    <option value="{{ $lk->id_lokasi }}">
-                                                        {{ $lk->nama_lokasi }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label>Ruang</label>
-                                            <select id="ruang" name="id_ruang" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value=''>- Pilih Ruang -</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label>Tipe</label>
-                                            <select id="tipe" name="id_tipe" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value=''>- Pilih Tipe -</option>
-                                                @foreach ($tipe as $tp)
-                                                    <option value="{{ $tp->id_tipe }}">
-                                                        {{ $tp->nama_tipe }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label>Kelompok</label>
-                                            <select id="kelompok" name="id_kelompok" class="form-control select2"
-                                                style="width: 100%;">
-                                                <option value=''>- Pilih Kelompok -</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="form-group">
-                                            <label>Jenis</label>
-                                            <select id="jenis" name="id_jenis" class="form-control select2"
-                                                style="width: 100%;" data-placeholder="- Pilih Jenis -">
-                                                <option value=''>- Pilih Jenis -</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label for="nama_barang" class="control-label">Nama Barang</label>
-                                            <input type="text" class="form-control" name="nama_barang" id="nama_barang">
-                                            <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <div class="form-group">
-                                            <label class="control-label">Tahun Diterima</label>
-                                            <input type="text" class="form-control" name="tahun_diterima"
-                                                data-inputmask='"mask": "9999"' data-mask>
-                                        </div>
-                                    </div>
-                                </div>
-                                <hr>
-                                <button type="submit" class="btn btn-info">CARI <i class="fas fa-search"></i></button>
-                            </form>
-                        </div>
+                      
                     </div>
                     <div class="card">
                         <div class="card-header">
@@ -342,15 +231,17 @@
     </script>
     <!-- Page specific script -->
     <script>
-        $(function() {
-            $("#tbl_fa").DataTable({
-                "responsive": true,
-                "lengthChange": false,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#tbl_fa_wrapper .col-md-6:eq(0)');
+        $(document).ready(function() {
+            $('#tbl_permintaanfa').DataTable({
+                // Optional configurations
+                paging: true,
+                pageLength: 10, // Show 10 records per page
+                searching: true,
+                ordering: true,
+                order: [[0, 'asc']], // Sort by first column
+            });
         });
-    </script>
+      </script>
     <script>
         //message with toastr
         @if (session()->has('notification'))
