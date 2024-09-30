@@ -12,14 +12,7 @@
             padding: 0;
         }
 
-        .email-container {
-            background-color: white;
-            max-width: 600px;
-            margin: 40px auto; /* Center the container with margin */
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+       
 
         .email-header {
             background-color: #007cba; /* Monday.com primary color */
@@ -85,9 +78,7 @@
             text-align: center; /* Center button text */
         }
 
-        .btn:hover {
-            background-color: #005f9c; /* Darker shade on hover */
-        }
+        
 
         .email-footer {
             background-color: #f7f7f7; /* Light footer background */
@@ -102,9 +93,7 @@
             text-decoration: none;
         }
 
-        .email-footer a:hover {
-            text-decoration: underline;
-        }
+      
 
         .contact-info {
             font-size: 14px;
