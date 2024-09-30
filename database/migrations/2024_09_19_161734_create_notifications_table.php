@@ -33,8 +33,8 @@ class CreateNotificationsTable extends Migration
             $table->enum('tipe_notif', ['email', 'system', 'keduanya'])->default('system');
             
             // Kolom opsional untuk periode aktif notifikasi dan tanggal kadaluarsa
-            $table->dateTime('notif_periode')->nullable(); 
-            $table->dateTime('notif_expired')->nullable(); 
+            $table->dateTime('read_at')->nullable(); 
+    
 
             // Timestamps otomatis untuk mencatat waktu pembuatan dan pembaruan
             $table->timestamps(); 
@@ -49,7 +49,7 @@ class CreateNotificationsTable extends Migration
             $table->foreign('id_user_penerima')->references('id')->on('users')->onDelete('cascade');
 
             // Foreign key untuk menghubungkan dengan tabel permintaan_fixed_assets
-            $table->foreign('id_pengajuan')->references('id')->on('permintaan_fixed_assets')->onDelete('cascade');
+            $table->foreign('id_pengajuan')->references('id_permintaan_fa')->on('permintaan_fixed_assets')->onDelete('cascade');
         });
     }
 

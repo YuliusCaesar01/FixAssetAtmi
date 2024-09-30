@@ -225,13 +225,20 @@
         
         <!-- Tombol Kirim Notifikasi -->
         @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap))
-            <form action="" method="POST" style="margin-left: 10px;">
-                @csrf
-                <button type="submit" class="btn btn-warning">
-                    Kirim Notifikasi
-                </button>
-            </form>
-        @endif
+        <form action="{{ route('notifications.send') }}" method="POST" style="margin-left: 10px;">
+            @csrf
+            <input type="hidden" name="id_user_pengirim" value="{{ auth()->user()->id }}">
+            <input type="hidden" name="id_user_penerima" value="{{ $pfa->user->id }}">
+            <input type="hidden" name="id_pengajuan" value="{{ $pfa->id_permintaan_fa }}">
+            <input type="hidden" name="jenis_notif" value="profil"> <!-- Input untuk jenis_notif -->
+            <input type="hidden" name="keterangan_notif" value="Data Userdetails anda belum terupdate, Mohon untuk mengisi nama lengkap dll terlebih dahulu!">
+            <button type="submit" class="btn btn-warning">
+                Kirim Notifikasi
+            </button>
+        </form>
+    @endif
+    
+    
       </div>
     </div>
   </div>

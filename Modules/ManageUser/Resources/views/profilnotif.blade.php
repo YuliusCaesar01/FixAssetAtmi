@@ -68,72 +68,101 @@
                         </div>
                     </div>
 
-                    <!-- Notification Column -->
-                    <div class="col-md-9">
-                        <div class="card">
-                            <div class="card-header p-2">
-                                <ul class="nav nav-pills">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" href="#in" data-toggle="tab">Notification Message</a>
-                                    </li>
-                                </ul>
-                            </div>
+                
+             <!-- Notification Column -->
+                <div class="col-md-9">
+                    <div class="card">
+                        <div class="card-header p-2">
+                            <ul class="nav nav-pills">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#in" data-toggle="tab">Notification Message</a>
+                                </li>
+                            </ul>
+                        </div>
 
-                            <div class="card-body">
-                                <div class="tab-content">
-                                    <div class="active tab-pane" id="in">
-                                        <!-- Display Notification Information -->
-                                        <div class="form-group">
-                                            <p class="text-bold">Notification Today</p>
-                                        </div>
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="active tab-pane" id="in">
+                                    <div class="form-group">
+                                        <p class="text-bold">Notification Today</p>
+                                        <input type="text" id="search" class="form-control" placeholder="Search notifications" onkeyup="filterNotifications()">
+                                    </div>
 
-                                        <!-- Notification Timeline -->
-                                        <div class="timeline timeline-inverse" id="notificationTimeline">
-                                            <div class="time-label" data-date="2024-09-24">
-                                                <span class="bg-danger">24 Sep. 2024</span>
+                                    <!-- Notification Timeline -->
+                                    <div class="timeline timeline-inverse" id="notificationTimeline">
+                                        @foreach ($notifications as $notification)
+                                        
+                                            <div class="notification-item">
+                                                <span class="bg-danger">{{ $notification->created_at->format('d M. Y') }}</span>
                                             </div>
-                                            
-                                            <!-- Notification with profile picture and text inline -->
-                                            <div>
+                                            <div class="notification-item">
                                                 <i class="fas fa-envelope bg-primary"></i>
                                                 <div class="timeline-item">
-                                                    <span class="time"><i class="far fa-clock"></i> 12:05 PM</span>
+                                                    <span class="time">
+                                                        <i class="far fa-clock"></i> {{ $notification->created_at->format('h:i A') }}
+                                                    </span>
                                                     <div class="timeline-header d-flex align-items-center">
                                                         <!-- Sender Profile Picture -->
-                                                        <img src="https://example.com/path-to-sender-profile.jpg" 
+                                                        <img src="{{ $notification->pengirim->userDetail && $notification->pengirim->userDetail->foto && $notification->pengirim->userDetail->foto !== 'default.png' 
+                                                            ? asset($notification->pengirim->userDetail->foto) 
+                                                            : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" 
                                                              alt="Sender Profile" 
                                                              class="img-circle mr-2" 
-                                                             style="width: 40px; height: 40px; object-fit: cover;">
+                                                             style="width: 40px; height: 40px; object-fit: cover; object-position: top;">
                                                         
-                                                        <!-- Sender Message -->
+                                                        <!-- Sender Name in Bold -->
                                                         <h3 class="timeline-header">
-                                                            <a href="#">John Doe</a> sent you a message
+                                                            <strong><a href="#">{{ ucfirst($notification->pengirim->username) }}</a></strong> sent you a message
                                                         </h3>
                                                     </div>
                                                     <div class="timeline-body">
-                                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                                        {{ $notification->keterangan_notif }}
                                                     </div>
                                                     <div class="timeline-footer">
-                                                        <a href="#" class="btn btn-primary btn-sm">Read more</a>
-                                                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                                                       @if($notification->jenis_notif == 'profil')
+                                                       <button class="btn btn-icon-edit btn-primary btn-sm" style="border-radius: 0%;" data-id="{{ Auth::user()->id }}" data-name="{{ Auth::user()->username }}" title="Edit">
+                                                        <span class="text-bold">Edit Profile</span> &nbsp;<i class="fas fa-edit"></i>
+                                                       </button> 
+                                                       @else
+                                                       <a href="{{ route('managepermintaanfa.index') }}" class="btn btn-primary btn-sm">Check more</a>
+                                                      @endif
+                                                        <form action="{{ route('notification.destroy', $notification->id) }}" method="POST" style="display: inline-block;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus notifikasi ini?')">Delete</button>
+                                                        </form>
+                                                      
                                                     </div>
                                                 </div>
                                             </div>
+                                        @endforeach
 
-                                            <!-- Add more timeline items here -->
-                                        </div>
+                                        @if ($notifications->isEmpty())
+                                            <p>No notifications yet.</p>
+                                        @endif
                                     </div>
+                                </div>
 
-                                    <div class="tab-pane" id="settings">
-                                        <!-- Settings form content -->
-                                    </div>
+                                <div class="tab-pane" id="settings">
+                                    <!-- Settings form content -->
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
+<script>
+    function filterNotifications() {
+        const input = document.getElementById('search').value.toLowerCase();
+        const items = document.querySelectorAll('.notification-item');
+    
+        items.forEach(item => {
+            const text = item.innerText.toLowerCase();
+            item.style.display = text.includes(input) ? '' : 'none';
+        });
+    }
+    </script>
 @endsection
-

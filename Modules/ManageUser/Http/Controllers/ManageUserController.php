@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Userdetail;
 use App\Models\User;
+use App\Models\Notification;
+
 use Illuminate\Support\Str; // Import Str class
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ResetPasswordMail; // Import your mailable class
@@ -225,13 +227,44 @@ public function reset(Request $request)
 
     
     
-    
+public function send(Request $request)
+{
+    // Validate the input data (if needed)
+    $request->validate([
+        'id_user_pengirim' => 'required|exists:users,id',
+        'id_user_penerima' => 'required|exists:users,id',
+        'id_pengajuan' => 'nullable|exists:permintaan_fixed_assets,id_permintaan_fa',
+        'keterangan_notif' => 'required|string|max:255',
+        'jenis_notif' => 'required|string|max:50', // Validasi jenis_notif
+    ]);
+
+    // Create a new notification
+    Notification::create([
+        'id_user_pengirim' => $request->id_user_pengirim,
+        'id_user_penerima' => $request->id_user_penerima,
+        'id_pengajuan' => $request->id_pengajuan,
+        'keterangan_notif' => $request->keterangan_notif,
+        'jenis_notif' => $request->jenis_notif, // Menggunakan input dari request
+        'tipe_notif' => 'system', // Default notification type
+    ]);
+
+    // Redirect back with success message
+    return back()->with('success', 'Notification sent successfully!');
+}
     
     
 
     
+public function deleteOldNotifications()
+{
+    // Menghapus notifikasi yang dibaca selama 30 hari atau lebih
+    $deletedCount = Notification::whereNotNull('read_at')
+        ->where('read_at', '<=', now()->subDays(30))
+        ->delete();
 
-    
+    // Log jumlah notifikasi yang dihapus
+    \Log::info("Deleted $deletedCount old notifications");
+}
 
     /**
      * Update the specified resource in storage.
@@ -241,10 +274,45 @@ public function reset(Request $request)
      */
     public function notifprofil()
     {
-        return view('manageuser::profilnotif')->with(['menu' => $this->menu3 ]);
 
+        $this->deleteOldNotifications();
+
+        $user = Auth::user();
+        // Fetch notifications for the user
+        $notifications = Notification::where('id_user_penerima', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+    
+        // Check if notifications exist and update read_at
+        if ($notifications->isNotEmpty()) {
+            foreach ($notifications as $notification) {
+                // Only update if not already marked as read
+                if (is_null($notification->read_at)) {
+                    $notification->read_at = now(); // Set read_at to current timestamp
+                    $notification->save(); // Save the notification
+                }
+            }
+        }
+    
+        return view('manageuser::profilnotif')->with(['menu' => $this->menu3, 'notifications' => $notifications]);
     }
 
+    public function notifdelete($id)
+    {
+        // Cari notifikasi berdasarkan id
+        $notification = Notification::find($id);
+
+        // Pastikan notifikasi ada dan milik user yang sedang login
+        if (!$notification || $notification->id_user_penerima !== Auth::id()) {
+dd('error');     
+   }
+
+        // Hapus notifikasi
+        $notification->delete();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('success', 'Notifikasi berhasil dihapus.');
+    }
 
     public function changeEmail(Request $request)
     {

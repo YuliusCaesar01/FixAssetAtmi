@@ -1,12 +1,17 @@
 @php
 use App\Models\PermintaanNonFixedAsset;
 use App\Models\Userdetail;
+use App\Models\Notification;
 
 use Illuminate\Support\Facades\Auth;
 
 $role = Auth::user()->getRoleNames()->first(); // Assuming the user has only one role
 
 $userdetail = Userdetail::where('id_user', Auth::id())->first();
+
+ $unreadCount = Notification::where('id_user_penerima', auth()->user()->id)
+                                ->where('read_at', null) // Assuming you have a read_at column
+                                ->count();
 
 @endphp
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -46,10 +51,17 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             </a>
         </li>
         <li class="nav-item icon-button">
-            <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button">
+            <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button" style="position: relative;">
                 <i class="fas fa-bell"></i>
+                @if($unreadCount > 0) <!-- Replace $unreadCount with your actual variable -->
+                    <span style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px;">
+                        {{ $unreadCount }}
+                    </span>
+                @endif
             </a>
         </li>
+        
+        
         <li class="nav-item icon-button">
             <a class="nav-link" href="{{ route('logout') }}" role="button">
                 <i class="fas fa-sign-out-alt"></i>

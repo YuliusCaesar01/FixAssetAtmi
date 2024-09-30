@@ -109,7 +109,9 @@ Route::post('/profile/editprofil/{id}', [ManageUserController::class, 'edituserd
 
 // Rute untuk mengubah password
 Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
-
+//notification
+Route::delete('/notification/{id}', [ManageUserController::class, 'notifdelete'])->name('notification.destroy');
+Route::post('/notifications/send', [ManageUserController::class, 'send'])->name('notifications.send');
 
 //userEdit
 Route::group(['middleware' => ['checkRole:superadmin']], function () {

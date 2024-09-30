@@ -9,46 +9,36 @@ class Notification extends Model
 {
     use HasFactory;
 
-    // Define the table associated with the model
+    // Specify the table name if it's different from the pluralized form of the model name
     protected $table = 'notifications';
 
-    // Define the primary key
-    protected $primaryKey = 'notif_id';
-
-    // Define which attributes are mass assignable
+    // Define the fillable attributes that can be mass-assigned
     protected $fillable = [
-        'nama_notif',
-        'jenis_notif',
-        'id_asal',
-        'id_tujuan',
+        'id_user_pengirim',
+        'id_user_penerima',
         'id_pengajuan',
+        'jenis_notif',
+        'keterangan_notif',
+        'tipe_notif',
         'notif_periode',
-        'notif_expired'
+        'notif_expired',
     ];
 
-    // Relationships
-
-    /**
-     * The notification belongs to the user who originated it (asal).
-     */
-    public function asal()
+    // Relationship to the User model for the sender (user_pengirim)
+    public function pengirim()
     {
-        return $this->belongsTo(User::class, 'id_asal');
+        return $this->belongsTo(User::class, 'id_user_pengirim');
     }
 
-    /**
-     * The notification belongs to a role that it is destined for (tujuan).
-     */
-    public function tujuan()
+    // Relationship to the User model for the receiver (user_penerima)
+    public function penerima()
     {
-        return $this->belongsTo(Role::class, 'id_tujuan');
+        return $this->belongsTo(User::class, 'id_user_penerima');
     }
 
-    /**
-     * The notification is related to a specific pengajuan (fixed asset request).
-     */
+    // Relationship to the PermintaanFixedAsset model (if it exists)
     public function pengajuan()
     {
-        return $this->belongsTo(PermintaanFixedAsset::class, 'id_pengajuan', 'id_permintaan_fa');
+        return $this->belongsTo(PermintaanFixedAsset::class, 'id_pengajuan');
     }
 }

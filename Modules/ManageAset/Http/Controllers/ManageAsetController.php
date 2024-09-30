@@ -11,6 +11,7 @@ use App\Models\Kelompok;
 use App\Models\Lokasi;
 use App\Models\Ruang;
 use App\Models\Tipe;
+
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
