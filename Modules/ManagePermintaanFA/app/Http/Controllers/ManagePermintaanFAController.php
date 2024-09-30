@@ -14,6 +14,8 @@ use App\Models\Tipe;
 use App\Models\Bast;
 use App\Models\User;
 use Illuminate\Support\Str;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 use Illuminate\Support\Facades\Auth; // Add this line
 use App\Models\PermintaanFixedAsset;
@@ -169,7 +171,35 @@ try {
 } catch (\Exception $e) {
     $pdfbukti1 = null;
 }
-return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $this->menu, 'pdf' => $pdf, 'pdfbukti1' => $pdfbukti1]);
+
+
+$fa = FixedAsset::where('no_permintaan', $permintaan->id_permintaan_fa)->first();
+$code = $fa->kode_fa ?? '';
+// Define the base URL for your asset detail page
+// Define the URL or text to encode in the QR code
+$baseUrl = url('/aset/manageaset/detail/'. $code );
+$fullUrl = $baseUrl;
+
+// Create a new QR code instance
+$qrCode = new QrCode($fullUrl);
+
+// Set the size of the QR code (in pixels)
+$qrCode->setSize(200); // 200x200 pixels
+
+// Set the margin around the QR code
+$qrCode->setMargin(10); // 10 pixels margin
+
+// Generate the QR code
+$writer = new PngWriter();
+$qrCodeImage = $writer->write($qrCode)->getString();
+
+// Encode QR code image in Base64 for embedding in HTML
+$base64QrCode = base64_encode($qrCodeImage);
+
+
+
+
+return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $this->menu, 'pdf' => $pdf, 'pdfbukti1' => $pdfbukti1 , 'qrcode' => $base64QrCode]);
     }
 
     /**
@@ -687,6 +717,8 @@ public function catat(Request $request)
             'id_user' => $pfa->id_user,
 
         ]);
+
+
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Permintaan FA telah dicatat dengan sukses!');
     }

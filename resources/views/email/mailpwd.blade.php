@@ -12,7 +12,35 @@
             padding: 0;
         }
 
-       
+.email-footer {
+    background-color: #007cba; /* Monday.com primary color */
+    padding: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: white; /* White text for contrast */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    gap: 20px; /* Space between the items */
+}
+
+.email-footer a {
+    color: white; /* White links to match the footer background */
+    text-decoration: none;
+}
+
+.contact-info {
+    display: flex; /* Use flex instead of inline-flex */
+    justify-content: center; /* Align items horizontally */
+    align-items: center; /* Align items vertically */
+    gap: 20px; /* Space between items */
+}
+
+.email-footer p {
+    margin: 0 10px;
+    white-space: nowrap; /* Prevent text from wrapping */
+}
+
+
 
         .email-header {
             background-color: #007cba; /* Monday.com primary color */
@@ -143,12 +171,13 @@
             <small>Salam hangat, Tim IT ATMI</small>
         </div>
         <div class="email-footer">
-            <div class="contact-info d-flex justify-content-between">
-                <p class="mb-0">Email: <a href="mailto:itatmicorp@gmail.com">itatmicorp@gmail.com</a></p>
-                <p class="mb-0">Staff Email: <a href="mailto:daniel@atmi.co.id">daniel@atmi.co.id</a></p>
-                <p class="mb-0">No. Telp: +(62) 271-714466</p>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:itatmicorp@gmail.com">itatmicorp@gmail.com</a></p>
+                <p>Staff Email: <a href="mailto:daniel@atmi.co.id">daniel@atmi.co.id</a></p>
+                <p>No. Telp: +(62) 271-714466</p>
             </div>
         </div>
+        
         
     </div>
 </body>

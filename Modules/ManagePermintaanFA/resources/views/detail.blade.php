@@ -671,17 +671,26 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 </div>
                                             </div>
                                             <p class="font-weight-bold" style="font-size: 16px; margin: 0;">Pencatatan Aset</p> <!-- Reduced size -->
+                                   
                                             <div class="status-note">
-                                                    @if($permintaan->valid_manageraset === 'setuju')
-                                                    <div class="note">
-
-                                                        <p>Note: <em>Telah Dicatat</em></p>
-
-                                                    </div>
-
-                                                    @else
+                                                @if($permintaan->valid_manageraset === 'setuju')
+                                                @if($qrcode)
+                                                <div class="qr-code-container" style="text-align: center; margin-top: 10px;">
+                                                    <center><img src="data:image/png;base64,{{ $qrcode }}" alt="QR Code" id="qrcode" style="width: 120px; height: 120px;"> <!-- Reduced size -->
+                                                    </center>
+                                                    <div style="margin-top: 10px;">
+                                                        <!-- Download QR Code Button -->
+                                                        <a href="data:image/png;base64,{{ $qrcode }}" download="barcode.png" style="text-decoration: none;">
+                                                            <button type="submit" class="btn btn-secondary" style=" color: white; padding: 4px 8px; border: none; border-radius: 4px;">
+                                                                Download QR Code
+                                                            </button>
+                                                        </a>
+                                            
                                                        
-                                                    @endif
+                                                    </div>
+                                                </div>
+                                                @endif
+                                            @endif
 
                                             </div>
                                           
