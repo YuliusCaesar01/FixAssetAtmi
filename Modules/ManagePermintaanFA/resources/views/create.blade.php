@@ -135,19 +135,10 @@
                                                             <label>Lokasi</label>
                                                             <select id="lokasi" name="id_lokasi" class="form-control select2" style="width: 100%;" required>
                                                                 <option value="">- Pilih Lokasi -</option>
-                                                                @if(Auth::user()->divisi->nama_divisi == 'Yayasan')
                                                                 @foreach ($lokasi as $lk)
                                                                     <option value="{{ $lk->id_lokasi }}">{{ $lk->nama_lokasi_yayasan }}</option>
                                                                 @endforeach
-                                                                @elseif(Auth::user()->divisi->nama_divisi == 'Mikael')
-                                                                @foreach ($lokasi as $lk)
-                                                                    <option value="{{ $lk->id_lokasi }}">{{ $lk->nama_lokasi_mikael }}</option>
-                                                                @endforeach
-                                                                @else
-                                                                @foreach ($lokasi as $lk)
-                                                                    <option value="{{ $lk->id_lokasi }}">{{ $lk->nama_lokasi_politeknik }}</option>
-                                                                @endforeach
-                                                                @endif
+                                                               
                                                             </select>
                                                             <div class="invalid-feedback">Lokasi wajib dipilih.</div>
                                                         </div>
@@ -160,19 +151,10 @@
                                                             <label>Kelompok</label>
                                                             <select id="kelompok" name="id_kelompok" class="form-control select2" style="width: 100%;" required>
                                                                 <option value="">- Pilih Kelompok -</option>
-                                                            @if(Auth::user()->divisi->nama_divisi == 'Yayasan')
                                                                 @foreach ($kelompok as $k)
                                                                 <option value="{{ $k->id_kelompok }}" data-tipe-id="{{ $k->id_tipe }}">{{ $k->nama_kelompok_yayasan }}</option>
                                                                @endforeach
-                                                            @elseif(Auth::user()->divisi->nama_divisi == 'Mikael')
-                                                            @foreach ($kelompok as $k)
-                                                                <option value="{{ $k->id_kelompok}}" data-tipe-id="{{ $k->id_tipe }}">{{ $k->nama_kelompok_mikael }}</option>
-                                                            @endforeach
-                                                            @else
-                                                            @foreach ($kelompok as $k)
-                                                            <option value="{{ $k->id_kelompok }}" data-tipe-id="{{ $k->id_tipe }}">{{ $k->nama_kelompok_politeknik }}</option>
-                                                           @endforeach
-                                                            @endif
+                                                          
 
                                                             </select>
                                                             <div class="invalid-feedback">Kelompok wajib dipilih.</div>
@@ -185,19 +167,10 @@
                                                             <label>Jenis</label>
                                                             <select id="jenis" name="id_jenis" class="form-control select2" style="width: 100%;" data-placeholder="- Pilih Jenis -" required>
                                                                 <option value="">- Pilih Jenis -</option>
-                                                            @if(Auth::user()->divisi->nama_divisi == 'Yayasan')
                                                                 @foreach ($jenis as $j)
                                                                 <option value="{{ $j->id_jenis }}" data-tipe-id="{{ $j->id_jenis }}">{{ $j->nama_jenis_yayasan }}</option>
                                                                @endforeach
-                                                            @elseif(Auth::user()->divisi->nama_divisi == 'Mikael')
-                                                            @foreach ($jenis as $j)
-                                                                <option value="{{ $j->id_jenis }}" data-tipe-id="{{ $j->id_jenis }}">{{ $j->nama_jenis_mikael }}</option>
-                                                            @endforeach
-                                                            @else
-                                                            @foreach ($jenis as $j)
-                                                            <option value="{{ $j->id_jenis }}" data-tipe-id="{{ $j->id_jenis }}">{{ $j->nama_jenis_politeknik }}</option>
-                                                           @endforeach
-                                                            @endif                                                            </select>
+                                                                                                                </select>
                                                             <div class="invalid-feedback">Jenis wajib dipilih.</div>
                                                         </div>
                                                     </div>
@@ -228,19 +201,10 @@
                                                             <label>Tipe</label>
                                                             <select id="tipe" name="id_tipe" class="form-control select2" style="width: 100%;" required>
                                                                 <option value="">- Pilih Tipe -</option>
-                                                            @if(Auth::user()->divisi->nama_divisi == 'Yayasan')
                                                                 @foreach ($tipe as $tp)
                                                                 <option value="{{ $tp->id_tipe }}" data-tipe-id="{{ $tp->id_tipe }}">{{ $rg->nama_tipe_yayasan }}</option>
                                                                @endforeach
-                                                            @elseif(Auth::user()->divisi->nama_divisi == 'Mikael')
-                                                            @foreach ($tipe as $tp)
-                                                                <option value="{{ $tp->id_jenis }}" data-tipe-id="{{ $tp->id_jenis }}">{{ $rg->nama_tipe_mikael }}</option>
-                                                            @endforeach
-                                                            @else
-                                                            @foreach ($tipe as $tp)
-                                                            <option value="{{ $tp->id_jenis }}" data-tipe-id="{{ $tp->id_jenis }}">{{ $tp->nama_tipe_politeknik }}</option>
-                                                           @endforeach
-                                                            @endif                                                             </select>
+                                                            </select>
                                                             <div class="invalid-feedback">Tipe wajib dipilih.</div>
                                                         </div>
                                                         <div class="form-group">
@@ -321,16 +285,9 @@
             if (tipe) {
                 const option = document.createElement('option');
                 option.value = tipe.id_tipe;
-                if(instansi == 'Yayasan'){
                     option.textContent = tipe.nama_tipe_yayasan;
                     tipeSelect.appendChild(option);
-                }else if(instansi == 'Mikael'){
-                    option.textContent = tipe.nama_tipe_mikael;
-                    tipeSelect.appendChild(option);
-                }else{
-                    option.textContent = tipe.nama_tipe_politeknik;
-                    tipeSelect.appendChild(option);
-                }
+              
                
             }
         }
@@ -348,16 +305,9 @@
             filteredJenis.forEach(jenis => {
                 const option = document.createElement('option');
                 option.value = jenis.id_jenis;
-                if(instansi == 'Yayasan'){
                     option.textContent = jenis.nama_jenis_yayasan; // Ensure this matches your data
                     jenisSelect.appendChild(option);
-                }else if(instansi == 'Mikael'){
-                    option.textContent = jenis.nama_jenis_mikael; // Ensure this matches your data
-                    jenisSelect.appendChild(option);
-                }else{
-                    option.textContent = jenis.nama_jenis_politeknik; // Ensure this matches your data
-                    jenisSelect.appendChild(option);
-                }
+               
             });
         }
     }
