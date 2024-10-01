@@ -257,13 +257,18 @@ public function send(Request $request)
     
 public function deleteOldNotifications()
 {
-    // Menghapus notifikasi yang dibaca selama 30 hari atau lebih
     $deletedCount = Notification::whereNotNull('read_at')
-        ->where('read_at', '<=', now()->subDays(30))
-        ->delete();
+    ->where('read_at', '<=', now()->subDays(30))
+    ->forceDelete();
 
-    // Log jumlah notifikasi yang dihapus
-    \Log::info("Deleted $deletedCount old notifications");
+
+}
+public function getNotificationsCount() {
+    $unreadCount = Notification::where('id_user_penerima', auth()->user()->id)
+    ->where('read_at', null) // Assuming you have a read_at column
+    ->count();
+    
+    return response()->json(['unreadCount' => $unreadCount]);
 }
 
     /**
@@ -275,6 +280,7 @@ public function deleteOldNotifications()
     public function notifprofil()
     {
 
+        $this->getNotificationsCount();
         $this->deleteOldNotifications();
 
         $user = Auth::user();
@@ -296,6 +302,8 @@ public function deleteOldNotifications()
     
         return view('manageuser::profilnotif')->with(['menu' => $this->menu3, 'notifications' => $notifications]);
     }
+
+   
 
     public function notifdelete($id)
     {

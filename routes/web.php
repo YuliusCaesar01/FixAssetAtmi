@@ -112,6 +112,7 @@ Route::post('/profile/change-password', [ProfileController::class, 'changePasswo
 //notification
 Route::delete('/notification/{id}', [ManageUserController::class, 'notifdelete'])->name('notification.destroy');
 Route::post('/notifications/send', [ManageUserController::class, 'send'])->name('notifications.send');
+Route::get('/get-notifications-count', [ManageUserController::class, 'getNotificationsCount'])->name('getNotificationsCount');
 
 //userEdit
 Route::group(['middleware' => ['checkRole:superadmin']], function () {

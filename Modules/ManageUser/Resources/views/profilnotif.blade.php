@@ -84,7 +84,9 @@
                             <div class="tab-content">
                                 <div class="active tab-pane" id="in">
                                     <div class="form-group">
-                                        <p class="text-bold">Notification Today</p>
+                                        <p class="text-bold">Today's Notifications</p>
+                                        <small>Only notifications from the last 30 days are displayed.</small>
+
                                         <input type="text" id="search" class="form-control" placeholder="Search notifications" onkeyup="filterNotifications()">
                                     </div>
 

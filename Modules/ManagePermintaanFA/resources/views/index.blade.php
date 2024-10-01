@@ -768,35 +768,51 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 // Handle Generate PDF button click
-document.getElementById('generatePdf').addEventListener('click', function() {
-    var idPermintaan = $('#dirmansetuju').data('id');
-    // Lakukan tindakan untuk generate PDF
-    alert('Membuat pengesahan berita acara untuk permintaan ID: ' + idPermintaan);
-    // Close modal
-    $('#approveModal').modal('hide');
-});
+var generatePdfButton = document.getElementById('generatePdf');
+
+if (generatePdfButton) {
+    generatePdfButton.addEventListener('click', function() {
+        var idPermintaan = $('#dirmansetuju').data('id');
+        // Lakukan tindakan untuk generate PDF
+        alert('Membuat pengesahan berita acara untuk permintaan ID: ' + idPermintaan);
+        // Close modal
+        $('#approveModal').modal('hide');
+    });
+} else {
+}
+
 
 // Handle Reject button click
-document.getElementById('confirmReject').addEventListener('click', function() {
-    var alasan = document.getElementById('rejectReason').value;
-    if (alasan.trim() === '') {
-        alert('Harap masukkan alasan penolakan.');
-        return;
-    }
-    var idPermintaan = $('#dirmantolak').data('id');
-    // Lakukan tindakan untuk reject dengan alasan
-    alert('Permintaan dengan ID: ' + idPermintaan + ' ditolak dengan alasan: ' + alasan);
-    // Close modal
-    $('#rejectModal').modal('hide');
-});
+var confirmRejectButton = document.getElementById('confirmReject');
+
+if (confirmRejectButton) {
+    confirmRejectButton.addEventListener('click', function() {
+        var alasan = document.getElementById('rejectReason').value;
+        if (alasan.trim() === '') {
+            alert('Harap masukkan alasan penolakan.');
+            return;
+        }
+        var idPermintaan = $('#dirmantolak').data('id');
+        // Lakukan tindakan untuk reject dengan alasan
+        alert('Permintaan dengan ID: ' + idPermintaan + ' ditolak dengan alasan: ' + alasan);
+        // Close modal
+        $('#rejectModal').modal('hide');
+    });
+}
+
 
     </script>
 <script>
-    // Ketika tombol tindakan diklik, ambil data-id dari tombol dan simpan di modal
-    document.getElementById('tindakan').addEventListener('click', function() {
+   // Ketika tombol tindakan diklik, ambil data-id dari tombol dan simpan di modal
+var tindakanButton = document.getElementById('tindakan');
+
+if (tindakanButton) {
+    tindakanButton.addEventListener('click', function() {
         var permintaanId = this.getAttribute('data-id'); // Ambil ID dari atribut data-id
         document.getElementById('permintaanId').value = permintaanId; // Set ID ke hidden input
     });
+}
+
     
     document.getElementById('rejectBtn').addEventListener('click', function() {
         showConfirmationSection('Ditolak');

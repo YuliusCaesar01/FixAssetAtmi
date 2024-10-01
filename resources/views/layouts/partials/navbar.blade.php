@@ -53,11 +53,9 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
         <li class="nav-item icon-button">
             <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button" style="position: relative;">
                 <i class="fas fa-bell"></i>
-                @if($unreadCount > 0) <!-- Replace $unreadCount with your actual variable -->
-                    <span style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px;">
-                        {{ $unreadCount }}
-                    </span>
-                @endif
+                <span id="unreadCount" style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
+                    {{ $unreadCount }}
+                </span>
             </a>
         </li>
         
@@ -483,4 +481,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
     
        
     </script>
+
+    
     
