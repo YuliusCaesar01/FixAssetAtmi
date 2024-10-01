@@ -63,9 +63,9 @@
                                                     <label>Instansi</label>
                                                     <select id="instansi" name="instansi" class="form-control" style="width: 100%;" required>
                                                         <option value="">- Pilih Instansi -</option>
-                                                        <option value="yayasan">Yayasan</option>
-                                                        <option value="mikael">SMK Mikael</option>
-                                                        <option value="politeknik">Politeknik</option>
+                                                        <option value="1">Yayasan</option>
+                                                        <option value="2">SMK Mikael</option>
+                                                        <option value="3">Politeknik</option>
                                                     </select>
                                                     
                                                 </div>
@@ -227,23 +227,7 @@
 @section('scripttambahan')
     <!-- InputMask -->
     <script>
-        const lokasiYayasan = [
-            @foreach ($lokasi as $lk)
-                { id: '{{ $lk->id_lokasi }}', nama: '{{ $lk->nama_lokasi_yayasan }}' },
-            @endforeach
-        ];
-    
-        const lokasiMikael = [
-            @foreach ($lokasi as $lk)
-                { id: '{{ $lk->id_lokasi }}', nama: '{{ $lk->nama_lokasi_mikael }}' },
-            @endforeach
-        ];
-    
-        const lokasiPoliteknik = [
-            @foreach ($lokasi as $lk)
-                { id: '{{ $lk->id_lokasi }}', nama: '{{ $lk->nama_lokasi_politeknik }}' },
-            @endforeach
-        ];
+      
     
         const ruangYayasan = [
             @foreach ($ruang as $rg)
@@ -263,60 +247,7 @@
             @endforeach
         ];
     
-        const tipeYayasan = [
-            @foreach ($tipe as $tp)
-                { id: '{{ $tp->id_tipe }}', nama: '{{ $tp->nama_tipe_yayasan }}' },
-            @endforeach
-        ];
-    
-        const tipeMikael = [
-            @foreach ($tipe as $tp)
-                { id: '{{ $tp->id_tipe}}', nama: '{{ $tp->nama_tipe_mikael }}' },
-            @endforeach
-        ];
-    
-        const tipePoliteknik = [
-            @foreach ($tipe as $tp)
-                { id: '{{ $tp->id_tipe }}', nama: '{{ $tp->nama_tipe_politeknik }}' },
-            @endforeach
-        ];
-    
-        const kelompokYayasan = [
-            @foreach ($kelompok as $kp)
-                { id: '{{ $kp->id_kelompok }}', nama: '{{ $kp->nama_kelompok_yayasan }}' },
-            @endforeach
-        ];
-    
-        const kelompokMikael = [
-            @foreach ($kelompok as $kp)
-                { id: '{{ $kp->id_kelompok }}', nama: '{{ $kp->nama_kelompok_mikael }}' },
-            @endforeach
-        ];
-    
-        const kelompokPoliteknik = [
-            @foreach ($kelompok as $kp)
-                { id: '{{ $kp->id_kelompok }}', nama: '{{ $kp->nama_kelompok_politeknik }}' },
-            @endforeach
-        ];
-    
-        const jenisYayasan = [
-            @foreach ($jenis as $jn)
-                { id: '{{ $jn->id_jenis }}', nama: '{{ $jn->nama_jenis_yayasan }}' },
-            @endforeach
-        ];
-    
-        const jenisMikael = [
-            @foreach ($jenis as $jn)
-                { id: '{{ $jn->id_jenis }}', nama: '{{ $jn->nama_jenis_mikael }}' },
-            @endforeach
-        ];
-    
-        const jenisPoliteknik = [
-            @foreach ($jenis as $jn)
-                { id: '{{ $jn->id_jenis }}', nama: '{{ $jn->nama_jenis_politeknik }}' },
-            @endforeach
-        ];
-    
+      
         document.getElementById('instansi').addEventListener('change', function () {
             const instansi = this.value;
             const lokasiSelect = document.getElementById('lokasi');
@@ -329,14 +260,9 @@
             lokasiSelect.innerHTML = '<option value="">- Pilih Lokasi -</option>';
             let lokasiOptions = [];
     
-            if (instansi === 'yayasan') {
+          
                 lokasiOptions = lokasiYayasan;
-            } else if (instansi === 'mikael') {
-                lokasiOptions = lokasiMikael;
-            } else if (instansi === 'politeknik') {
-                lokasiOptions = lokasiPoliteknik;
-            }
-    
+          
             lokasiOptions.forEach(function (lokasi) {
                 const option = document.createElement('option');
                 option.value = lokasi.id;
@@ -348,11 +274,11 @@
             ruangSelect.innerHTML = '<option value="">- Pilih Ruang -</option>';
             let ruangOptions = [];
     
-            if (instansi === 'yayasan') {
+            if (instansi === '1') {
                 ruangOptions = ruangYayasan;
-            } else if (instansi === 'mikael') {
+            } else if (instansi === '2') {
                 ruangOptions = ruangMikael;
-            } else if (instansi === 'politeknik') {
+            } else if (instansi === '3') {
                 ruangOptions = ruangPoliteknik;
             }
     
@@ -367,13 +293,8 @@
             tipeSelect.innerHTML = '<option value="">- Pilih Tipe -</option>';
             let tipeOptions = [];
     
-            if (instansi === 'yayasan') {
                 tipeOptions = tipeYayasan;
-            } else if (instansi === 'mikael') {
-                tipeOptions = tipeMikael;
-            } else if (instansi === 'politeknik') {
-                tipeOptions = tipePoliteknik;
-            }
+            
     
             tipeOptions.forEach(function (tipe) {
                 const option = document.createElement('option');
@@ -388,13 +309,8 @@
             kelompokSelect.innerHTML = '<option value="">- Pilih Kelompok -</option>';
             let kelompokOptions = [];
     
-            if (instansi === 'yayasan') {
                 kelompokOptions = kelompokYayasan;
-            } else if (instansi === 'mikael') {
-                kelompokOptions = kelompokMikael;
-            } else if (instansi === 'politeknik') {
-                kelompokOptions = kelompokPoliteknik;
-            }
+           
     
             kelompokOptions.forEach(function (kelompok) {
                 const option = document.createElement('option');
@@ -407,13 +323,8 @@
             jenisSelect.innerHTML = '<option value="">- Pilih Jenis -</option>';
             let jenisOptions = [];
     
-            if (instansi === 'yayasan') {
                 jenisOptions = jenisYayasan;
-            } else if (instansi === 'mikael') {
-                jenisOptions = jenisMikael;
-            } else if (instansi === 'politeknik') {
-                jenisOptions = jenisPoliteknik;
-            }
+          
     
             jenisOptions.forEach(function (jenis) {
                 const option = document.createElement('option');

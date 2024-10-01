@@ -85,7 +85,6 @@ $managerasetuser = User::where('role_id', 19)->first();
                             <hr>
                             <h5 class="font-weight-bold text-uppercase">Kategori Barang</h5>
                             <dl class="row">
-                               @if($permintaan->id_institusi ==  1)
                                 <dt class="col-sm-4">Tipe</dt>
                                 <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_yayasan }} </dd>
                                 <dt class="col-sm-4">Kelompok</dt>
@@ -96,37 +95,49 @@ $managerasetuser = User::where('role_id', 19)->first();
                                 <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_yayasan }}</dd>
                                 <dt class="col-sm-4">Lokasi</dt>
                                 <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_yayasan }}</dd>
+                               @if($permintaan->id_institusi ==  1)
                                 <dt class="col-sm-4">Ruang</dt>
                                 <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_yayasan }}</dd>
                                @elseif($permintaan->id_institusi ==  2)
-                               <dt class="col-sm-4">Tipe</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_yayasan }} </dd>
-                                <dt class="col-sm-4">Kelompok</dt>
-                                <dd class="col-sm-8">
-                                    : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok_yayasan }}
-                                </dd>
-                                <dt class="col-sm-4">Jenis</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_mikael }}</dd>
-                                <dt class="col-sm-4">Lokasi</dt>
-                                <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_mikael }}</dd>
                                 <dt class="col-sm-4">Ruang</dt>
                                 <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_mikael }}</dd>
                                @else
-                               <dt class="col-sm-4">Tipe</dt>
-                               <dd class="col-sm-8">: {{ $permintaan->id_tipe }} - {{ $permintaan->Tipe->nama_tipe_politeknik }} </dd>
-                               <dt class="col-sm-4">Kelompok</dt>
-                               <dd class="col-sm-8">
-                                   : {{ $permintaan->id_kelompok }} - {{ $permintaan->Kelompok->nama_kelompok_politeknik }}
-                               <dt class="col-sm-4">Jenis</dt>
-                               <dd class="col-sm-8">: {{ $permintaan->id_jenis }} - {{ $permintaan->jenis->nama_jenis_politeknik }}</dd>
-                               <dt class="col-sm-4">Lokasi</dt>
-                               <dd class="col-sm-8">: {{ $permintaan->id_lokasi }} - {{ $permintaan->Lokasi->nama_lokasi_politeknik }}</dd>
                                <dt class="col-sm-4">Ruang</dt>
                                <dd class="col-sm-8">: {{ $permintaan->id_ruang }} - {{ $permintaan->ruang->nama_ruang_politeknik }}</dd>
                                @endif
                             </dl>
                         </div>
                     </div>
+
+                    @if($permintaan->valid_manageraset === 'setuju')
+                    @if($qrcode)
+                  
+                     <!-- QR Code in Bottom-Right Corner -->
+                     <div class="row mt-4">
+                        <div class="col-12 text-center">
+                            <div class="qr-code-container">
+                                <p>
+                                    <strong>Pengajuan Telah Dicatat</strong> <br>
+                                    <span style="color: blue;">Generated Barcode:</span>
+                                </p>                                <center>
+                                <img src="data:image/png;base64,{{ $qrcode }}" alt="QR Code" id="qrcode">
+                                </center>
+                                <div class="button-group">
+                                    <a href="data:image/png;base64,{{ $qrcode }}" download="barcode.png">
+                                            <button type="submit" class="btn btn-primary">Download QR Code</button>
+                                        
+                                        
+                                                                            </a>
+                                    <button class="btn btn-secondary" onclick="printQRCode()">Print QR Code</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    @endif
+                @endif
+                    
+
                     <div class="row mt-4">
                         <nav class="w-100">
                             <div class="nav nav-tabs" id="product-tab" role="tablist">
@@ -671,36 +682,28 @@ $managerasetuser = User::where('role_id', 19)->first();
                                                 </div>
                                             </div>
                                             <p class="font-weight-bold" style="font-size: 16px; margin: 0;">Pencatatan Aset</p> <!-- Reduced size -->
-                                   
-                                            <div class="status-note">
+                                           
                                                 @if($permintaan->valid_manageraset === 'setuju')
-                                                @if($qrcode)
-                                                <div class="qr-code-container" style="text-align: center; margin-top: 10px;">
-                                                    <center><img src="data:image/png;base64,{{ $qrcode }}" alt="QR Code" id="qrcode" style="width: 120px; height: 120px;"> <!-- Reduced size -->
-                                                    </center>
-                                                    <div style="margin-top: 10px;">
-                                                        <!-- Download QR Code Button -->
-                                                        <a href="data:image/png;base64,{{ $qrcode }}" download="barcode.png" style="text-decoration: none;">
-                                                            <button type="submit" class="btn btn-secondary" style=" color: white; padding: 4px 8px; border: none; border-radius: 4px;">
-                                                                Download QR Code
-                                                            </button>
-                                                        </a>
-                                            
-                                                       
-                                                    </div>
-                                                </div>
-                                                @endif
-                                            @endif
+                                                <div class="status-note">
+                                                    <p>Catatan : <strong>Telah Dicatat</strong></p>
 
-                                            </div>
-                                          
+                                                </div>
+
+                                                @endif
+
+                                            <br>
+                                            <center>
+                                                @if($permintaan->valid_manageraset === 'setuju')
+                                                {{-- {{ route('pengajuan.pdf', ['id' => $permintaan->id_permintaan_fa]) }} --}}
+                                                <a href="{{ route('pengajuan.pdf', ['id' => $permintaan->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Pengajuan</a>
+                                                @endif
+                                            </center>
                                             {{-- <button class="btn-download">Download PDF</button> <!-- Download PDF Button --> --}}
                                         </div>
-                                        <br>
-                                        @if($permintaan->valid_manageraset === 'setuju')
-                                        {{-- {{ route('pengajuan.pdf', ['id' => $permintaan->id_permintaan_fa]) }} --}}
-                                        <a href="{{ route('pengajuan.pdf', ['id' => $permintaan->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Pengajuan</a>
-                                        @endif
+                                       
+                                
+
+                                       
                                     </div>
                                     
                                 </div>
@@ -709,162 +712,7 @@ $managerasetuser = User::where('role_id', 19)->first();
                         </div>
                     </div>
                     
-                    <style>
-                        .tab-background {
-                            background-color: #f8f9fa; /* Light gray background for each tab content */
-                            border-radius: 8px; /* Optional: round corners */
-                            padding: 15px; /* Padding inside the tab content */
-                        }
-                    
-                        /* Other styles remain the same */
-                        .validation-time {
-                            position: absolute; /* Position the time in the corner */
-                            top: 10px; /* Adjust top position */
-                            right: 10px; /* Adjust right position */
-                            font-size: 12px; /* Font size for the validation time */
-                            color: #6c757d; /* Light gray color for better visibility */
-                            font-weight: normal; /* Not bold */
-                        }
-                    
-                        .progress-timeline {
-                            display: flex;
-                            justify-content: space-between;
-                            flex-wrap: wrap;
-                            margin-top: 20px;
-                            padding: 10px;
-                            border-radius: 8px;
-                        }
-                    
-                        .btn-download {
-                            background-color: #007bff; /* Blue background */
-                            color: white; /* White text */
-                            border: none; /* No border */
-                            border-radius: 4px; /* Rounded corners */
-                            padding: 8px 12px; /* Padding for the button */
-                            font-size: 14px; /* Font size */
-                            cursor: pointer; /* Pointer cursor on hover */
-                            margin-top: 10px; /* Space above the button */
-                        }
-                    
-                        .btn-download:hover {
-                            background-color: #0056b3; /* Darker blue on hover */
-                        }
-                        .countdown {
-                                display: block;
-                                width: 100%;
-                                padding: 0.5rem;
-                                text-align: center;
-                                color: white;
-                                background-color: #6a6a6a;
-                            }
-                                            .timeline-item {
-                            text-align: center;
-                            flex: 1 1 18%; /* Adjust to allow for 5 items (100% / 5 = 20% minus margin) */
-                            min-width: 150px; /* Optional: set a minimum width if needed */
-                            position: relative;
-                            padding: 15px;
-                            background-color: white;
-                            border-radius: 8px;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                            margin-bottom: 15px;
-                        }
-                    
-                        .timeline-item:hover {
-                            transform: scale(1.02); /* Slightly scale up on hover */
-                        }
-                    
-                        .status-indicator.default {
-                            background-color: #ffc107; /* Color for the default state (yellow) */
-                            border: 2px solid white; /* White border */
-                        }
-                    
-                        .status-indicator.default i {
-                            color: white; /* White color for the icon */
-                        }
-                    
-                        .timeline-item:not(:last-child) {
-                            margin-right: 15px;
-                        }
-                    
-                        .profile-status {
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            margin-bottom: 10px;
-                        }
-                    
-                        .profile-pic {
-                            width: 60px;
-                            height: 60px;
-                            border-radius: 50%;
-                            object-fit: cover;
-                            margin-right: 10px;
-                        }
-                    
-                        .status-indicator {
-                            width: 20px; /* Adjust width as needed */
-                            height: 20px; /* Adjust height as needed */
-                            border-radius: 50%; /* Makes it circular */
-                            border: 2px solid white; /* White border */
-                            background-color: transparent; /* Transparent background */
-                            display: flex; /* Use flexbox for centering */
-                            align-items: center; /* Center vertically */
-                            justify-content: center; /* Center horizontally */
-                            position: relative; /* Ensure positioning for child elements */
-                        }
-                    
-                        .status-indicator i {
-                            color: white; /* White color for the icons */
-                            font-size: 10px; /* Size of the icons */
-                            margin: 0; /* Remove any default margin */
-                        }
-                    
-                        .status-indicator.approved {
-                            background-color: #28a745;
-                        }
-                    
-                        .status-indicator.rejected {
-                            background-color: #dc3545;
-                        }
-                    
-                        .timeline-content {
-                            padding-top: 10px;
-                            font-size: 14px;
-                        }
-                    
-                        .status-note {
-                            margin-top: 10px;
-                            text-align: left;
-                        }
-                    
-                        .status {
-                            background-color: #f8f9fa;
-                            padding: 5px;
-                            border-radius: 5px;
-                            margin-bottom: 5px;
-                        }
-                        .bg-dark-500 {
-                            background-color: #333; /* Atau warna lain sesuai kebutuhan */
-                        }
-                        .note {
-                            background-color: #e9ecef;
-                            padding: 5px;
-                            border-radius: 5px;
-                        }
-                    
-                        @media (max-width: 768px) {
-                            .timeline-item {
-                                flex: 1 1 45%; /* Show 2 items in a row on smaller screens */
-                            }
-                        }
-                    
-                        @media (max-width: 480px) {
-                            .timeline-item {
-                                flex: 1 1 90%; /* Show 1 item in a row on mobile */
-                            }
-                        }
-                    </style>
-                    
+                   
                     
 
                     

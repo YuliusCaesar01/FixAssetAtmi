@@ -213,16 +213,15 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
         </nav>
     </div>
 </aside>
-
 <!-- Edit User Details and Change Password Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit User Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -236,26 +235,28 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 <form id="editDetailsForm" method="POST" action="{{ route('editprofil', $userdetail->id_userdetail ?? $null) }}" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="id" value="{{ $userdetail->id_userdetail ?? '' }}">
+                    
                     <!-- Display existing photo -->
                     <div class="form-group text-center mb-4">
                         <center>
-                            <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img">
+                        <img src="{{ $userdetail && $userdetail->foto && $userdetail->foto !== 'default.png' ? asset($userdetail->foto) : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" alt="User Image" class="profile-img" style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
                         </center>
-                        <small>Current Profile Photo</small>
+                        <small class="d-block mt-2">Current Profile Photo</small>
                     </div>
-                    <center>
+
                     <!-- Change Profile Photo Input -->
-                    <div class="form-group text-center">
-                        <label for="foto">Change Profile Photo</label>
-                        <input type="file" class="form-control-file mx-auto" id="foto" name="foto" accept="image/*">
-                    </div>
-                    </center>
                     <div class="form-group">
-                        <label for="nama_lengkap">Nama Lengkap</label>
-                        <input type="text" class="form-control" id="nama_lengkap" value="{{$userdetail->nama_lengkap ?? 'belum ditambahkan'}}" name="nama_lengkap" required>
+                        <label for="foto" class="font-weight-bold">Change Profile Photo</label>
+                        <input type="file" class="form-control-file" id="foto" name="foto" accept="image/*">
+                    </div>
+
+                    <!-- User Details Fields -->
+                    <div class="form-group">
+                        <label for="nama_lengkap" class="font-weight-bold">Nama Lengkap</label>
+                        <input type="text" class="form-control" id="nama_lengkap" value="{{ $userdetail->nama_lengkap ?? 'belum ditambahkan' }}" name="nama_lengkap" required>
                     </div>
                     <div class="form-group">
-                        <label for="jenis_kelamin">Jenis Kelamin</label>
+                        <label for="jenis_kelamin" class="font-weight-bold">Jenis Kelamin</label>
                         <select class="form-control" id="jenis_kelamin" name="jenis_kelamin" required aria-label="Pilih Jenis Kelamin">
                             <option value="" disabled selected>Pilih Jenis Kelamin</option>
                             <option value="laki-laki">Laki-laki</option>
@@ -263,10 +264,11 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="no_induk_karyawan">No Induk Karyawan</label>
-                        <input type="text" class="form-control" value="{{$userdetail->no_induk_karyawan ?? 'belum ditambahkan'}}" id="no_induk_karyawan" name="no_induk_karyawan" required>
+                        <label for="no_induk_karyawan" class="font-weight-bold">No Induk Karyawan</label>
+                        <input type="text" class="form-control" value="{{ $userdetail->no_induk_karyawan ?? 'belum ditambahkan' }}" id="no_induk_karyawan" name="no_induk_karyawan" required>
                     </div>
-                   <!-- Change Password Button -->
+
+                    <!-- Change Password Button -->
                     <button type="button" class="btn btn-primary btn-block show-form" data-target="changePasswordForm">
                         <i class="fas fa-key"></i> Change Password
                     </button>
@@ -275,7 +277,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     <button type="button" class="btn btn-warning btn-block show-form" data-target="changeEmailForm">
                         <i class="fas fa-user"></i> Change User Data
                     </button>
-                   
                 </form>
 
                 <!-- Change Password Form -->
@@ -283,29 +284,21 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     @csrf
                     <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
                     <div class="form-group">
-                        <label for="old_password">Old Password</label>
+                        <label for="old_password" class="font-weight-bold">Old Password</label>
                         <input type="password" class="form-control" id="old_password" name="old_password" required>
                     </div>
                     <div class="form-group">
-                        <label for="new_password">New Password</label>
+                        <label for="new_password" class="font-weight-bold">New Password</label>
                         <input type="password" class="form-control" id="new_password" name="new_password" required>
                     </div>
                     <div class="form-group">
-                        <label for="new_password_confirmation">Confirm New Password</label>
+                        <label for="new_password_confirmation" class="font-weight-bold">Confirm New Password</label>
                         <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" required>
                     </div>
-                                        <!-- Edit User Details Button -->
-                        <button type="button" class="btn btn-info show-form" data-target="editDetailsForm">
-                            <i class="fas fa-id-badge"></i> Edit User Details
-                        </button>
-
-                                            <!-- Change UserData Button -->
-                        <button type="button" class="btn btn-warning show-form" data-target="changeEmailForm">
-                            <i class="fas fa-user"></i> Change UserData
-                        </button>
-
-
-
+                    <!-- Edit User Details Button -->
+                    <button type="button" class="btn btn-info btn-block show-form" data-target="editDetailsForm">
+                        <i class="fas fa-id-badge"></i> Edit User Details
+                    </button>
                 </form>
 
                 <!-- Change Email Form -->
@@ -313,27 +306,27 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     @csrf
                     <input type="hidden" name="user_id" id="user_id" value="{{ Auth::id() }}">
                     <div class="form-group">
-                        <label for="old_email">Old Email</label>
+                        <label for="old_email" class="font-weight-bold">Old Email</label>
                         <input type="email" class="form-control" id="old_email" name="old_email" value="{{ Auth::user()->email }}" readonly>
                     </div>
                     <div class="form-group">
-                        <label for="new_email">New Email</label>
+                        <label for="new_email" class="font-weight-bold">New Email</label>
                         <input type="email" class="form-control" id="new_email" name="new_email" required>
                     </div>
                     <div class="form-group">
-                        <label for="ttd">Upload TTD</label>
-                        <input type="file" class="form-control-file mx-auto" id="ttd" name="ttd" accept="image/*">
+                        <label for="ttd" class="font-weight-bold">Upload TTD</label>
+                        <input type="file" class="form-control-file" id="ttd" name="ttd" accept="image/*">
                         <small>Upload your signature. Background will be automatically removed if white.</small>
                     </div>
-             <!-- Edit User Details Button -->
-            <button type="button" class="btn btn-info show-form" data-target="editDetailsForm">
-                <i class="fas fa-id-badge"></i> Edit User Details
-            </button>
-               <!-- Edit Password Button -->
-            <button type="button" class="btn btn-primary show-form" data-target="changePasswordForm">
-                <i class="fas fa-key"></i> Change Password
-            </button>               
-         </form>
+                    <!-- Edit User Details Button -->
+                    <button type="button" class="btn btn-info btn-block show-form" data-target="editDetailsForm">
+                        <i class="fas fa-id-badge"></i> Edit User Details
+                    </button>
+                    <!-- Edit Password Button -->
+                    <button type="button" class="btn btn-primary btn-block show-form" data-target="changePasswordForm">
+                        <i class="fas fa-key"></i> Change Password
+                    </button>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="submit" id="gantiprofil" form="editDetailsForm" class="btn btn-primary" style="display: none;">Save User Details</button>
@@ -343,6 +336,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
         </div>
     </div>
 </div>
+
 
 @if (session('success'))
     <div class="alert alert-success">

@@ -24,49 +24,69 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <!-- Profile Column -->
-                    <div class="col-md-3">
-                        <!-- Profile Image -->
-                        <div class="card card-primary card-outline">
-                            <div class="card-body box-profile text-center">
-                                <img class="profile-user-img img-fluid img-circle" 
-                                     src="{{ auth()->user()->userDetail && auth()->user()->userDetail->foto && auth()->user()->userDetail->foto !== 'default.png' 
-                                            ? asset(auth()->user()->userDetail->foto) 
-                                            : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" 
-                                     alt="User profile picture" 
-                                     loading="lazy" 
-                                     style="width: 70px; height: 70px; object-fit: cover; object-position: top; border: none;">
+                   <!-- Profile Column -->
+<div class="col-md-3">
+    <!-- Profile Card -->
+    <div class="card card-primary" style="border: none; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);">
+        <div class="card-body text-center">
+            <!-- Profile Image -->
+            <img class="profile-user-img img-fluid img-circle" 
+                 src="{{ auth()->user()->userDetail && auth()->user()->userDetail->foto && auth()->user()->userDetail->foto !== 'default.png' 
+                        ? asset(auth()->user()->userDetail->foto) 
+                        : 'https://as2.ftcdn.net/v2/jpg/00/64/67/27/1000_F_64672736_U5kpdGs9keUll8CRQ3p3YaEv2M6qkVY5.jpg' }}" 
+                 alt="User profile picture" 
+                 loading="lazy" 
+                 style="width: 90px; height: 90px; object-fit: cover; object-position: top; border-radius: 50%; border: none;">
 
-                                <h3 class="profile-username">{{ ucfirst(auth()->user()->username) }}</h3>
-                                <p class="text-muted">Divisi: {{ auth()->user()->Divisi->nama_divisi }}</p>
-                            </div>
-                        </div>
+            <!-- Profile Info -->
+            <h3 class="profile-username" style="margin-top: 10px;">{{ ucfirst(auth()->user()->username) }}</h3>
+            <p class="text-muted" style="margin-bottom: 10px;">Divisi: {{ auth()->user()->Divisi->nama_divisi }}</p>
 
-                        <!-- About Me Box -->
-                        <div class="card card-primary">
-                            <div class="card-header">
-                                <h3 class="card-title">About Me</h3>
-                            </div>
-                            <div class="card-body">
-                                <strong><i class="fas fa-user mr-1"></i> Nama Lengkap</strong>
-                                <p class="text-muted">{{ ucfirst(auth()->user()->userDetail->nama_lengkap ?? 'userdetail belum terinput') }}</p>
-                                <hr>
-                                <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-                                <p class="text-muted">{{ auth()->user()->email }}</p>
-                                <hr>
-                                <strong><i class="fas fa-users mr-1"></i> User Role</strong>
-                                <p class="text-muted">{{ ucfirst(auth()->user()->getRoleNames()->first()) }}</p>
-                                <hr>
-                                <strong><i class="fas fa-id-badge mr-1"></i> No Induk Karyawan</strong>
-                                <p class="text-muted">{{ ucfirst(auth()->user()->userDetail->no_induk_karyawan ?? 'userdetail belum terinput') }}</p>
-                                <hr>
-                                <button class="btn-icon btn-icon-edit btn-primary btn-block" style="border-radius: 0%;" data-id="{{ Auth::user()->id }}" data-name="{{ Auth::user()->username }}" title="Edit">
-                                    <span class="text-bold">Edit Profile</span> &nbsp;<i class="fas fa-edit"></i>
-                                </button>
-                                
-                            </div>
-                        </div>
-                    </div>
+            <!-- Edit Button -->
+            <button class="btn btn-icon-edit btn-primary btn-block" 
+                    style="border-radius: 0%; background-color: #007bff; border: none; padding: 10px; cursor: pointer;" 
+                    data-id="{{ Auth::user()->id }}" 
+                    data-name="{{ Auth::user()->username }}" 
+                    title="Edit Profile">
+                <span style="font-weight: bold;">Edit Profile</span> &nbsp;<i class="fas fa-edit"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- About Me Box -->
+   <!-- About Me Box -->
+<div class="card" style="margin-top: 15px; border-radius: 8px; border: none;">
+    <div class="card-header" style="background-color: #f8f9fa; border-bottom: none;">
+        <h4 class="card-title" style="text-align: left; margin: 0; font-weight: bold;">About Me</h4>
+    </div>
+    <div class="card-body" style="padding: 15px;">
+        <!-- Full Name -->
+        <div style="margin-bottom: 15px;">
+            <strong style="font-size: 16px;"><i class="fas fa-user mr-1"></i> Nama Lengkap</strong>
+            <p class="text-muted" style="margin-top: 5px;">{{ ucfirst(auth()->user()->userDetail->nama_lengkap ?? 'userdetail belum terinput') }}</p>
+        </div>
+
+        <!-- Email -->
+        <div style="margin-bottom: 15px;">
+            <strong style="font-size: 16px;"><i class="fas fa-envelope mr-1"></i> Email</strong>
+            <p class="text-muted" style="margin-top: 5px;">{{ auth()->user()->email }}</p>
+        </div>
+
+        <!-- Role -->
+        <div style="margin-bottom: 15px;">
+            <strong style="font-size: 16px;"><i class="fas fa-users mr-1"></i> User Role</strong>
+            <p class="text-muted" style="margin-top: 5px;">{{ ucfirst(auth()->user()->getRoleNames()->first()) }}</p>
+        </div>
+
+        <!-- Employee ID -->
+        <div style="margin-bottom: 15px;">
+            <strong style="font-size: 16px;"><i class="fas fa-id-badge mr-1"></i> No Induk Karyawan</strong>
+            <p class="text-muted" style="margin-top: 5px;">{{ ucfirst(auth()->user()->userDetail->no_induk_karyawan ?? 'userdetail belum terinput') }}</p>
+        </div>
+    </div>
+</div>
+
+</div>
 
                 
              <!-- Notification Column -->

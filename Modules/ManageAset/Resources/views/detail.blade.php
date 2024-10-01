@@ -25,7 +25,7 @@
                         <div class="col-12 col-sm-6">
                             <h3 class="d-inline-block"> <b>Fix Asset {{ ucfirst($fa->nama_barang) }} </b></h3>
                             <div class="col-12">
-                                <img src="{{ $fa->foto_barang ? asset($fa->foto_barang) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+                                <img src="{{ $fa->foto_barang ? asset('uploads/photos/' . basename($fa->foto_barang)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
                                 
                                 <p class="float-right">Dibuat Oleh: <b>{{ ucfirst($fa->user->username) }}</b></p>
                             </div>
@@ -256,36 +256,4 @@
     </script>
 @endsection
 
-<!-- Add this to your CSS -->
-<style>
-    .qr-code-container {
-        position: absolute;
-        bottom: 10px; /* Adjust as needed */
-        right: 10px;  /* Adjust as needed */
-        background-color: #fff; /* Optional: add background color for better visibility */
-        padding: 10px; /* Optional: add padding */
-        border: 1px solid #ccc; /* Optional: add border */
-        border-radius: 5px; /* Optional: add rounded corners */
-    }
 
-    .qr-code-container img {
-        display: block;
-        margin-bottom: 10px;
-    }
-
-    .button-group {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .button-group button {
-        flex: 1;
-        margin: 0 5px;
-        padding: 10px;
-        font-size: 16px;
-    }
-
-    .button-group a {
-        text-decoration: none;
-    }
-</style>

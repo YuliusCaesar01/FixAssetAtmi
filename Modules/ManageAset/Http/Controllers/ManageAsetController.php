@@ -11,7 +11,6 @@ use App\Models\Kelompok;
 use App\Models\Lokasi;
 use App\Models\Ruang;
 use App\Models\Tipe;
-
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -73,7 +72,7 @@ class ManageAsetController extends Controller
         }
 
 
-        return view('manageaset::index', compact('aset', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu]);
+        return view('manageaset::index', compact('aset', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu])->with('success', 'Data berhasil ditambahkan!');
     }
 
     public function detail($kode_fa)
@@ -156,9 +155,88 @@ $base64QrCode = base64_encode($qrCodeImage);
      */
     public function store(Request $request)
     {
-        //define validation rules
-      dd($request->all());
-    }
+        
+            // Validasi data yang masuk
+            $request->validate([
+                '_token' => 'required',
+                'instansi' => 'required|string|max:255',
+                'id_lokasi' => 'required|integer',
+                'id_ruang' => 'required|integer',
+                'id_tipe' => 'required|integer',
+                'id_kelompok' => 'required|integer',
+                'id_jenis' => 'required|integer',
+                'nama_barang' => 'required|string|max:255',
+                'tahun_diterima' => 'required|integer',
+                'no_permaintaan' => 'required|string|max:255',
+                'des_barang' => 'required|string',
+                'status_transaksi' => 'required|string|max:255',
+                'status_barang' => 'required|string|max:255',
+                'foto_barang' => 'nullable|file|image|max:2048',
+            ]);
+        
+            // Proses upload foto barang
+            $fotoPath = null;
+            if ($request->hasFile('foto_barang')) {
+                // Generate a unique file name
+                $fileName = time() . '_' . $request->file('foto_barang')->getClientOriginalName();
+                // Move the uploaded file to the desired location
+                $fotoPath = $request->file('foto_barang')->move(public_path('uploads/photos'), $fileName);
+            }
+            
+
+            // Mengambil data terkait untuk membentuk kode aset
+            $kode_institusi = Institusi::find($request->instansi)->kode_institusi;
+            $kode_tipe = Tipe::find($request->id_tipe)->kode_tipe;
+            $kode_kelompok = Kelompok::find($request->id_kelompok)->kode_kelompok;
+            $kode_jenis = Jenis::find($request->id_jenis)->kode_jenis;
+            $kode_lokasi = Lokasi::find($request->id_lokasi)->kode_lokasi;
+            $kode_ruang = Ruang::find($request->id_ruang)->kode_ruang;
+        
+            // Menghitung jumlah aset untuk menentukan nomor urut
+            $kode_max = FixedAsset::where('id_institusi', $request->instansi)
+                ->where('id_tipe', $request->id_tipe)
+                ->where('id_kelompok', $request->id_kelompok)
+                ->where('id_jenis', $request->id_jenis)
+                ->where('id_lokasi', $request->id_lokasi)
+                ->where('id_ruang', $request->id_ruang)
+                ->count();
+        
+            $no_urut = str_pad($kode_max + 1, 3, '0', STR_PAD_LEFT);
+        
+            // Membentuk kode aset
+            $kode_fa = $kode_lokasi . "." . $kode_institusi . "." . $kode_kelompok . "." . $kode_jenis . "." . $kode_ruang . "." . $kode_tipe . "-" . $no_urut;
+        
+            // Membuat ID unik untuk aset
+            $idFa = Str::random(32);
+        
+            // Menentukan status aset berdasarkan peran pengguna
+            $status_fa = auth()->user()->hasRole('superadmin') ? 1 : 0;
+        
+            // Simpan data ke dalam database
+            FixedAsset::create([
+                'id_fa' => $idFa,
+                'status_fa' => $status_fa,
+                'kode_fa' => $kode_fa,
+                'id_user' =>  auth()->user()->id,
+                'id_divisi' => auth()->user()->id_divisi,
+                'id_institusi' => $request->instansi,
+                'id_lokasi' => $request->id_lokasi,
+                'id_ruang' => $request->id_ruang,
+                'id_tipe' => $request->id_tipe,
+                'id_kelompok' => $request->id_kelompok,
+                'id_jenis' => $request->id_jenis,
+                'nama_barang' => $request->nama_barang,
+                'tahun_diterima' => $request->tahun_diterima,
+                'no_permaintaan' => $request->no_permaintaan,
+                'des_barang' => $request->des_barang,
+                'status_transaksi' => $request->status_transaksi,
+                'status_barang' => $request->status_barang,
+                'foto_barang' => $fotoPath,
+            ]);
+        
+            // Redirect atau return response
+            return $this->index($request)->with('success', 'Data berhasil ditambahkan!');
+        }
 
     private function isValidDataStructure($data)
     {
@@ -310,10 +388,10 @@ $base64QrCode = base64_encode($qrCodeImage);
         $institusi = Institusi::all();
         $divisi = Divisi::where('id_institusi', $fa->id_institusi)->get();
         $tipe = Tipe::all();
-        $kelompok = Kelompok::where('id_tipe', $fa->id_tipe)->get();
-        $jenis = Jenis::where('id_kelompok', $fa->id_kelompok)->get();
+        $kelompok = Kelompok::all();
+        $jenis = Jenis::all();
         $lokasi = Lokasi::all();
-        $ruang = Ruang::where('id_ruang', $fa->id_ruang)->get();
+        $ruang = Ruang::all();
         return view("manageaset::edit", compact('fa', 'institusi', 'divisi', 'tipe', 'kelompok', 'jenis', 'lokasi', 'ruang'), ['menu' => $this->menu]);
     }
 
