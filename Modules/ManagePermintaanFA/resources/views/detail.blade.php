@@ -57,7 +57,7 @@ $managerasetuser = User::where('role_id', 19)->first();
                                 @endif
                             </div>
                         @else
-                            <p>No PDF file available.</p>
+                            <p style="width: 680px; height: 550px;">No PDF file available.</p>
                         @endif
 
                                 
@@ -642,8 +642,11 @@ $managerasetuser = User::where('role_id', 19)->first();
                                               <p>Catatan : <strong>{{ ucfirst($permintaan->catatan) }}</strong></p>
                                               @endif
                                                 @if($permintaan->valid_dirmanageraset == 'setuju')
+                                                <br>
                                                   <center>
                                                     <a href="{{ route('bast.pdf', ['id' => $permintaan->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View BAST</a>
+                                                <br>                                                <br>
+                                                <small style="font-size: 0.7em;">(Berita Acara Serah Terima (BAST) Sudah Dibuat)</small>
                                                 </center>
                                                   @endif
                                             </div>

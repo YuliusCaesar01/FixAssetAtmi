@@ -31,10 +31,10 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <a href="{{ route('manageaset.edit', $fa->id_fa) }}"
+                            {{-- <a href="{{ route('manageaset.edit', $fa->id_fa) }}"
                                 class="btn btn-xs btn-default float-right text-info" id="btn-create-aset">
                                 <i class="fas fa-pen-square"></i> Aset
-                            </a>
+                            </a> --}}
                             <h4 class="my-3">Kode : <span class="badge bg-info">{{ $fa->kode_fa }} </span></h4>
                             <hr>
                             <h5>Kategori Barang</h5>

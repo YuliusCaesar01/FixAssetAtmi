@@ -181,18 +181,17 @@
 @if($pfa->valid_dirmanageraset == 'menunggu')                    
 
 <!-- Tombol Approve -->
-<button id="dirmansetuju" class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal">Approve</button>
+<button id="dirmansetuju{{ $pfa->id_permintaan_fa }}"  class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Approve</button>
 <button class="btn btn-secondary delay-btn" data-id="{{ $pfa->id_permintaan_fa }}" data-status="{{ $pfa->status_permohonan }}" data-bs-toggle="modal" data-bs-target="#delayModal">Delay</button>
 <!-- Tombol Reject -->
-<button id="dirmantolak" class="btn btn-danger" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#rejectModal">Reject</button>
-
+<button id="dirmantolak{{ $pfa->id_permintaan_fa }}" class="btn btn-danger" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#rejectModal{{ $pfa->id_permintaan_fa }}">Reject</button>
 
 <!-- Modal Approve -->
-<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+<div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="approveModalLabel">Konfirmasi Approve</h5>
+        <h5 class="modal-title" id="approveModalLabel{{ $pfa->id_permintaan_fa }}">Konfirmasi Approve</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -212,15 +211,14 @@
         <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST">
             @csrf
             <button type="submit" 
-        class="btn btn-primary" 
-        id="generatePdf"
-        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
-            disabled
-            style="background-color: #2a5988; border-color: #2a5988; opacity: 0.7; cursor: not-allowed;"
-            title="Tidak dapat membuat BAST karena data detail User Pengaju belum lengkap."
-        @endif
-          >Membuatkan BAST</button>
-
+              class="btn btn-primary" 
+              id="generatePdf{{ $pfa->id_permintaan_fa }}"
+              @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
+                disabled
+                style="background-color: #2a5988; border-color: #2a5988; opacity: 0.7; cursor: not-allowed;"
+                title="Tidak dapat membuat BAST karena data detail User Pengaju belum lengkap."
+              @endif
+            >Membuatkan BAST</button>
         </form>
         
         <!-- Tombol Kirim Notifikasi -->
@@ -236,48 +234,41 @@
                 Kirim Notifikasi
             </button>
         </form>
-    @endif
-    
-    
+        @endif
       </div>
     </div>
   </div>
 </div>
 
-
-
 <!-- Modal Reject -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
+<div class="modal fade" id="rejectModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="rejectModalLabel">Konfirmasi Tolak</h5>
+        <h5 class="modal-title" id="rejectModalLabel{{ $pfa->id_permintaan_fa }}">Konfirmasi Tolak</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        
-        <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST" id="rejectForm">
+        <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST" id="rejectForm{{ $pfa->id_permintaan_fa }}">
           @csrf
           <div class="form-group">
-              <!-- Hidden input with a name attribute -->
               <input type="hidden" name="status" value="tolak">
-              <label for="rejectReason">Alasan Penolakan</label>
-              <textarea class="form-control" id="rejectReason" name="rejectReason" rows="3" required placeholder="Masukkan alasan penolakan ..."></textarea>
+              <label for="rejectReason{{ $pfa->id_permintaan_fa }}">Alasan Penolakan</label>
+              <textarea class="form-control" id="rejectReason{{ $pfa->id_permintaan_fa }}" name="rejectReason" rows="3" required placeholder="Masukkan alasan penolakan ..."></textarea>
               <div class="invalid-feedback">Alasan penolakan wajib diisi.</div>
           </div>
           <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-              <!-- Tombol Konfirmasi Reject -->
-              <button type="submit" class="btn btn-danger" id="confirmReject">Tolak</button>
+              <button type="submit" class="btn btn-danger" id="confirmReject{{ $pfa->id_permintaan_fa }}">Tolak</button>
           </div>
-      </form>
-      
+        </form>
       </div>
     </div>
   </div>
 </div>
+
 @elseif($pfa->valid_dirmanageraset == 'setuju')
 
 <a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Document</a>
@@ -295,72 +286,68 @@
 
 @elseif(auth()->user()->role_id == 17)
 @if ($pfa->valid_dirkeuangan == 'setuju')
-<!-- Tambahkan status atau elemen lainnya di sini -->
 <button class="btn btn-primary" disabled>Disetujui</button>
 @elseif ($pfa->valid_dirkeuangan == 'ditolak')
 <button class="btn btn-danger" disabled>Ditolak</button>
-
 @elseif ($pfa->valid_dirkeuangan == 'menunggu')
 <!-- Tombol Approve dan Reject -->
-<button class="btn btn-success" data-toggle="modal" data-target="#approveModal">Approve</button>
-<button class="btn btn-danger" data-toggle="modal" data-target="#rejectModal">Reject</button>
+<button class="btn btn-success" data-toggle="modal" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Approve</button>
+<button class="btn btn-danger" data-toggle="modal" data-target="#rejectModal{{ $pfa->id_permintaan_fa }}">Reject</button>
 
 <!-- Approve Modal -->
-<div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="approveModalLabel">Approve Request</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{ route('bast.tindakan') }}" method="POST">
-          @csrf
-          <input type="hidden" name="id" value="{{ $pfa->id_permintaan_fa }}">
-          <input type="hidden" name="status" value="setuju">
-          <div class="form-group">
-            <label for="harga_perolehan">Harga Perolehan</label>
-            <input type="number" class="form-control" id="harga_perolehan" name="harga_perolehan" required>
-          </div>
-          <button type="submit" class="btn btn-primary">Approve</button>
-        </form>            
-      </div>
+<div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="approveModalLabel{{ $pfa->id_permintaan_fa }}">Approve Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('bast.tindakan') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $pfa->id_permintaan_fa }}">
+                    <input type="hidden" name="status" value="setuju">
+                    <div class="form-group">
+                        <label for="harga_perolehan{{ $pfa->id_permintaan_fa }}">Harga Perolehan</label>
+                        <input type="number" class="form-control" id="harga_perolehan{{ $pfa->id_permintaan_fa }}" name="harga_perolehan" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Approve</button>
+                </form>            
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Reject Modal -->
-<div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="rejectModalLabel">Reject Request</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{ route('bast.tindakan') }}" method="POST">
-          @csrf
-          <input type="hidden" name="id" value="{{ $pfa->id_permintaan_fa }}">
-          <input type="hidden" name="status" value="tolak">
-          <div class="form-group">
-            <label for="alasan_reject">Alasan</label>
-            <textarea class="form-control" id="alasan_reject" name="alasan_reject" required></textarea>
-          </div>
-          <button type="submit" class="btn btn-danger">Reject</button>
-        </form>
-      </div>
+<div class="modal fade" id="rejectModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="rejectModalLabel{{ $pfa->id_permintaan_fa }}">Reject Request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('bast.tindakan') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" value="{{ $pfa->id_permintaan_fa }}">
+                    <input type="hidden" name="status" value="tolak">
+                    <div class="form-group">
+                        <label for="alasan_reject{{ $pfa->id_permintaan_fa }}">Alasan</label>
+                        <textarea class="form-control" id="alasan_reject{{ $pfa->id_permintaan_fa }}" name="alasan_reject" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 @else
 <button class="btn btn-danger" disabled>Ditolak</button>
 @endif
-
-
 
 
   @elseif(auth()->user()->role_id == 19)
@@ -768,51 +755,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 // Handle Generate PDF button click
-var generatePdfButton = document.getElementById('generatePdf');
-
-if (generatePdfButton) {
-    generatePdfButton.addEventListener('click', function() {
-        var idPermintaan = $('#dirmansetuju').data('id');
-        // Lakukan tindakan untuk generate PDF
-        alert('Membuat pengesahan berita acara untuk permintaan ID: ' + idPermintaan);
-        // Close modal
-        $('#approveModal').modal('hide');
-    });
-} else {
-}
-
+document.getElementById('generatePdf').addEventListener('click', function() {
+    var idPermintaan = document.getElementById('dirmansetuju').value;
+    // Lakukan tindakan untuk generate PDF
+    alert('Membuat pengesahan berita acara untuk permintaan ID: ' + idPermintaan);
+    // Close modal
+    $('#approveModal').modal('hide');
+});
 
 // Handle Reject button click
-var confirmRejectButton = document.getElementById('confirmReject');
-
-if (confirmRejectButton) {
-    confirmRejectButton.addEventListener('click', function() {
-        var alasan = document.getElementById('rejectReason').value;
-        if (alasan.trim() === '') {
-            alert('Harap masukkan alasan penolakan.');
-            return;
-        }
-        var idPermintaan = $('#dirmantolak').data('id');
-        // Lakukan tindakan untuk reject dengan alasan
-        alert('Permintaan dengan ID: ' + idPermintaan + ' ditolak dengan alasan: ' + alasan);
-        // Close modal
-        $('#rejectModal').modal('hide');
-    });
-}
-
+document.getElementById('confirmReject').addEventListener('click', function() {
+    var alasan = document.getElementById('rejectReason').value;
+    if (alasan.trim() === '') {
+        alert('Harap masukkan alasan penolakan.');
+        return;
+    }
+    var idPermintaan = $('#dirmantolak').data('id');
+    // Lakukan tindakan untuk reject dengan alasan
+    alert('Permintaan dengan ID: ' + idPermintaan + ' ditolak dengan alasan: ' + alasan);
+    // Close modal
+    $('#rejectModal').modal('hide');
+});
 
     </script>
 <script>
-   // Ketika tombol tindakan diklik, ambil data-id dari tombol dan simpan di modal
-var tindakanButton = document.getElementById('tindakan');
-
-if (tindakanButton) {
-    tindakanButton.addEventListener('click', function() {
+    // Ketika tombol tindakan diklik, ambil data-id dari tombol dan simpan di modal
+    document.getElementById('tindakan').addEventListener('click', function() {
         var permintaanId = this.getAttribute('data-id'); // Ambil ID dari atribut data-id
         document.getElementById('permintaanId').value = permintaanId; // Set ID ke hidden input
     });
-}
-
     
     document.getElementById('rejectBtn').addEventListener('click', function() {
         showConfirmationSection('Ditolak');

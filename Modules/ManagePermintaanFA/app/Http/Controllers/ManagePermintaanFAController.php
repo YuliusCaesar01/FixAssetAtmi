@@ -16,7 +16,8 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
-
+use App\Mail\NotifyUser;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth; // Add this line
 use App\Models\PermintaanFixedAsset;
 use Illuminate\Http\RedirectResponse;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Crypt;
 use Carbon\Carbon;
+use App\Models\Notification;
 
 
 class ManagePermintaanFAController extends Controller
@@ -53,11 +55,18 @@ class ManagePermintaanFAController extends Controller
                         $item->delay_id = null;
                         $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
                         $item->save();
+
+                        $permintaan = $item;
+                        $user = Auth::user();
+
+                        // Call mail function to send email for approval
+                         $this->mail('approval', $permintaan, $user);
                         break;
                     case 18:
                         $item->valid_dirmanageraset = 'setuju';
                          // Parse the timestamp to get the month and year
                          $item->valid_dirmanageraset_timestamp = Carbon::now(); // Set to current time or any appropriate value
+                         $timestamp = Carbon::parse($item->valid_dirmanageraset_timestamp);
 
                         // Convert month to Roman numerals
                         $bulan = $this->monthToRoman($timestamp->month);
@@ -70,6 +79,11 @@ class ManagePermintaanFAController extends Controller
                             $item->delay_id = null;
                             $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
                             $item->save();
+                            $permintaan = $item;
+                            $user = Auth::user();
+
+                            // Call mail function to send email for approval
+                             $this->mail('approval', $permintaan, $user);
                         break;
                     default:
                         # code...
@@ -222,71 +236,64 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        // Validasi data
-        $validatedData = $request->validate([
-            'deskripsi_permintaan' => 'required',
-            'alasan_permintaan' => 'required',
-            'id_lokasi' => 'required',
-            'id_ruang' => 'required',
-            'id_tipe' => 'required',
-            'nama_barang' => 'required',
-            'merk_barang' => 'required',
-            'id_kelompok' => 'required',
-            'status_transaksi' => 'required',
-            'id_jenis' => 'required',
-            'file_pdf' => 'nullable|file|mimes:pdf|max:2048', // Tambahkan batas ukuran jika perlu
-        ]);
-    
-        // Ambil pengguna yang sedang login
-        $user = Auth::user();
-        $divisi = $user->divisi;
-    
-        // Simpan data ke dalam database
-        $permintaan = PermintaanFixedAsset::create([
-            'deskripsi_permintaan' => strip_tags($validatedData['deskripsi_permintaan']),
-            'alasan_permintaan' => strip_tags($validatedData['alasan_permintaan']),
-            'id_lokasi' => strip_tags($validatedData['id_lokasi']),
-            'id_ruang' => $validatedData['id_ruang'],
-            'id_tipe' => $validatedData['id_tipe'],
-            'tgl_permintaan' => Carbon::now(),
-            'status_permohonan' => $validatedData['status_transaksi'],
-            'id_kelompok' => $validatedData['id_kelompok'],
-            'id_jenis' => $validatedData['id_jenis'], 
-            'unit_pemohon' => $request->unit_pemohon, 
-            'unit_tujuan' => $request->unit_tujuan,
-            'id_institusi' => $divisi->id_institusi,
-            'id_user' => $user->id,
-            'nama_barang' => $validatedData['nama_barang'],
-            'merk_barang' => $validatedData['merk_barang'],
-        ]);
-    
-        if ($request->hasFile('file_pdf')) {
-            $file = $request->file('file_pdf');
-            if ($file->isValid()) {
-                // Tentukan nama file yang unik agar tidak bentrok
-                $fileName = time() . '_' . $file->getClientOriginalName();
-        
-                // Pindahkan file ke direktori public/uploads/pdfs
-                $file->move(public_path('uploads/pdfs'), $fileName);
-        
-                // Simpan path file ke database dengan enkripsi
-                $permintaan->file_pdf = Crypt::encryptString('uploads/pdfs/' . $fileName);
-                $permintaan->save();
-        
-                return redirect()->route('managepermintaanfa.index')->with('success', 'PDF uploaded successfully.');
-            } else {
-                return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
-            }
+{
+    // Validasi data
+    $validatedData = $request->validate([
+        'deskripsi_permintaan' => 'required',
+        'alasan_permintaan' => 'required',
+        'id_lokasi' => 'required',
+        'id_ruang' => 'required',
+        'id_tipe' => 'required',
+        'nama_barang' => 'required',
+        'merk_barang' => 'required',
+        'id_kelompok' => 'required',
+        'status_transaksi' => 'required',
+        'id_jenis' => 'required',
+        'file_pdf' => 'nullable|file|mimes:pdf|max:2048',
+    ]);
+
+    // Ambil pengguna yang sedang login
+    $user = Auth::user();
+    $divisi = $user->divisi;
+
+    // Simpan data ke dalam database
+    $permintaan = PermintaanFixedAsset::create([
+        'deskripsi_permintaan' => strip_tags($validatedData['deskripsi_permintaan']),
+        'alasan_permintaan' => strip_tags($validatedData['alasan_permintaan']),
+        'id_lokasi' => strip_tags($validatedData['id_lokasi']),
+        'id_ruang' => $validatedData['id_ruang'],
+        'id_tipe' => $validatedData['id_tipe'],
+        'tgl_permintaan' => Carbon::now(),
+        'status_permohonan' => $validatedData['status_transaksi'],
+        'id_kelompok' => $validatedData['id_kelompok'],
+        'id_jenis' => $validatedData['id_jenis'],
+        'unit_pemohon' => $request->unit_pemohon,
+        'unit_tujuan' => $request->unit_tujuan,
+        'id_institusi' => $divisi->id_institusi,
+        'id_user' => $user->id,
+        'nama_barang' => $validatedData['nama_barang'],
+        'merk_barang' => $validatedData['merk_barang'],
+    ]);
+
+    // Handle file upload
+    if ($request->hasFile('file_pdf')) {
+        $file = $request->file('file_pdf');
+        if ($file->isValid()) {
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('uploads/pdfs'), $fileName);
+            $permintaan->file_pdf = Crypt::encryptString('uploads/pdfs/' . $fileName);
+            $permintaan->save();
         } else {
-            return redirect()->route('managepermintaanfa.index')->with('error', 'No PDF file found.');
+            return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
         }
-        
-        
-        
-    
-        return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
     }
+
+    // Call mail function to send email for approval
+    $this->mail('approval', $permintaan, $user);
+
+    return redirect()->route('managepermintaanfa.index')->with('success', 'Permintaan berhasil diajukan.');
+}
+
     
 
     /**
@@ -356,7 +363,14 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
             // Save the file path to the database (relative path)
             $model->foto_barang = 'uploads/photos/' . $fileName; 
         }
-      
+        $permintaan = $model;
+        if ($model->perkiraan_harga >= 1000000000) {
+            $user = User::where('role_id', 15)->first();
+        } else {
+            $user = User::where('role_id', 16)->first();
+        }
+       // Call mail function to send email for approval
+    $this->mail('approval', $permintaan, $user);
     } elseif ($request->status === 'delayed') {
         // Handle delay
 
@@ -401,7 +415,11 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         // Handle rejection
         $model->catatan = $request->catatan; // Store rejection note
         $model->status = 'rejected'; // Update status to 'rejected'
-        
+        $permintaan = $pfa;
+        $user = Auth::user();
+    
+       // Call mail function to send email for approval
+        $this->mail('rejection', $permintaan, $user);
         // Handle PDF upload (if rejection includes optional PDF upload)
         if ($request->hasFile('file_pdf')) {
             $file = $request->file('file_pdf');
@@ -415,6 +433,7 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
                 return redirect()->route('managepermintaanfa.index')->with('error', 'PDF upload failed.');
             }
         }
+        
     }
 
     // Save the model
@@ -442,37 +461,58 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
             // Jika permintaan tidak ditemukan, return response atau redirect dengan pesan error
             return redirect()->back()->withErrors('Permintaan fix asset tidak ditemukan.');
         }
-
+        if ($permintaan->status_permohonan == 'Pemindahan') {
+            $user = User::where('role_id', 18)->first();
+        } else {
+            $user = User::where('role_id', 17)->first();
+        }
         // Logika untuk Setuju atau Ditolak
         if ($validatedData['tindakanType'] == 'Setuju') {
             // Tindakan Setuju: update status permintaan
             if (Auth::user()->role_id == 16) {
                 $permintaan->valid_karyausaha = 'setuju';
                 $permintaan->valid_karyausaha_timestamp = Carbon::now();
+                $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
+                $permintaan->save(); // Simpan perubahan ke database
+                 if($permintaan->save){
+                   $this->mail('approval', $permintaan, $user);
+
+                 }
 
             }else{
              $permintaan->valid_ketuayayasan = 'setuju';
              $permintaan->valid_ketuayayasan_timestamp = Carbon::now();
+             $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
+             $this->mail('approval', $permintaan, $user);
+              $permintaan->save(); // Simpan perubahan ke database
 
             }
+          
+           
         } else {
             if (Auth::user()->role_id == 16) {
                 $permintaan->valid_karyausaha = 'tolak';
                 $permintaan->status = 'ditolak';
                 //notif ke role sebelumnya
                 $permintaan->valid_karyausaha_timestamp = Carbon::now();
-
+                $permintaan->catatan = $validatedData['alasan']; // Simpan alasan penolakan
+                $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
+                $permintaan->save(); // Simpan perubahan ke database
+                $user = Auth::user();
+                $this->mail('rejection', $permintaan, $user);
             }else{
                  $permintaan->valid_ketuayayasan = 'tolak';
                  $permintaan->valid_ketuayayasan_timestamp = Carbon::now();
-
+                 $permintaan->catatan = $validatedData['alasan']; // Simpan alasan penolakan
+                 $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
+                 $permintaan->save(); // Simpan perubahan ke database
+                 $user = Auth::user();
+                 $this->mail('rejection', $permintaan, $user);
             }
-            $permintaan->catatan = $validatedData['alasan']; // Simpan alasan penolakan
         }
 
-        // Simpan tindak lanjut
-        $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
-        $permintaan->save(); // Simpan perubahan ke database
+        
+      
 
         // Berikan respons atau redirect setelah berhasil
         return redirect()->route('managepermintaanfa.index')->with('success', 'Tindakan berhasil dilakukan.');
@@ -493,7 +533,8 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
             ]);
     
             $permintaan = PermintaanFixedAsset::find($validatedData['id']);
-    
+            $user = User::where('role_id', 18)->first();
+
             switch (Auth::user()->role_id) {
                 case 17:
                     if ($request->status === 'setuju') {
@@ -502,7 +543,12 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
                         $permintaan->valid_dirkeuangan = 'setuju';
                         $permintaan->valid_dirkeuangan_timestamp = Carbon::now();
                         $permintaan->update();
-
+                        if ($permintaan->save()) {
+                            $this->mail('approval', $permintaan, $user);
+                        } else {
+                            // Handle the error, you can get the errors like this
+                            $errors = $permintaan->getErrors(); // If you have a method for this
+                        }
                     } elseif ($request->status === 'tolak') {
                         // Logika untuk status 'tolak'
                         $permintaan->status = 'ditolak';
@@ -625,7 +671,12 @@ public function tindakanbast(Request $request, $id)
     $pfa->valid_dirmanageraset = 'setuju';
     $pfa->valid_dirmanageraset_timestamp = Carbon::now();
     $pfa->save();
+    // Call mail function to send email for approval
+    $permintaan = $pfa;
+    $user = Auth::user();
 
+   // Call mail function to send email for approval
+    $this->mail('approval', $permintaan, $user);
  // Parse the timestamp to get the month and year
  $timestamp = Carbon::parse($pfa->valid_dirmanageraset_timestamp);
 
@@ -718,9 +769,62 @@ public function catat(Request $request)
 
         ]);
 
-
+        $permintaan = $pfa;
+        $user = Auth::user();
+    
+       // Call mail function to send email for approval
+        $this->mail('success', $permintaan, $user);
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Permintaan FA telah dicatat dengan sukses!');
+    }
+
+    public function mail($typemail, $permintaan, $user)
+    {
+        switch ($typemail) {
+            case 'approval':
+                $emailType = 'Approval';
+                $subject = 'No-Reply, Fixed Asset Approval';
+                $message = 'Fix Asset terbaru menunggu tindakan anda';
+                break;
+            case 'rejection':
+                $emailType = 'Rejection';
+                $subject = 'No-Reply,Fixed Asset Rejection';
+                $message = 'Fix Asset telah ditolak';
+
+                break;
+            case 'delayed':
+                    $emailType = 'Delayed';
+                    $subject = 'No-Reply,Fixed Asset Delayed';
+                    $message = 'Fix Asset telah ditunda';
+
+                break;
+            case 'success':
+                    $emailType = 'Success';
+                    $subject = 'No-Reply,Fixed Asset Approved';
+                    $message = 'Fix Asset telah Approved success';
+
+                    break;
+            default:
+                return; // Exit if no valid email type is provided
+        }
+    
+      
+Notification::create([
+    'id_user_pengirim' => auth()->user()->id,
+    'id_user_penerima' => $user->id,
+    'id_pengajuan' => $permintaan->id_permintaan_fa,
+    'keterangan_notif' => $message,
+    'jenis_notif' => 'pengajuan', // Menggunakan input dari request
+    'tipe_notif' => 'system', // Default notification type
+]);
+
+        // Kirim email ke user atau admin berdasarkan role
+      $mail =  Mail::to($user->email)->send(new NotifyUser($subject, $emailType, $permintaan));
+
+
+      
+    
+
     }
 
     /**

@@ -23,29 +23,38 @@
             margin: 0 auto;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden; /* Ensure border radius is applied */
+            overflow: hidden;
         }
 
+        /* Updated Header */
         .email-header {
-            background-color: #5da3f0;
-            padding: 20px;
+            background-color: #007cba;
+            padding: 30px;
             text-align: center;
+            color: white;
         }
 
         .email-header img {
-            max-width: 100%;
+            max-width: 180px;
             height: auto;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .email-header h1 {
+            margin: 10px 0;
+            font-size: 22px;
         }
 
         .email-body {
             padding: 20px;
-            text-align: center;
+            text-align: left;
         }
 
         h1 {
             font-size: 24px;
             color: #333;
-            margin: 0 0 20px;
+            margin-bottom: 20px;
         }
 
         p {
@@ -58,8 +67,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0 auto;
-            text-align: left;
+            margin-top: 20px;
         }
 
         td {
@@ -81,6 +89,7 @@
             font-size: 16px;
             border-radius: 4px;
             margin-top: 20px;
+            text-align: center;
         }
 
         .btn:hover {
@@ -88,27 +97,37 @@
         }
 
         .email-footer {
+            background-color: #f7f7f7; /* Light footer background */
+            padding: 15px;
+            text-align: center;
             font-size: 12px;
             color: #888;
-            padding: 10px 20px;
-            text-align: center;
-            border-top: 1px solid #f0f0f0;
         }
 
         .email-footer a {
-            color: #4184f3;
+            color: #007cba;
             text-decoration: none;
-            margin: 0 5px;
         }
 
-        .email-footer a:hover {
-            text-decoration: underline;
-        }
+      
 
-        .email-footer .unsubscribe {
+        .contact-info {
+            font-size: 14px;
+            color: #555; /* Slightly darker for better visibility */
             margin-top: 10px;
-            display: block;
-            color: #888;
+        }
+
+        small {
+            display: block; /* Small text in its own line */
+            margin-top: 10px;
+            color: #555; /* Slightly darker for better visibility */
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
         }
 
         @media (max-width: 600px) {
@@ -129,9 +148,13 @@
                 font-size: 14px;
             }
 
+            .email-header img {
+                max-width: 150px;
+            }
+
             .email-footer {
-                font-size: 11px;
-                padding: 15px;
+                flex-direction: column;
+                font-size: 12px;
             }
 
             .email-footer a {
@@ -144,64 +167,84 @@
 <body>
     <div class="email-container">
         <div class="email-header">
-            <img src="https://via.placeholder.com/32" alt="ATMI Logo">
+            <img src="http://localhost:8080/fixaset.png" alt="Company Logo">
+            <h1 style="color: #f0f0f0;">Fixed Asset ATMI</h1>
         </div>
         <div class="email-body">
             <h1>Halo!</h1>
-            <p>Pengajuan Fix Asset Delayed/Disetujui/Ditolak/Menunggu</p>
-        
+            <p>Pengajuan Fix Asset Menunggu Tindakan Anda:</p>
+
             <table>
                 <tr>
                     <td class="table-header">Diajukan oleh:</td>
-                    <td><strong>Muhammad</strong></td>
+                    <td><strong>{{$permintaan->user->userdetail->nama_lengkap}}</strong></td>
                 </tr>
                 <tr>
                     <td class="table-header">Diajukan Tanggal:</td>
-                    <td><strong>2021-01-01</strong></td>
+                    <td><strong>{{ \Carbon\Carbon::parse($permintaan->created_at)->translatedFormat('d F Y H:i') }} WIB</strong></td>
                 </tr>
                 <tr>
                     <td class="table-header">Jenis Ajuan:</td>
-                    <td><strong>[Jenis Ajuan]</strong></td>
+                    <td><strong>FIX ASSET</strong></td>
                 </tr>
                 <tr>
                     <td class="table-header">Deskripsi Ajuan:</td>
-                    <td><strong>[Deskripsi Ajuan]</strong></td>
+                    <td><strong>{{$permintaan->deskripsi_permintaan}}</strong></td>
                 </tr>
                 <tr>
-                    <td class="table-header">STATUS:</td>
-                    <td><strong>Menunggu/Ditolak/Disetujui/Delay</strong></td>
+                    <td class="table-header">Status Permohonan:</td>
+                    <td><strong>{{$permintaan->status_permohonan}}</strong></td>
                 </tr>
+                <tr>
+                    <td class="table-header">STATUS</td>
+                    @if($permintaan->status == 'disetujui')
+                        <td><span class="badge badge-success">Disetujui</span></td>
+                    @elseif($permintaan->status == 'ditolak')
+                        <td><span class="badge badge-danger">Ditolak</span></td>
+                    @elseif($permintaan->status == null || $permintaan->status == 'menunggu' )
+                        <td><span class="badge badge-warning">Pending Approval</span></td>
+                    @elseif($permintaan->status == 'delayed')
+                        <td><span class="badge badge-info">Pending Delay</span></td>
+                
+                    @endif
+                    
+                    
+
+                </tr>
+                @if($permintaan->delay_id != null)
                 <tr>
                     <td class="table-header">Alasan Delay:</td>
-                    <td><small>Catatan</small></td>
+                    <td><small>{{$permintaan->catatan}}</small></td>
                 </tr>
                 <tr>
                     <td class="table-header">Waktu Delay:</td>
-                    <td><small>Sampai dengan 14 Agustus 2024</small></td>
+                    <td><small>Sampai dengan {{$permintaan->delay_timestamp}}/small></td>
                 </tr>
+                @endif
+                @if($permintaan->status == 'tolak')
+
                 <tr>
-                    <td class="table-header">Alasan penolakan:</td>
+                    <td class="table-header">Alasan Penolakan:</td>
                     <td><small><strong>[Alasan Penolakan]</strong></small></td>
-                
                 </tr>
                 <tr>
                     <td class="table-header">Ditolak oleh:</td>
-                    <td><small><strong>[OfficialFixaset]</strong></small></td>
-                
+                    <td><small><strong>[Official FixAsset]</strong></small></td>
                 </tr>
+                @endif
             </table>
-        
+
             <a href="#" class="btn">Lihat Sekarang</a>
-        
-            <p>If you have any questions, just reply to this email—we're always happy to help out.</p>
-            <p>IT Team ATMI</p>
+
+            <p>Salam Hangat.</p>
+            <p>Tim IT ATMI</p>
         </div>
         <div class="email-footer">
-            <p>
-                <a href="#">Dashboard</a> · <a href="#">Billing</a> · <a href="#">Help</a>
-            </p>
-            <a href="#" class="unsubscribe">If these emails get annoying, please feel free to unsubscribe.</a>
-            <p>Contoso - 1234 Main Street - Anywhere, MA - 56789</p>
+            <div class="contact-info">
+                <p>Email: <a href="mailto:itatmicorp@gmail.com">itatmicorp@gmail.com</a></p>
+                <p>Staff Email: <a href="mailto:daniel@atmi.co.id">daniel@atmi.co.id</a></p>
+                <p>No. Telp: +(62) 271-714466</p>
+            </div>
         </div>
     </div>
 </body>

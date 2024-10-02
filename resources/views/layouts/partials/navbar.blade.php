@@ -32,9 +32,12 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
                         <div class="input-group-append">
                             <button class="btn btn-navbar" type="submit"><i class="fas fa-search"></i></button>
-                            <li class="nav-item">
-                                <a id="bell" class="nav-link" data-widget="notif" href="#" role="button">
+                            <li class="nav-item icon-button">
+                                <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button" style="position: relative;">
                                     <i class="fas fa-bell"></i>
+                                    <span id="unreadCount" style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
+                                        {{ $unreadCount }}
+                                    </span>
                                 </a>
                             </li>
                             <button class="btn btn-navbar" type="button" data-widget="navbar-search">
