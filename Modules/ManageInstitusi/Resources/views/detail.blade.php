@@ -36,12 +36,14 @@
                                                 {{ $ins->kode_institusi }}</span>
                                         </h4>
                                     </div>
+                                    @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-institusi" title="Ubah Institusi"
+                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
                                             data-di="{{ $ins->id_institusi }}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
                                     </div>
+                                    @endif
                                 </div>
                             </div><!-- /.col -->
                         </div><!-- /.row -->

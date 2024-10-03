@@ -11,11 +11,14 @@
                         <div class="col-6">
                             <h1 class="m-0">Data Jenis</h1>
                         </div><!-- /.col -->
+                        @if(auth()->user()->role_id == 19)
+
                         <div class="col-6">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-jenis">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-kelompok">
                                 <i class="fas fa-plus"></i> Jenis
                             </a>
                         </div>
+                        @endif
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -23,22 +26,7 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="card">
-                        <div class="card-header">
-                            <div class="row">
-                                <div class="col-6">
-                                    <h5 class="m-0">Jenis</h5>
-                                </div>
-                                <div class="col-6">
-                                    <div class="float-right">
-                                        <select class="form-control form-control-sm" id="mode-selector">
-                                            <option value="yayasan">Yayasan</option>
-                                            <option value="smkmikael">SMK Mikael</option>
-                                            <option value="politeknik">Politeknik</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
                         <div class="card-body">
                             <table id="tbl_jenis" class="table table-striped table-sm">
                                 <thead>

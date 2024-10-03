@@ -11,11 +11,14 @@
                         <div class="col-6">
                             <h1 class="m-0">Data Kelompok</h1>
                         </div><!-- /.col -->
+                        @if(auth()->user()->role_id == 19)
+
                         <div class="col-6">
                             <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-kelompok">
                                 <i class="fas fa-plus"></i> Kelompok
                             </a>
                         </div>
+                        @endif
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -28,15 +31,7 @@
                                 <div class="col-6">
                                     <h5 class="m-0">Kelompok</h5>
                                 </div>
-                                <div class="col-6">
-                                    <div class="float-right">
-                                        <select class="form-control form-control-sm" id="mode-selector">
-                                            <option value="yayasan">Yayasan</option>
-                                            <option value="smkmikael">SMK Mikael</option>
-                                            <option value="politeknik">Politeknik</option>
-                                        </select>
-                                    </div>
-                                </div>
+                              
                             </div>
                         </div>
                         <div class="card-body">

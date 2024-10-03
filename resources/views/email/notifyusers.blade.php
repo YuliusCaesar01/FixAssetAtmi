@@ -218,7 +218,7 @@
                 </tr>
                 <tr>
                     <td class="table-header">Waktu Delay:</td>
-                    <td><small>Sampai dengan {{$permintaan->delay_timestamp}}/small></td>
+                    <td><small>Sampai dengan {{$permintaan->delay_timestamp}}</small></td>
                 </tr>
                 @endif
                 @if($permintaan->status == 'tolak')
@@ -237,7 +237,7 @@
             <a href="#" class="btn">Lihat Sekarang</a>
 
             <p>Salam Hangat.</p>
-            <p>Tim IT ATMI</p>
+            <p>IT ATMI YKBS</p>
         </div>
         <div class="email-footer">
             <div class="contact-info">

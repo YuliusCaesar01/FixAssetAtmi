@@ -161,7 +161,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     </ul>
                 </li>
 
-                @if(auth()->user()->role_id == 19 || auth()->user()->role_id == 1)
                 <li class="nav-header">KATEGORI</li>
                 <li class="nav-item">
                     <a href="{{ route('manageinstitusi.index') }}" class="nav-link {{ $menu == 'Institusi' ? 'active' : '' }}">
@@ -211,7 +210,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         </li>
                     </ul>
                 </li>
-                @endif
+               
             </ul>
         </nav>
     </div>

@@ -55,12 +55,14 @@ class ManagePermintaanFAController extends Controller
                         $item->delay_id = null;
                         $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
                         $item->save();
+                        $user = User::where('id', $item->user_id)->first();
 
                         $permintaan = $item;
-                        $user = Auth::user();
-
+               
                         // Call mail function to send email for approval
-                         $this->mail('approval', $permintaan, $user);
+                       
+                         $this->mail('delayend', $permintaan, $user);
+
                         break;
                     case 18:
                         $item->valid_dirmanageraset = 'setuju';
@@ -80,10 +82,11 @@ class ManagePermintaanFAController extends Controller
                             $item->delay_timestamp = null; // Ensure 'status' is the correct field name for updating
                             $item->save();
                             $permintaan = $item;
-                            $user = Auth::user();
+                            $user = User::where('id', $item->user_id)->first();
+                            $user1 = User::where('role_id', 19)->first();
 
-                            // Call mail function to send email for approval
-                             $this->mail('approval', $permintaan, $user);
+                             $this->mail('delayend', $permintaan, $user);
+
                         break;
                     default:
                         # code...
@@ -253,7 +256,7 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
     ]);
 
     // Ambil pengguna yang sedang login
-    $user = Auth::user();
+    $user = User::where('role_id', 14)->first();
     $divisi = $user->divisi;
 
     // Simpan data ke dalam database
@@ -410,7 +413,11 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         $model->delay_id = auth()->user()->role_id; // Store role_id in delay_id
         $model->delay_timestamp = $request->delay_date; // Ensure this column exists in your database
         $model->status = 'delayed'; // Update status to 'delayed'
+        $permintaan = $model;
+        $user = User::where('id', $model->id_user)->first();
     
+        // Call mail function to send email for approval
+         $this->mail('delayed', $permintaan, $user);
     } elseif ($request->status === 'ditolak') {
         // Handle rejection
         $model->catatan = $request->catatan; // Store rejection note
@@ -474,10 +481,10 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
                 $permintaan->valid_karyausaha_timestamp = Carbon::now();
                 $permintaan->tindak_lanjut = $validatedData['tindakLanjut'];
                 $permintaan->save(); // Simpan perubahan ke database
-                 if($permintaan->save){
-                   $this->mail('approval', $permintaan, $user);
+             
+                $this->mail('approval', $permintaan, $user);
 
-                 }
+                 
 
             }else{
              $permintaan->valid_ketuayayasan = 'setuju';
@@ -673,7 +680,7 @@ public function tindakanbast(Request $request, $id)
     $pfa->save();
     // Call mail function to send email for approval
     $permintaan = $pfa;
-    $user = Auth::user();
+    $user = User::where('role_id', 19)->first();
 
    // Call mail function to send email for approval
     $this->mail('approval', $permintaan, $user);
@@ -770,7 +777,7 @@ public function catat(Request $request)
         ]);
 
         $permintaan = $pfa;
-        $user = Auth::user();
+        $user = User::where('id', $pfa->id_user)->first();
     
        // Call mail function to send email for approval
         $this->mail('success', $permintaan, $user);
@@ -796,7 +803,11 @@ public function catat(Request $request)
                     $emailType = 'Delayed';
                     $subject = 'No-Reply,Fixed Asset Delayed';
                     $message = 'Fix Asset telah ditunda';
-
+            case 'delayend':
+                        $emailType = 'Delayend';
+                        $subject = 'No-Reply,Fixed Asset Delay End';
+                        $message = 'Fix Asset waktu penundaan telah berakhir';
+    
                 break;
             case 'success':
                     $emailType = 'Success';
@@ -811,7 +822,7 @@ public function catat(Request $request)
       
 Notification::create([
     'id_user_pengirim' => auth()->user()->id,
-    'id_user_penerima' => $user->id,
+    'id_user_penerima' => $user->id ,
     'id_pengajuan' => $permintaan->id_permintaan_fa,
     'keterangan_notif' => $message,
     'jenis_notif' => 'pengajuan', // Menggunakan input dari request

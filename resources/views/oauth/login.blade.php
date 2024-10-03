@@ -134,5 +134,23 @@
     @endif
 });
 </script>
+<script>
+    $(document).ready(function() {
+        $('form').on('submit', function(e) {
+            var $form = $(this);
+            var $submitBtn = $form.find('button[type="submit"]');
+
+            // Disable the submit button after it's clicked
+            $submitBtn.prop('disabled', true);
+        });
+
+        // Membuka kembali modal jika ada error
+        @if ($errors->any())
+            $('#forgotPasswordModal').modal('show');
+        @endif
+    });
+</script>
+
+
 
 @endsection

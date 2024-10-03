@@ -40,12 +40,14 @@
                                                 {{ $kelompok->kode_kelompok }}</span>
                                         </h4>
                                     </div>
+                                    @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-kelompok" title="Ubah Kelompok"
-                                            data-di="{{ $kelompok->id_kelompok }}" class="btn btn-sm btn-secondary float-right">
+                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
+                                            data-di="{{   $kelompok->id_kelompok}}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
                                     </div>
+                                    @endif
                                 </div>
                             </div><!-- /.col -->
                         </div><!-- /.row -->
@@ -60,15 +62,7 @@
                             <div class="col-6">
                                 <h3 class="card-title">Jenis</h3>
                             </div>
-                            <div class="col-6">
-                                <div class="float-right">
-                                    <select class="form-control form-control-sm" id="mode-selector">
-                                        <option value="yayasan">Yayasan</option>
-                                        <option value="smkmikael">SMK Mikael</option>
-                                        <option value="politeknik">Politeknik</option>
-                                    </select>
-                                </div>
-                            </div>
+                         
                         </div>
                     </div>
                     <!-- /.card-header -->

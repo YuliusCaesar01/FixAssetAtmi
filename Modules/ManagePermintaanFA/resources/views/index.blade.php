@@ -158,7 +158,7 @@
                                              <!-- view button -->
                                              @if($pfa->pdf_bukti_1 != null)
                                              <button class="btn btn-secondary" disabled>{{ ucfirst($pfa->status)}}</button>
-                                             <a href="{{ asset('storage/' . Crypt::decryptString($pfa->pdf_bukti_1)) }}" class="btn btn-primary" target="_blank">View PDF</a>
+                                             {{-- <a href="{{ asset('storage/' . Crypt::decryptString($pfa->pdf_bukti_1)) }}" class="btn btn-primary" target="_blank">View PDF</a> --}}
                                              @else
                                              <button class="btn btn-secondary" disabled>{{ ucfirst($pfa->status)}}</button>
                                              @endif
@@ -199,11 +199,7 @@
       <div class="modal-body">
         Penyerahan Berita Acara Serah Terima Aset
         <!-- Informasi jika userdetail tidak lengkap -->
-        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
-            <div class="alert alert-warning mt-3">
-                <strong>Perhatian!</strong> Data user detail <strong>Pengaju</strong> belum lengkap. Silakan lengkapi data sebelum membuat BAST.
-            </div>
-        @endif
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -213,16 +209,12 @@
             <button type="submit" 
               class="btn btn-primary" 
               id="generatePdf{{ $pfa->id_permintaan_fa }}"
-              @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap) || $pfa->user->userdetail->nama_lengkap == 'Default')
-                disabled
-                style="background-color: #2a5988; border-color: #2a5988; opacity: 0.7; cursor: not-allowed;"
-                title="Tidak dapat membuat BAST karena data detail User Pengaju belum lengkap."
-              @endif
+             
             >Membuatkan BAST</button>
         </form>
         
         <!-- Tombol Kirim Notifikasi -->
-        @if(is_null($pfa->user->userdetail) || is_null($pfa->user->userdetail->nama_lengkap))
+        {{-- @if(is_null(optional($pfa->user->userdetail)->nama_lengkap) || optional($pfa->user->userdetail)->nama_lengkap === 'Default')
         <form action="{{ route('notifications.send') }}" method="POST" style="margin-left: 10px;">
             @csrf
             <input type="hidden" name="id_user_pengirim" value="{{ auth()->user()->id }}">
@@ -234,7 +226,7 @@
                 Kirim Notifikasi
             </button>
         </form>
-        @endif
+        @endif --}}
       </div>
     </div>
   </div>
@@ -271,7 +263,7 @@
 
 @elseif($pfa->valid_dirmanageraset == 'setuju')
 
-<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Document</a>
+<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Document BAST</a>
 @else
 <p class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-gray-600 rounded-full">
     Telah Ditolak
@@ -354,16 +346,16 @@
   @if ($pfa->valid_manageraset != 'menunggu')
   <!-- Tambahkan status atau elemen lainnya di sini -->
   <button class="btn btn-primary" disabled>Telah Disimpan</button>
-  @elseif ($pfa->valid_manageraset == 'menunggu')
-  <!-- Tombol Approve dan Reject -->
-  <button class="btn btn-success" data-toggle="modal" data-target="#approveModal">Simpan</button>
+@elseif ($pfa->valid_manageraset == 'menunggu')
+  <!-- Tombol Approve -->
+  <button class="btn btn-success" data-toggle="modal" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Simpan</button>
   
   <!-- Approve Modal -->
-  <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel" aria-hidden="true">
+  <div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="approveModalLabel">Approve Request</h5>
+          <h5 class="modal-title" id="approveModalLabel{{ $pfa->id_permintaan_fa }}">Approve Request</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -386,8 +378,7 @@
       </div>
     </div>
   </div>
-  
-  
+
   @else
   <button class="btn btn-danger" disabled>Ditolak</button>
   @endif
