@@ -421,23 +421,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 });
 
     
-        // Notification on bell icon click
-        const bellIcon = document.getElementById('bell');
-        bellIcon.addEventListener('click', function (event) {
-            const notificationMessage = 'You have a new notification!';
-            const notificationDiv = document.createElement('div');
-            notificationDiv.className = 'notification-popup';
-            notificationDiv.textContent = notificationMessage;
-    
-            const rect = event.target.getBoundingClientRect();
-            notificationDiv.style.position = 'fixed';
-            notificationDiv.style.top = rect.bottom + 'px';
-            notificationDiv.style.left = rect.left + 'px';
-            document.body.appendChild(notificationDiv);
-    
-            setTimeout(() => document.body.removeChild(notificationDiv), 3000);
-        });
-    
+      
         document.querySelectorAll('.nav-item').forEach(item => {
     const dropdown = item.querySelector('.nav-treeview');
     const arrowIcon = item.querySelector('.nav-link .right');
@@ -457,21 +441,29 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 });
 
     
-        // Profile image click handling
-        const profileImg = document.getElementById('profile-img');
-        const profileView = document.getElementById('profile-view');
-        const sidebar = document.querySelector('.main-sidebar');
-        const backToNavbarButton = document.getElementById('back-to-navbar');
-    
+document.addEventListener('DOMContentLoaded', function () {
+    const profileImg = document.getElementById('profile-img');
+    const profileView = document.getElementById('profile-view');
+    const sidebar = document.querySelector('.main-sidebar');
+    const backToNavbarButton = document.getElementById('back-to-navbar');
+
+    if (profileImg && profileView && sidebar && backToNavbarButton) {
+        // Handle profile image click
         profileImg.addEventListener('click', function () {
             profileView.style.display = 'block';
-            sidebar.classList.add('hidden-sidebar');
+            sidebar.classList.add('hidden-sidebar'); // Hide sidebar
         });
-    
+
+        // Handle back to navbar click
         backToNavbarButton.addEventListener('click', function () {
             profileView.style.display = 'none';
-            sidebar.classList.remove('hidden-sidebar');
+            sidebar.classList.remove('hidden-sidebar'); // Show sidebar again
         });
+    } else {
+        console.error('Elements not found in the DOM.');
+    }
+});
+
     
       
     
