@@ -28,20 +28,14 @@
                     <div class="card card-info  collapsed-card">
                         <div class="card-header" style="width: 100%;">
                             <center><h3 class="card-title">Kategori Aset Tetap (Fixed Asset)</h3></center>
-                          
                         </div>
-                      
                     </div>
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">Semua Aset Tetap (Fixed Asset)</h3>
                         </div>
                         <div class="card-body">
-                            @if ($errors->any())
-                                <div class="alert alert-danger" role="alert">
-                                    {!! implode('', $errors->all('<li>:message</li>')) !!}
-                                </div>
-                            @endif
+                           
                             <table id="tbl_permintaanfa" class="table table-striped table-sm" id="tbl_fa">
                                 <thead>
                                     <tr>
@@ -79,6 +73,15 @@
                                                         </button>
                                                     @endif
                                                 @endrole
+                                                <!-- Tombol Delete -->
+                                                <form action="{{ route('manageaset.destroy', $ast->id_fa) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -103,6 +106,7 @@
         </div>
     </div>
 @endsection
+
 @section('scripttambahan')
     <!-- InputMask -->
     <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
@@ -242,20 +246,7 @@
             });
         });
       </script>
-    <script>
-        //message with toastr
-        @if (session()->has('notification'))
-
-            var isi = @json(session('notification'));
-            Swal.fire({
-                icon: 'success',
-                title: 'Hei...',
-                text: isi,
-                showConfirmButton: false,
-                timer: 2500
-            });
-        @endif
-    </script>
+   
     <script>
         $(document).ready(function() {
             $('.validate-asset').click(async function() {
@@ -319,5 +310,20 @@
             }
         });
     </script>
-
+@if (session('success'))
+@once
+<div class="alert alert-success">
+    <script>
+        var isi = @json(session('notification'));
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil..',
+            text: isi,
+            showConfirmButton: false,
+            timer: 2500
+        });
+    </script>
+</div>
+@endonce
+@endif
 @endsection

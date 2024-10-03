@@ -463,6 +463,9 @@ $base64QrCode = base64_encode($qrCodeImage);
      */
     public function destroy($id)
     {
-        //
+        $aset = FixedAsset::findOrFail($id);
+        $aset->delete();
+
+        return redirect()->back()->with('success', 'Aset berhasil dihapus.');
     }
 }

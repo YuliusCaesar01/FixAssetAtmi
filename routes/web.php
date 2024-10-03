@@ -89,6 +89,8 @@ Route::post('/managepermintaanfa/reject', [ManagePermintaanFAController::class, 
 Route::post('/managepermintaanfa/tindakan', [ManagePermintaanFAController::class, 'tindakan'])->name('managepermintaanfa.tindakan');
 Route::post('/bast/tindakan', [ManagePermintaanFAController::class, 'tindakan_bast'])->name('bast.tindakan');
 Route::post('/bast/tindakanbast/{id}', [ManagePermintaanFAController::class, 'tindakanbast'])->name('bast.tindakanbast');
+Route::resource('manageaset', ManageAsetController::class);
+
 // routes/web.php
 // routes/web.php
 Route::get('/bast/pdf/{id}', [ManagePermintaanFAController::class, 'viewBast'])->name('bast.pdf');
