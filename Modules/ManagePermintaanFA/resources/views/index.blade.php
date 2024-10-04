@@ -181,10 +181,7 @@
 @if($pfa->valid_dirmanageraset == 'menunggu')                    
 
 <!-- Tombol Approve -->
-<button id="dirmansetuju{{ $pfa->id_permintaan_fa }}"  class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Approve</button>
-<button class="btn btn-secondary delay-btn" data-id="{{ $pfa->id_permintaan_fa }}" data-status="{{ $pfa->status_permohonan }}" data-bs-toggle="modal" data-bs-target="#delayModal">Delay</button>
-<!-- Tombol Reject -->
-<button id="dirmantolak{{ $pfa->id_permintaan_fa }}" class="btn btn-danger" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#rejectModal{{ $pfa->id_permintaan_fa }}">Reject</button>
+<button id="dirmansetuju{{ $pfa->id_permintaan_fa }}"  class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Confirmation</button>
 
 <!-- Modal Approve -->
 <div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
@@ -232,38 +229,11 @@
   </div>
 </div>
 
-<!-- Modal Reject -->
-<div class="modal fade" id="rejectModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="rejectModalLabel{{ $pfa->id_permintaan_fa }}">Konfirmasi Tolak</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST" id="rejectForm{{ $pfa->id_permintaan_fa }}">
-          @csrf
-          <div class="form-group">
-              <input type="hidden" name="status" value="tolak">
-              <label for="rejectReason{{ $pfa->id_permintaan_fa }}">Alasan Penolakan</label>
-              <textarea class="form-control" id="rejectReason{{ $pfa->id_permintaan_fa }}" name="rejectReason" rows="3" required placeholder="Masukkan alasan penolakan ..."></textarea>
-              <div class="invalid-feedback">Alasan penolakan wajib diisi.</div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-danger" id="confirmReject{{ $pfa->id_permintaan_fa }}">Tolak</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+
 
 @elseif($pfa->valid_dirmanageraset == 'setuju')
 
-<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">View Document BAST</a>
+<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">Document BAST  <i class="fas fa-eye ml-2"></i></a>
 @else
 <p class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-gray-600 rounded-full">
     Telah Ditolak
@@ -283,8 +253,7 @@
 <button class="btn btn-danger" disabled>Ditolak</button>
 @elseif ($pfa->valid_dirkeuangan == 'menunggu')
 <!-- Tombol Approve dan Reject -->
-<button class="btn btn-success" data-toggle="modal" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Approve</button>
-<button class="btn btn-danger" data-toggle="modal" data-target="#rejectModal{{ $pfa->id_permintaan_fa }}">Reject</button>
+<button class="btn btn-success" data-toggle="modal" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Confirm</button>
 
 <!-- Approve Modal -->
 <div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
@@ -529,36 +498,27 @@
               <option value="rusak">rusak</option>
             </select>
           </div>
-
           <div class="form-group mt-3">
             <label>Pilih Jenis File</label>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="file_type" id="uploadImage" value="image" checked>
-              <label class="form-check-label" for="uploadImage">
-                Upload Gambar
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="file_type" id="uploadPDF" value="pdf">
-              <label class="form-check-label" for="uploadPDF">
-                Upload PDF
-              </label>
+            <div class="btn-group" role="group" aria-label="File Upload Type">
+              <button type="button" class="btn btn-primary active" id="uploadImageBtn2">Upload Gambar</button>
+              <button type="button" class="btn btn-secondary" id="uploadPDFBtn2">Upload PDF</button>
             </div>
           </div>
-
+          
           <div id="imageUploadContainer" class="form-group mt-3">
             <label for="image_file">Upload File</label>
-            <input type="file" class="form-control-file" id="image_file" name="file_image" accept="image/*">
-            <small class="text-muted">(*File kurang dari 2 MB)</small>
+            <input type="file" class="form-control-file" id="image_file2" name="file_image2" accept="image/*">
+            <small class="text-muted">(*File gambar kurang dari 2 MB)</small>
             <div id="image-upload-feedback" class="mt-2"></div>
-        </div>
-        
-        <div id="pdfUploadContainer" class="form-group mt-3 d-none">
+          </div>
+          
+          <div id="pdfUploadContainer" class="form-group mt-3 d-none">
             <label for="pdf_file">Upload File</label>
-            <input type="file" class="form-control-file" id="pdf_file" name="file_pdf" accept="application/pdf">
+            <input type="file" class="form-control-file" id="pdf_file2" name="file_pdf2" accept="application/pdf">
             <small class="text-muted">(*Opsional upload pdf, kurang dari 2 MB)</small>
             <div id="file-upload-feedback" class="mt-2"></div>
-        </div>
+          </div>
 
           <div class="form-group">
             <label for="alasanDelay">Alasan Delay</label>
@@ -619,34 +579,25 @@
           </div>
           <div class="form-group mt-3">
             <label>Pilih Jenis File</label>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="file_type2" id="uploadImage2" value="image" checked>
-              <label class="form-check-label" for="uploadImage">
-                Upload Gambar
-              </label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="radio" name="file_type2" id="uploadPDF2" value="pdf">
-              <label class="form-check-label" for="uploadPDF">
-                Upload PDF
-              </label>
+            <div class="btn-group" role="group" aria-label="File Upload Type">
+              <button type="button" class="btn btn-primary active" id="uploadImageBtn">Upload Gambar</button>
+              <button type="button" class="btn btn-secondary" id="uploadPDFBtn">Upload PDF</button>
             </div>
           </div>
-
+          
           <div id="imageUploadContainer2" class="form-group mt-3">
             <label for="image_file2">Upload File</label>
             <input type="file" class="form-control-file" id="image_file2" name="file_image2" accept="image/*">
-            <small class="text-muted">(*File kurang dari 2 MB)</small>
+            <small class="text-muted">(*File gambar kurang dari 2 MB)</small>
             <div id="image-upload-feedback2" class="mt-2"></div>
-        </div>
-        
-        <div id="pdfUploadContainer2" class="form-group mt-3 d-none">
+          </div>
+          
+          <div id="pdfUploadContainer2" class="form-group mt-3 d-none">
             <label for="pdf_file2">Upload File</label>
             <input type="file" class="form-control-file" id="pdf_file2" name="file_pdf2" accept="application/pdf">
             <small class="text-muted">(*Opsional upload pdf, kurang dari 2 MB)</small>
             <div id="file-upload-feedback2" class="mt-2"></div>
-        </div>
-         
+          </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-primary">Approve</button>
@@ -696,30 +647,39 @@
   });
 </script>
 <script>
-  // Script to toggle between file upload options
-  document.querySelectorAll('input[name="file_type"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      if (this.value === 'image') {
-        document.getElementById('imageUploadContainer').classList.remove('d-none');
-        document.getElementById('pdfUploadContainer').classList.add('d-none');
-      } else {
-        document.getElementById('imageUploadContainer').classList.add('d-none');
-        document.getElementById('pdfUploadContainer').classList.remove('d-none');
-      }
-    });
-  });
-    // Script to toggle between file upload options
-    document.querySelectorAll('input[name="file_type2"]').forEach(radio => {
-    radio.addEventListener('change', function() {
-      if (this.value === 'image') {
-        document.getElementById('imageUploadContainer2').classList.remove('d-none');
-        document.getElementById('pdfUploadContainer2').classList.add('d-none');
-      } else {
-        document.getElementById('imageUploadContainer2').classList.add('d-none');
-        document.getElementById('pdfUploadContainer2').classList.remove('d-none');
-      }
-    });
-  });
+
+document.getElementById('uploadImageBtn2').addEventListener('click', function() {
+  document.getElementById('imageUploadContainer').classList.remove('d-none');
+  document.getElementById('pdfUploadContainer').classList.add('d-none');
+  
+  this.classList.add('active');
+  document.getElementById('uploadPDFBtn2').classList.remove('active');
+});
+
+document.getElementById('uploadPDFBtn2').addEventListener('click', function() {
+  document.getElementById('imageUploadContainer').classList.add('d-none');
+  document.getElementById('pdfUploadContainer').classList.remove('d-none');
+  
+  this.classList.add('active');
+  document.getElementById('uploadImageBtn2').classList.remove('active');
+});
+
+  document.getElementById('uploadImageBtn').addEventListener('click', function() {
+  document.getElementById('imageUploadContainer2').classList.remove('d-none');
+  document.getElementById('pdfUploadContainer2').classList.add('d-none');
+  
+  this.classList.add('active');
+  document.getElementById('uploadPDFBtn').classList.remove('active');
+});
+
+document.getElementById('uploadPDFBtn').addEventListener('click', function() {
+  document.getElementById('imageUploadContainer2').classList.add('d-none');
+  document.getElementById('pdfUploadContainer2').classList.remove('d-none');
+  
+  this.classList.add('active');
+  document.getElementById('uploadImageBtn').classList.remove('active');
+});
+
 </script>
 
 <script>

@@ -34,7 +34,7 @@
     <link href="{{ asset('vendor/css/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/css/head.css') }}" rel="stylesheet">
 
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('icon.jpg') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('fixasetlogormv.png') }}">
     <!-- DataTables -->
     <link rel="stylesheet" href="{{ asset('vendor/css/dataTables.bootstrap4.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/css/responsive.bootstrap4.min.css') }}">

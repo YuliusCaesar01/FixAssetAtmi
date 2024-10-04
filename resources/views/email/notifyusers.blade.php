@@ -167,7 +167,7 @@
 <body>
     <div class="email-container">
         <div class="email-header">
-            <img src="http://localhost:8080/fixaset.png" alt="Company Logo">
+            <img src="{{ asset('fixasetlogormv.png') }}" alt="Company Logo">
             <h1 style="color: #f0f0f0;">Fixed Asset ATMI</h1>
         </div>
         <div class="email-body">

@@ -7,7 +7,7 @@ use App\Http\Controllers\Main\TeamMemberController;
 use App\Http\Controllers\Fixaset;
 use Modules\ManagePermintaanNFA\app\Http\Controllers\ManagePermintaanNFAController;
 use Modules\ManagePermintaanFA\app\Http\Controllers\ManagePermintaanFAController;
-
+use Modules\ManageAset\Http\Controllers\ManageAsetController;
 use Modules\ManageRuang\Http\Controllers\ManageRuangController;
 use Modules\ManageTipe\Http\Controllers\ManageTipeController;
 use Modules\ManageLokasi\Http\Controllers\ManageLokasiController;
