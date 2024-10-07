@@ -17,10 +17,16 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
-        <li class="nav-item icon-button">
-            <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+        <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
         </li>
-    </ul>
+        <li class="nav-item d-none d-sm-inline-block">
+        <a href="index3.html" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+        </li>
+        </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -33,13 +39,22 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         <div class="input-group-append">
                             <button class="btn btn-navbar" type="submit"><i class="fas fa-search"></i></button>
                             <li class="nav-item icon-button">
-                                <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button" style="position: relative;">
+                                <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" 
+                                   onclick="removeSpan()" 
+                                   data-widget="notif" 
+                                   href="{{ route('notifprofile') }}" 
+                                   role="button" 
+                                   style="position: relative;">
                                     <i class="fas fa-bell"></i>
-                                    <span id="unreadCount" style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
-                                        {{ $unreadCount }}
-                                    </span>
+                                    <span class="notification-count" 
+                                    id="notificationCount" 
+                                    style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
+                                  
+                              </span>
+                              
                                 </a>
                             </li>
+                            
                             <button class="btn btn-navbar" type="button" data-widget="navbar-search">
                                 <i class="fas fa-times"></i>
                             </button>
@@ -53,14 +68,25 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li>
+        <span id="notificationCount" style="display: none;">0</span>
+
         <li class="nav-item icon-button">
-            <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" onclick="removeSpan()" data-widget="notif" href="{{ route('notifprofile') }}" role="button" style="position: relative;">
+            <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" 
+               onclick="removeSpan()" 
+               data-widget="notif" 
+               href="{{ route('notifprofile') }}" 
+               role="button" 
+               style="position: relative;">
                 <i class="fas fa-bell"></i>
-                <span id="unreadCount" style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
-                    {{ $unreadCount }}
-                </span>
+                <span class="notification-count" 
+                id="notificationCount" 
+                style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
+              {{ $unreadCount }}
+          </span>
+          
             </a>
         </li>
+        
         
         
         <li class="nav-item icon-button">
@@ -109,12 +135,25 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item">
+                <li class="nav-item {{ $menu == 'Dashboard' || $menu == 'BukuManual' ? 'menu-open' : '' }}">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ $menu == 'Dashboard' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
-                        <p>Dashboard</p>
+                        <p>
+                            Dashboard
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="" class="nav-link {{ $menu == 'ManualBook' ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>Manual Book</p>
+                            </a>
+                        </li>
+                        
+                    </ul>
                 </li>
+                
                 <li class="nav-header">FIXED ASSET</li>
 
                 <li class="nav-item has-treeview {{ $menu == 'Aset' || $menu == 'Tambah Aset' ? 'menu-open' : '' }}">
@@ -472,5 +511,25 @@ document.addEventListener('DOMContentLoaded', function () {
        
     </script>
 
+<script>
+    const eventSource = new EventSource('http://localhost:8080/main/main/notifications/sse');
+
+    eventSource.onmessage = function(event) {
+    const data = JSON.parse(event.data); // Parsing data JSON
     
+
+    const countElement = document.getElementById('notificationCount');
+    countElement.textContent = data.count; // Update span text
+
+    // Display logic
+    if (data.count > 0) {
+        countElement.style.display = 'inline'; // Show
+    } else {
+        countElement.style.display = 'none'; // Hide
+    }
+};
+
+</script>
+
+
     

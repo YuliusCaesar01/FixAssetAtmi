@@ -74,6 +74,7 @@
                                                     @endif
                                                 @endrole
                                                 <!-- Tombol Delete -->
+                                                @role('pimpinanunitkarya')
                                                 <form action="{{ route('manageaset.destroy', $ast->id_fa) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
@@ -82,6 +83,7 @@
                                                         <i class="fa fa-trash"></i> Delete
                                                     </button>
                                                 </form>
+                                                @endrole
                                             </td>
                                         </tr>
                                     @endforeach

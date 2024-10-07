@@ -9,6 +9,25 @@
     $fixedAssetCount = PermintaanFixedAsset::where('status', 'menunggu')->count();
     $fixedAsset = FixedAsset::all()->count();
 @endphp
+<style>
+    .float-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: #007bff; /* Warna biru untuk tombol */
+        color: white;
+        border-radius: 50%;
+        padding: 15px;
+        font-size: 24px;
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .float-button:hover {
+    }
+</style>
 
 <div class="content-wrapper">
     <div class="content-header">
@@ -87,5 +106,10 @@
         </div>
     </section>
 </div>
+
+<!-- Floating Button -->
+<a href="" class="float-button">
+    <i class="fas fa-book"></i>
+</a>
 
 @endsection

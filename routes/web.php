@@ -4,6 +4,8 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Main\DashboardController;
 use App\Http\Controllers\Main\TeamMemberController;
+use App\Http\Controllers\NotificationController;
+
 use App\Http\Controllers\Fixaset;
 use Modules\ManagePermintaanNFA\app\Http\Controllers\ManagePermintaanNFAController;
 use Modules\ManagePermintaanFA\app\Http\Controllers\ManagePermintaanFAController;
@@ -18,6 +20,7 @@ use Modules\ManageUser\Http\Controllers\ManageUserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Socialite\Facades\Socialite;
+
 
 use App\Http\Controllers\EmailController;
 
@@ -98,6 +101,9 @@ Route::get('/pengajuan/pdf/{id}', [ManagePermintaanFAController::class, 'viewPen
 Route::post('/bast/catat', [ManagePermintaanFAController::class, 'catat'])->name('bast.catat');
 
     
+//notif
+Route::get('/main/notifications/sse', [NotificationController::class, 'sendSSE'])->name('notife');
+
     //atasan only
     Route::post('/validasiatasan/{id}', [ManagePermintaanNFAController::class, 'validasiatasan'])->name('validasiatasan');
 

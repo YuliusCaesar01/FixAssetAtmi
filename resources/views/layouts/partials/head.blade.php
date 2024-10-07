@@ -9,6 +9,10 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
+    @php
+    header("Access-Control-Allow-Origin: *");
+
+    @endphp
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"
         type="text/css">
     <!-- Ionicons -->
@@ -29,7 +33,9 @@
     <link href="{{ asset('vendor/css/daterangepicker.css') }}" rel="stylesheet">
     <!-- summernote -->
     <link href="{{ asset('vendor/css/summernote-bs4.min.css') }}" rel="stylesheet">
-    
+    <!-- AdminLTE CSS -->
+<link rel="stylesheet" href="{{ asset('vendor/css/adminlte.min.css') }}">
+
     <!-- navbar-->
     <link href="{{ asset('vendor/css/navbar.css') }}" rel="stylesheet">
     <link href="{{ asset('vendor/css/head.css') }}" rel="stylesheet">
