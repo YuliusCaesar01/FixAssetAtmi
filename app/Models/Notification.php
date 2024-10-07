@@ -17,12 +17,11 @@ class Notification extends Model
         'id_user_pengirim',
         'id_user_penerima',
         'id_pengajuan',
-        'jenis_notif',
         'keterangan_notif',
+        'jenis_notif',
         'tipe_notif',
-        'notif_periode',
-        'notif_expired',
     ];
+    
 
     // Relationship to the User model for the sender (user_pengirim)
     public function pengirim()

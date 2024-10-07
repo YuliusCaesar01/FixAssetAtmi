@@ -245,7 +245,6 @@ public function send(Request $request)
         'id_pengajuan' => $request->id_pengajuan,
         'keterangan_notif' => $request->keterangan_notif,
         'jenis_notif' => $request->jenis_notif, // Menggunakan input dari request
-        'tipe_notif' => 'system', // Default notification type
     ]);
 
     // Redirect back with success message

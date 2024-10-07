@@ -181,7 +181,7 @@
 @if($pfa->valid_dirmanageraset == 'menunggu')                    
 
 <!-- Tombol Approve -->
-<button id="dirmansetuju{{ $pfa->id_permintaan_fa }}"  class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Confirmation</button>
+<button id="dirmansetuju{{ $pfa->id_permintaan_fa }}" class="btn btn-success" data-toggle="modal" data-id="{{ $pfa->id_permintaan_fa }}" data-target="#approveModal{{ $pfa->id_permintaan_fa }}">Confirmation</button>
 
 <!-- Modal Approve -->
 <div class="modal fade" id="approveModal{{ $pfa->id_permintaan_fa }}" tabindex="-1" role="dialog" aria-labelledby="approveModalLabel{{ $pfa->id_permintaan_fa }}" aria-hidden="true">
@@ -195,24 +195,21 @@
       </div>
       <div class="modal-body">
         Penyerahan Berita Acara Serah Terima Aset
-        <!-- Informasi jika userdetail tidak lengkap -->
+        
+        <!-- Peringatan jika userdetail tidak lengkap -->
+        @if(is_null(optional($pfa->user->userdetail)->nama_lengkap) || optional($pfa->user->userdetail)->nama_lengkap === 'Default')
+          <div class="alert alert-warning mt-3">
+            <strong>Perhatian!</strong> Data user detail dari pengaju belum lengkap. Mohon untuk memperbarui data sebelum melanjutkan proses.
+          </div>
+        @endif
         
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-        <!-- Tombol Generate PDF -->
-        <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST">
-            @csrf
-            <button type="submit" 
-              class="btn btn-primary" 
-              id="generatePdf{{ $pfa->id_permintaan_fa }}"
-             
-            >Membuatkan BAST</button>
-        </form>
-        
-        <!-- Tombol Kirim Notifikasi -->
-        {{-- @if(is_null(optional($pfa->user->userdetail)->nama_lengkap) || optional($pfa->user->userdetail)->nama_lengkap === 'Default')
-        <form action="{{ route('notifications.send') }}" method="POST" style="margin-left: 10px;">
+
+        @if(is_null(optional($pfa->user->userdetail)->nama_lengkap) || optional($pfa->user->userdetail)->nama_lengkap === 'Default')
+          <!-- Tombol Kirim Notifikasi -->
+          <form action="{{ route('notifications.send') }}" method="POST" style="margin-left: 10px;">
             @csrf
             <input type="hidden" name="id_user_pengirim" value="{{ auth()->user()->id }}">
             <input type="hidden" name="id_user_penerima" value="{{ $pfa->user->id }}">
@@ -220,10 +217,16 @@
             <input type="hidden" name="jenis_notif" value="profil"> <!-- Input untuk jenis_notif -->
             <input type="hidden" name="keterangan_notif" value="Data Userdetails anda belum terupdate, Mohon untuk mengisi nama lengkap dll terlebih dahulu!">
             <button type="submit" class="btn btn-warning">
-                Kirim Notifikasi
+              Kirim Notifikasi
             </button>
-        </form>
-        @endif --}}
+          </form>
+        @else
+          <!-- Tombol Generate PDF -->
+          <form action="{{ route('bast.tindakanbast', $pfa->id_permintaan_fa) }}" method="POST">
+            @csrf
+            <button type="submit" class="btn btn-primary" id="generatePdf{{ $pfa->id_permintaan_fa }}">Membuatkan BAST</button>
+          </form>
+        @endif
       </div>
     </div>
   </div>
@@ -231,9 +234,10 @@
 
 
 
+
 @elseif($pfa->valid_dirmanageraset == 'setuju')
 
-<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">Document BAST  <i class="fas fa-eye ml-2"></i></a>
+<a href="{{ route('bast.pdf', ['id' => $pfa->id_permintaan_fa]) }}" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded">Document BAST</a>
 @else
 <p class="inline-flex items-center px-3 py-1 text-sm font-medium text-white bg-gray-600 rounded-full">
     Telah Ditolak
