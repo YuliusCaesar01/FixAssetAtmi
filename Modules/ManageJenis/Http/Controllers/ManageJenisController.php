@@ -45,35 +45,32 @@ class ManageJenisController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'nama_jenis' => 'required',
-            'id_kelompok' => 'required'
-        ]);
-
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
-        }
-
-        //kode tipe bertambah sesuai nomor max di tabel
-        $kode_max = Jenis::where('id_kelompok', $request->id_kelompok)->max('kode_jenis');
-        $kode_baru = str_pad($kode_max + 1, 3, '0', STR_PAD_LEFT);
-
-        $jenis = Jenis::create([
-            'nama_jenis' => $request->nama_jenis,
-            'kode_jenis' => $kode_baru,
-            'id_kelompok' => $request->id_kelompok,
-        ]);
-
-        //return response 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Jenis Berhasil Disimpan.',
-            'data'    => $jenis
-        ]);
+    
+     public function store(Request $request)
+     {
+         // Validate the incoming request data
+         $validator = Validator::make($request->all(), [
+             'id_kelompok' => 'required|exists:kelompoks,id_kelompok', // Ensure it exists in the kelompok table
+             'nama_jenis_yayasan' => 'required|string|unique:jenis,nama_jenis_yayasan', // Ensure it is unique in jenis table
+         ]);
+              // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
     }
+         // Create a new record in the jenis table
+         $jenis = Jenis::create([
+             'id_kelompok' => $request->id_kelompok,
+             'nama_jenis_yayasan' => $request->nama_jenis_yayasan,
+             'kode_jenis' => '' // Initial empty value for kode_jenis
+         ]);
+ 
+         // Generate kode_jenis based on the newly created id
+         $kodeJenis = str_pad($jenis->id_jenis, 3, '0', STR_PAD_LEFT); // Pad with zeros to a length of 2
+         $jenis->update(['kode_jenis' => $kodeJenis]); // Update the record with the generated kode_jenis
+ 
+         // Redirect back with a success message
+         return redirect()->back()->with('success', 'Data jenis telah ditambahkan!');
+     }
 
     /**
      * Show the specified resource.
@@ -121,15 +118,11 @@ class ManageJenisController extends Controller
 
         //update jenis
         $jenis->update([
-            'nama_jenis' => $request->nama_jenis,
+            'nama_jenis_yayasan' => $request->nama_jenis,
         ]);
 
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Jenis Berhasil Diubah.',
-            'data'    => $jenis
-        ]);
+        return redirect()->back()->with('success', 'Data jenis telah diupdate!');
+
     }
 
     /**
@@ -139,6 +132,19 @@ class ManageJenisController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Find the record by its ID
+        $record = Jenis::find($id);
+        
+        // Check if the record exists
+        if ($record) {
+            // Delete the record
+            $record->delete();
+            
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Data telah dihapus.');
+        }
+    
+        // If the record doesn't exist, redirect back with an error message
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
 }

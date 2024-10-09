@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Main\DashboardController;
 use App\Http\Controllers\Main\TeamMemberController;
 use App\Http\Controllers\NotificationController;
-
+use Modules\ManageUserGuide\app\Http\Controllers\ManageUserGuideController;
 use App\Http\Controllers\Fixaset;
 use Modules\ManagePermintaanNFA\app\Http\Controllers\ManagePermintaanNFAController;
 use Modules\ManagePermintaanFA\app\Http\Controllers\ManagePermintaanFAController;
@@ -107,6 +107,9 @@ Route::get('/main/notifications/sse', [NotificationController::class, 'sendSSE']
     //atasan only
     Route::post('/validasiatasan/{id}', [ManagePermintaanNFAController::class, 'validasiatasan'])->name('validasiatasan');
 
+    Route::prefix('manage-user-guide')->group(function () {
+        Route::resource('guides', ManageUserGuideController::class);
+    });
 //sendemail
 // routes/web.php
 // routes/web.php

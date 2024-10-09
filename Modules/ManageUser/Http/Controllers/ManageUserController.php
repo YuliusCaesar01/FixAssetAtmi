@@ -170,7 +170,7 @@ public function reset(Request $request)
     
         return view('manageuser::userdetails', [
             'menu' => $this->menu,
-            'userDetail' => $userDetail // Pass user details to the view
+            'userdetailed' => $userDetail // Pass user details to the view
         ]);
     }
     

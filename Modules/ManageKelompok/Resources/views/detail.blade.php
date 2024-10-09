@@ -42,7 +42,7 @@
                                     </div>
                                     @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
+                                        <a href="javascript:void(0)" id="btn-edit-kelompok" title="Ubah kelompok"
                                             data-di="{{   $kelompok->id_kelompok}}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
@@ -78,12 +78,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($jenis as $jn)
-                                    <tr id="index_{{ $jn->id_jenis }}"
-                                        data-nama-jenis-yayasan="{{ $jn->nama_jenis_yayasan }}"
-                                        data-nama-jenis-smkmikael="{{ $jn->nama_jenis_mikael }}"
-                                        data-nama-jenis-politeknik="{{ $jn->nama_jenis_politeknik }}">
+                                    <tr id="index_{{ $jn->id_jenis }}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="nama-jenis">{{ $jn->nama_jenis }}</td>
+                                        <td class="nama-jenis">{{ $jn->nama_jenis_yayasan }}</td>
                                         <td class="text-center lead">
                                             <span class="badge badge-warning">{{ $jn->kode_jenis }}</span>
                                         </td>

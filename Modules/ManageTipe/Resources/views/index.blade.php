@@ -18,6 +18,7 @@
                                 <i class="fas fa-plus"></i> Tipe
                             </a>
                         </div>
+                        
                         @endif
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
@@ -61,6 +62,18 @@
                                                     class="btn btn-sm btn-light">
                                                     <i class="far fa-folder-open"></i> Detail
                                                 </a>
+                                                @role('manageraset')
+                                                <form action="{{ route('manage-tipe.destroy', $tp->id_tipe) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" 
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                                
+                                                @endrole
                                             </td>
                                         </tr>
                                     @endforeach
@@ -81,63 +94,108 @@
             <!-- /.content -->
         </div>
     </div>
-    @include('managetipe::modal-create')
+    
+<!-- Modal -->
+<div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">TAMBAH DATA TIPE</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            @if($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            <div class="modal-body">
+                <form id="form-tipe" method="POST" action="/tipe/managetipe">
+                    @csrf <!-- Include CSRF token for Laravel -->
+                    <input type="hidden" id="id_tipe" name="id_tipe">
+                    <div class="form-group">
+                        <label for="nama_tipe" class="control-label">Tipe Barang Yayasan</label>
+                        <input type="text" class="form-control @error('nama_tipe') is-invalid @enderror" id="nama_tipe" name="nama_tipe" value="{{ old('nama_tipe') }}">
+                        @error('nama_tipe')
+                            <div class="alert alert-danger mt-2" role="alert">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">SIMPAN</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 @endsection
 
 @section('scripttambahan')
-    <script>
-        $(document).ready(function() {
-            // Handle mode change event
-            $('#mode-selector').change(function() {
-                let selectedMode = $(this).val();
+<script>
+    $(document).ready(function() {
+        // Function to initialize DataTable
+        function initializeDataTable() {
+            // Check if DataTable is already initialized
+            if ($.fn.dataTable.isDataTable('#tbl_tipe')) {
+                $('#tbl_tipe').DataTable().destroy(); // Destroy existing instance
+            }
 
-                // Loop through each row and update the "Nama" column based on the selected mode
-                $('#tbl_tipe tbody tr').each(function() {
-                    let namaTipe;
-                    switch (selectedMode) {
-                        case 'yayasan':
-                            namaTipe = $(this).data('nama-tipe-yayasan');
-                            break;
-                        case 'mikael':
-                            namaTipe = $(this).data('nama-tipe-mikael');
-                            break;
-                        case 'politeknik':
-                            namaTipe = $(this).data('nama-tipe-politeknik');
-                            break;
-                    }
-                    $(this).find('.nama-tipe').text(namaTipe);
-                });
-            });
+            // Initialize the DataTable
+            $("#tbl_tipe").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            }).buttons().container().appendTo('#tbl_tipe_wrapper .col-md-6:eq(0)');
+        }
 
-            // Button create post event
-            $('body').on('click', '#btn-detail-tipe', function() {
+        // Call the DataTable initialization
+        initializeDataTable();
+
+        // Button to open the modal
+        $('body').on('click', '#btn-create-kelompok', function() {
+            $('#modal-create').modal('show'); // Show the modal for adding a new Tipe
+        });
+
+        // Handle form submission errors (optional)
+        $('#form-tipe').on('submit', function(e) {
+            let hasError = false;
+            if ($('#nama_tipe').val() === '') {
+                hasError = true;
+                $('#alert-nama').removeClass('d-none').addClass('d-block').html('Please enter a valid name for Tipe Barang Yayasan.');
+            }
+            // Add similar checks for other input fields as needed
+
+            if (hasError) {
+                e.preventDefault(); // Prevent form submission if there are errors
+            }
+        });
+    });
+      // Detail button event
+      $('body').on('click', '#btn-detail-tipe', function() {
                 let kode = $(this).data('di');
 
                 $.ajax({
                     type: "GET",
                     success: function(response) {
-                        // Redirect ke URL yang diterima dalam respons
                         window.location.href = `/tipe/managetipe/detail/${kode}`;
                     },
                     error: function(xhr, status, error) {
-                        // Tangani kesalahan jika diperlukan
                         console.error(xhr.responseText);
                     }
                 });
             });
+       
+</script>
 
-            // Trigger the mode change event to initialize table with the default mode
-            $('#mode-selector').trigger('change');
-        });
-
-        $(function() {
-            $("#tbl_tipe").DataTable({
-                "responsive": true,
-                "lengthChange": true,
-                "autoWidth": false,
-                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-            }).buttons().container().appendTo('#tbl_tipe_wrapper .col-md-6:eq(0)');
-        });
-    </script>
 @endsection
 

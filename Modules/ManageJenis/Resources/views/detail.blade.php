@@ -27,14 +27,14 @@
                             <div class="col-sm-6">
                                 <h4 class="m-0 text-center text-purple lead">Kelompok :
                                     <span class="badge bg-purple">{{ $kelompok->kode_kelompok }}</span>
-                                    {{ $kelompok->nama_kelompok }}
+                                    {{ $kelompok->nama_kelompok_yayasan }}
                                 </h4>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <div class="row">
                                     <div class="col-6">
                                         <h3 class="m-0 text-center" id="nama_jenis"><i class="fas fa-tags"></i>
-                                            {{ $jenis->nama_jenis }}
+                                            {{ $jenis->nama_jenis_yayasan }}
                                         </h3>
                                         <h4 class="m-0 text-center">
                                             <span class="badge badge-primary"><i class="fas fa-barcode"></i> Kode :
@@ -43,9 +43,8 @@
                                     </div>
                                     @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
-                                            data-di="{{ $jenis->id_jenis}}" class="btn btn-sm btn-secondary float-right">
-                                            <i class="fas fa-pencil-alt"></i>
+                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe" data-id="1" class="btn btn-sm btn-secondary float-right">
+                                            <i class="fas fa-pencil-alt"></i> Ubah Jenis
                                         </a>
                                     </div>
                                     @endif
@@ -78,12 +77,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr id="index_{{ $kelompok->id_kelompok }}"
-                                    data-nama-kelompok-yayasan="{{ $kelompok->nama_kelompok_yayasan }}"
-                                    data-nama-kelompok-smkmikael="{{ $kelompok->nama_kelompok_mikael }}"
-                                    data-nama-kelompok-politeknik="{{ $kelompok->nama_kelompok_politeknik }}">
+                                <tr id="index_{{ $kelompok->id_kelompok }}">
                                     <td>{{ $kelompok->id_kelompok }}</td>
-                                    <td class="nama-kelompok">{{ $kelompok->nama_kelompok }}</td>
+                                    <td class="nama-kelompok">{{ $kelompok->nama_kelompok_yayasan }}</td>
                                     <td class="text-center lead">
                                         <span class="badge badge-warning">{{ $kelompok->kode_kelompok }}</span>
                                     </td>

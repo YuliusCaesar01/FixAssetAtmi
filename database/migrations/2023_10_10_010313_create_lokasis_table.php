@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama_lokasi_mikael')->nullable();
             $table->string('nama_lokasi_politeknik')->nullable();
             $table->string('keterangan_lokasi');
-            $table->string('kode_lokasi');
+            $table->string('kode_lokasi')->nullable();
             $table->timestamps();
         });
     }

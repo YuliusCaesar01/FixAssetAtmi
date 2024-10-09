@@ -8,6 +8,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule; // Make sure to import this at the top of your controller
 
 class ManageTipeController extends Controller
 {
@@ -47,13 +48,14 @@ class ManageTipeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama_tipe' => 'required'
+            'nama_tipe' => 'required|unique:tipes,nama_tipe_yayasan'
         ]);
 
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
-        }
+   
+         // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
+    }
 
         //kode tipe bertambah sesuai nomor max di tabel
         $kode_max = Tipe::max('kode_tipe');
@@ -61,16 +63,12 @@ class ManageTipeController extends Controller
 
         //create TIPE
         $tipe = Tipe::create([
-            'nama_tipe' => $request->nama_tipe,
+            'nama_tipe_yayasan' => $request->nama_tipe,
             'kode_tipe' => $kode_baru,
         ]);
 
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Tipe Berhasil Disimpan.',
-            'data'    => $tipe
-        ]);
+        return back()->with('success', 'Tipe data created successfully!');
+
     }
 
     /**
@@ -107,29 +105,26 @@ class ManageTipeController extends Controller
     public function update(Request $request, $id_tipe)
     {
         $tipe = Tipe::findOrFail($id_tipe);
-        //define validation rules
-        $validator = Validator::make($request->all(), [
-            'nama_tipe' => 'required',
+    
+        // Validasi input
+        $request->validate([
+            'nama_tipe' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('tipes', 'nama_tipe_yayasan')->ignore($id_tipe, 'id_tipe'), // Use Rule::unique for uniqueness validation
+            ],
         ]);
-
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        //create tipe
+    
+        // Update tipe
         $tipe->update([
-            'nama_tipe' => $request->nama_tipe,
+            'nama_tipe_yayasan' => $request->nama_tipe,
         ]);
-
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Tipe Berhasil Diubah.',
-            'data'    => $tipe
-        ]);
+    
+        // Redirect ke halaman index dengan pesan sukses
+        return back()->with('success', 'Data Tipe Berhasil Diubah.');
     }
-
+    
     /**
      * Remove the specified resource from storage.
      * @param int $id
@@ -137,6 +132,20 @@ class ManageTipeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Find the record by its ID
+        $record = Tipe::find($id);
+        
+        // Check if the record exists
+        if ($record) {
+            // Delete the record
+            $record->delete();
+            
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Data telah dihapus.');
+        }
+    
+        // If the record doesn't exist, redirect back with an error message
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
+    
 }

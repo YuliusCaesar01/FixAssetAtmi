@@ -18,7 +18,8 @@ class Lokasi extends Model
         'nama_lokasi_yayasan',
         'nama_lokasi_mikael',
         'nama_lokasi_politeknik',
-        'kode_lokasi'
+        'kode_lokasi',
+        'keterangan_lokasi'
     ];
 
     public function ruang(): HasMany

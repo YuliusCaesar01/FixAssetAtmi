@@ -59,9 +59,22 @@
                                                 <i class="far fa-folder-open"></i> UserDetails
                                             </a>
                                         @else
-                                            <span class="font-weight-lighter">No details available</span>
+                                            <form action="{{ route('notifications.send') }}" method="POST" style="margin-left: 0px; display:inline;">
+                                                @csrf
+                                                <input type="hidden" name="id_user_pengirim" value="{{ auth()->user()->id }}">
+                                                <input type="hidden" name="id_user_penerima" value="{{ $user->id }}">
+                                                <input type="hidden" name="id_pengajuan" value="null">
+                                                <input type="hidden" name="jenis_notif" value="profil"> <!-- Input untuk jenis_notif -->
+                                                <input type="hidden" name="keterangan_notif" value="Data Userdetails anda belum terupdate, Mohon untuk mengisi nama lengkap dll terlebih dahulu!">
+                                                <button type="submit" class="btn btn-warning btn-sm">
+                                                    Kirim Notifikasi
+                                                </button>
+                                                <small style="font-size: 0.7em;">Userdetail belum terupdate</small>
+                                                
+                                            </form>
                                         @endif
                                     </td>
+                                    
                                 </tr>
                             @endforeach
                         </tbody>

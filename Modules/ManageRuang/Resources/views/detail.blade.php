@@ -44,7 +44,7 @@
                                     </div>
                                     @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
+                                        <a href="javascript:void(0)" id="btn-edit-ruang" title="Ubah Tipe"
                                             data-di="{{ $ruang->id_ruang}}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
@@ -57,39 +57,32 @@
                             <table class="table table-striped table-sm" id="tbl_lokasi">
                                 <thead>
                                     <tr>
-                                        <th>Kode Lokasi</th>
-                                        <th>Nama</th>
-                                        <th>Keterangan</th>
+                                        <th>Kode Ruang</th>
+                                        <th>Nama Ruang Yayasan</th>
+                                        <th>Nama Ruang Mikael</th>
+                                        <th>Nama Ruang Politeknik</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($lokasi as $lok)
-                                    <tr id="index_{{ $lok->id_lokasi  }}" data-iteration="{{ $loop->iteration }}" 
-                                        data-nama-lokasi-yayasan="{{ $lok->nama_lokasi_yayasan }}" 
-                                        data-nama-lokasi-smkmikael="{{ $lok->nama_lokasi_mikael }}" 
-                                        data-nama-lokasi-politeknik="{{ $lok->nama_lokasi_politeknik }}">
+                                    <tr id="index_"  >
                                             <td class="text-center lead">
-                                                <span class="badge bg-yellow">{{ $lok->kode_lokasi }} </span>
+                                                <span class="badge bg-yellow">{{ $ruang->kode_ruang }} </span>
                                             </td>
-                                            <td class="nama-lokasi">{{ $lok->nama_lokasi_yayasan }}</td>
-                                            <td >{{ $lok->keterangan_lokasi }}</td>
-
+                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_yayasan }}</td>
+                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_mikael }}</td>
+                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_politeknik }}</td>
                                             <td>
-                                                <a href="javascript:void(0)" id="btn-detail-lokasi"
-                                                    data-di = "{{ $lok->id_lokasi }}" title="Detail Lokasi"
-                                                    class="btn btn-sm btn-light">
-                                                    <i class="far fa-folder-open"></i> Detail
-                                                </a>
+                                              
                                             </td>
                                         </tr>
-                                    @endforeach
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <th>Kode Lokasi</th>
-                                        <th>Nama</th>
-                                        <th>Keterangan</th>
+                                        <th>Nama Ruang Yayasan</th>
+                                        <th>Nama Ruang Mikael</th>
+                                        <th>Nama Ruang Politeknik</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
                                     </tr>
                                 </tfoot>

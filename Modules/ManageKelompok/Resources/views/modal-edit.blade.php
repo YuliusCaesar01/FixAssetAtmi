@@ -3,44 +3,30 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">UBAH DATA KELOMPOK </h5>
+                <h5 class="modal-title" id="exampleModalLabel">UBAH DATA KELOMPOK</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <input type="hidden" id="id_kelompok">
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Kelompok Yayasan</label>
-                    <input type="text" placeholder="{{$kelompok->nama_kelompok_yayasan}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
+            <form action="{{ route('manage-kelompok.update', $kelompok->id_kelompok) }}" method="POST" id="form-edit">
+                @csrf
+                @method('PUT') <!-- Method PUT untuk update -->
+                <input type="hidden" id="id_kelompok" name="id_kelompok" value="{{ $kelompok->id_kelompok }}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama-edit" class="control-label">Nama Kelompok</label>
+                        <input type="text" name="nama_kelompok" placeholder="{{ $kelompok->nama_kelompok_yayasan }}" class="form-control" id="nama-edit">
+                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Kelompok Mikael</label>
-                    <input type="text" placeholder="{{$kelompok->nama_kelompok_mikael}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">SIMPAN</button>
                 </div>
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Kelompok Politeknik</label>
-                    <input type="text"  placeholder="{{$kelompok->nama_kelompok_politeknik}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
-                </div>
-                {{-- <div class="form-group">
-                    <label>Tipe</label>
-                    <select name="id_tipe" id="idtipe-edit" class="form-control select2" style="width: 100%;" required>
-                        <option value="">- Pilih Tipe -</option>
-                        @foreach ($tipe as $tp)
-                            <option value="{{ $tp->id_tipe }}">{{ $tp->nama_tipe }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="update">SIMPAN</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
+
 
 <script>
     $(document).ready(function() {

@@ -14,7 +14,7 @@
                         @if(auth()->user()->role_id == 19)
 
                         <div class="col-6">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-kelompok">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-ruang">
                                 <i class="fas fa-plus"></i> Ruang
                             </a>
                         </div>
@@ -31,15 +31,17 @@
                                 <div class="col-6">
                                     <h5 class="m-0">Ruang</h5>
                                 </div>
-                                <div class="col-6">
-                                    <div class="float-right">
-                                        <select class="form-control form-control-sm" id="mode-selector">
-                                            <option value="yayasan">Yayasan</option>
-                                            <option value="smkmikael">SMK Mikael</option>
-                                            <option value="politeknik">Politeknik</option>
-                                        </select>
-                                    </div>
+                                <div class="col-6" style="display: grid; grid-template-columns: auto 1fr; align-items: center;">
+                                    <span>Pilih Institusi:</span>
+                                    <select class="form-control form-control-sm" id="mode-selector">
+                                        <center>
+                                        <option value="yayasan">Yayasan</option>
+                                        <option value="smkmikael">SMK Mikael</option>
+                                        <option value="politeknik">Politeknik</option>
+                                        </center>
+                                    </select>
                                 </div>
+                                
                             </div>
                         </div>
                         
@@ -70,6 +72,18 @@
                                                     class="btn btn-sm btn-light">
                                                     <i class="far fa-folder-open"></i> Detail
                                                 </a>
+                                                @role('manageraset')
+                                                <form action="{{ route('manage-ruang.destroy', $rg->id_ruang) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" 
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                                
+                                                @endrole
                                             </td>
                                         </tr>
                                     @endforeach
@@ -143,6 +157,43 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#tbl_ruang_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#form-create-kelompok').on('submit', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+    
+                $.ajax({
+                    url: $(this).attr('action'), // Get the form action URL
+                    type: 'POST',
+                    data: $(this).serialize(), // Serialize the form data
+                    success: function(response) {
+                        // Show success message with SweetAlert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message, // Success message from the server
+                        }).then(() => {
+                            location.reload(); // Reload the page after closing the alert
+                        });
+                    },
+                    error: function(xhr) {
+                        // Show error messages with SweetAlert
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessage = '';
+                        $.each(errors, function(key, value) {
+                            errorMessage += value[0] + '\n'; // Concatenate all error messages
+                        });
+    
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Errors',
+                            text: errorMessage, // Show validation errors
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

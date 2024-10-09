@@ -14,7 +14,7 @@
                         @if(auth()->user()->role_id == 19)
 
                         <div class="col-6">
-                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-kelompok">
+                            <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-lokasi">
                                 <i class="fas fa-plus"></i> Lokasi
                             </a>
                         </div>
@@ -55,6 +55,18 @@
                                                     class="btn btn-sm btn-light">
                                                     <i class="far fa-folder-open"></i> Detail
                                                 </a>
+                                                @role('manageraset')
+                                                <form action="{{ route('manage-lokasi.destroy', $lok->id_lokasi ) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" 
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                                
+                                                @endrole
                                             </td>
                                         </tr>
                                     @endforeach
@@ -78,49 +90,12 @@
 
 @endsection
 @section('scripttambahan')
-    <script>
-        $(document).ready(function() {
-            // Handle mode change event
-            $('#mode-selector').change(function() {
-                let selectedMode = $(this).val();
+<script>
 
-                // Loop through each row and update the "Nama" column based on the selected mode
-                $('#tbl_lokasi tbody tr').each(function() {
-                    let namaLokasi;
-                    switch (selectedMode) {
-                        case 'yayasan':
-                            namaLokasi = $(this).data('nama-lokasi-yayasan');
-                            break;
-                        case 'smkmikael':
-                            namaLokasi = $(this).data('nama-lokasi-smkmikael');
-                            break;
-                        case 'politeknik':
-                            namaLokasi = $(this).data('nama-lokasi-politeknik');
-                            break;
-                    }
-                    $(this).find('.nama-lokasi').text(namaLokasi);
-                });
-            });
+if ($.fn.DataTable.isDataTable('#tbl_lokasi')) {
+    $('#tbl_lokasi').DataTable().destroy();
+}
 
-            // Button detail post event
-            $('body').on('click', '#btn-detail-lokasi', function() {
-                let kode = $(this).data('di');
-
-                $.ajax({
-                    type: "GET",
-                    success: function(response) {
-                        // Redirect ke URL yang diterima dalam respons
-                        window.location.href =
-                            `/lokasi/managelokasi/detail/${kode}`;
-                    },
-                    error: function(xhr, status, error) {
-                        // Tangani kesalahan jika diperlukan
-                        console.error(xhr.responseText);
-                    }
-                });
-
-            });
-        });
 
         $(function() {
             $("#tbl_lokasi").DataTable({
@@ -131,4 +106,56 @@
             }).buttons().container().appendTo('#tbl_lokasi_wrapper .col-md-6:eq(0)');
         });
     </script>
+    
+<script>
+   
+
+    // Handle form submission for creating kelompok
+    $(document).ready(function() {
+        $('#form-create-kelompok').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            $.ajax({
+                url: $(this).attr('action'), // Get the form action URL
+                type: 'POST',
+                data: $(this).serialize(), // Serialize the form data
+                success: function(response) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                    }).then(() => {
+                        location.reload(); // Reload the page after closing the alert
+                    });
+                },
+                error: function(xhr) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorMessage = '';
+                    $.each(errors, function(key, value) {
+                        errorMessage += value[0] + '\n'; // Concatenate all error messages
+                    });
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Errors',
+                        text: errorMessage,
+                    });
+                }
+            });
+        });
+    });
+     // Detail button event
+     $('body').on('click', '#btn-detail-lokasi', function() {
+                let kode = $(this).data('di');
+
+                $.ajax({
+                    type: "GET",
+                    success: function(response) {
+                        window.location.href = `/lokasi/managelokasi/detail/${kode}`;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+</script>
+
 @endsection

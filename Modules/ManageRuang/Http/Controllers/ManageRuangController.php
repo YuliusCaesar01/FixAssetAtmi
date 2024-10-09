@@ -46,35 +46,41 @@ class ManageRuangController extends Controller
      */
     public function store(Request $request)
     {
+        // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'nama_ruang' => 'required',
-            'id_divisi' => 'required',
-            'id_lokasi' => 'required'
+            'nama_yayasan' => 'required|string|unique:ruangs,nama_ruang_yayasan',
+            'nama_mikael' => 'required|string|unique:ruangs,nama_ruang_mikael',
+            'nama_politeknik' => 'required|string|unique:ruangs,nama_ruang_politeknik',
         ]);
-
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
-        }
-
-        //kode divisi bertambah sesuai nomor max di tabel
-        $kode_max = Ruang::where('id_divisi', $request->id_divisi)->max('kode_ruang');
-        $kode_baru = str_pad($kode_max + 1, 2, '0', STR_PAD_LEFT);
-
-        $ruang = Ruang::create([
-            'nama_ruang' => $request->nama_ruang,
-            'kode_ruang' => $kode_baru,
-            'id_divisi'  => $request->id_divisi,
-            'id_lokasi'  => $request->id_lokasi
-        ]);
-
-        //return response 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Ruang Berhasil Disimpan.',
-            'data'    => $ruang
-        ]);
+    
+          // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
     }
+        // Create the record
+        $ruang = Ruang::create([
+            'nama_ruang_yayasan' => $request->nama_yayasan,
+            'nama_ruang_mikael' => $request->nama_mikael,
+            'nama_ruang_politeknik' => $request->nama_politeknik,
+            // 'kode_ruang' is not included yet
+        ]);
+    
+
+    
+        // Generate the kode_ruang with leading zeros based on the ID
+        $kodeRuang = str_pad($ruang->id_ruang, 3, '0', STR_PAD_LEFT);
+    
+        // Debugging: Log the generated kode_ruang
+        \Log::info('Generated kode_ruang: ' . $kodeRuang);
+    
+        // Update the created record with the generated kode_ruang
+        $ruang->update(['kode_ruang' => $kodeRuang]);
+    
+        // Redirect back with success message
+        return redirect()->back()->with('success', 'Data Ruang telah ditambahkan sukses!');
+    }
+    
+    
 
     /**
      * Show the specified resource.
@@ -107,30 +113,32 @@ class ManageRuangController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id_ruang)
+    public function update(Request $request, $id)
     {
-        $ruang = Ruang::findOrFail($id_ruang);
-        //define validation rules
+        // Validasi input
         $validator = Validator::make($request->all(), [
-            'nama_ruang' => 'required',
+            'nama_ruang_yayasan' => 'required|string|max:255',
+            'nama_ruang_mikael' => 'required|string|max:255',
+            'nama_ruang_politeknik' => 'required|string|max:255',
         ]);
 
-        //check validation 
+        // Jika validasi gagal, kembalikan kesalahan
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        //update ruang
+        // Temukan ruang berdasarkan ID
+        $ruang = Ruang::findOrFail($id);
+
+        // Update data ruang
         $ruang->update([
-            'nama_ruang' => $request->nama_ruang,
+            'nama_ruang_yayasan' => $request->nama_ruang_yayasan,
+            'nama_ruang_mikael' => $request->nama_ruang_mikael,
+            'nama_ruang_politeknik' => $request->nama_ruang_politeknik,
         ]);
 
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Ruang Berhasil Diubah.',
-            'data'    => $ruang
-        ]);
+        return redirect()->back()->with('success', 'Data ruang berhasil diupdate sukses!');
+
     }
 
     /**
@@ -139,7 +147,21 @@ class ManageRuangController extends Controller
      * @return Renderable
      */
     public function destroy($id)
-    {
-        //
+{
+    // Find the record by its ID
+    $record = Ruang::find($id);
+    
+    // Check if the record exists
+    if ($record) {
+        // Delete the record
+        $record->delete();
+        
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Data telah dihapus.');
     }
+
+    // If the record doesn't exist, redirect back with an error message
+    return redirect()->back()->with('error', 'Data tidak ditemukan.');
+}
+
 }

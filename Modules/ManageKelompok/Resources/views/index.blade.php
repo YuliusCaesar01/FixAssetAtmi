@@ -66,6 +66,18 @@
                                                     class="btn btn-sm btn-light">
                                                     <i class="far fa-folder-open"></i> Detail
                                                 </a>
+                                                @role('manageraset')
+                                                <form action="{{ route('manage-kelompok.destroy',  $kl->id_kelompok ) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" 
+                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </form>
+                                                
+                                                @endrole
                                             </td>
                                         </tr>
                                     @endforeach
@@ -87,38 +99,66 @@
             <!-- /.content -->
         </div>
     </div>
-    @include('managekelompok::modal-create')
+   <!-- Modal Create Kelompok -->
+<div class="modal fade" id="createKelompokModal" tabindex="-1" aria-labelledby="createKelompokLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createKelompokLabel">Create Kelompok</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            @if($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+            <div class="modal-body">
+                <form id="form-create-kelompok" action="{{ route('manage-kelompok.store') }}" method="POST">
+                    @csrf <!-- Include CSRF token for security -->
+
+                    <div class="mb-3">
+                        <label for="namaKelompok" class="form-label">Nama Kelompok</label>
+                        <input type="text" class="form-control @error('nama_kelompok') is-invalid @enderror" id="namaKelompok" name="nama_kelompok" required value="{{ old('nama_kelompok') }}">
+                        @error('nama_kelompok')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipeKelompok" class="form-label">Tipe Kelompok</label>
+                        <select class="form-control @error('tipe_kelompok') is-invalid @enderror" id="tipeKelompok" name="tipe_kelompok" required>
+                            <option value="">Select Tipe Kelompok</option> <!-- Placeholder option -->
+                            @foreach($tipe as $item)
+                                <option value="{{ $item->id_tipe }}" {{ old('tipe_kelompok') == $item->id_tipe ? 'selected' : '' }}>
+                                    {{ $item->nama_tipe_yayasan }}
+                                </option> <!-- Replace 'nama_tipe_yayasan' with the appropriate attribute -->
+                            @endforeach
+                        </select>
+                        @error('tipe_kelompok')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Create</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+  
 @endsection
 
 @section('scripttambahan')
+
     <script>
         $(document).ready(function() {
             // Handle mode change event
-            $('#mode-selector').change(function() {
-                let selectedMode = $(this).val();
-
-                // Loop through each row and update the "Nama" and "Tipe" columns based on the selected mode
-                $('#tbl_kelompok tbody tr').each(function() {
-                    let namaKelompok;
-                    let namaTipe;
-                    switch (selectedMode) {
-                        case 'yayasan':
-                            namaKelompok = $(this).data('nama-kelompok-yayasan');
-                            namaTipe = $(this).data('nama-tipe-yayasan');
-                            break;
-                        case 'smkmikael':
-                            namaKelompok = $(this).data('nama-kelompok-smkmikael');
-                            namaTipe = $(this).data('nama-tipe-smkmikael');
-                            break;
-                        case 'politeknik':
-                            namaKelompok = $(this).data('nama-kelompok-politeknik');
-                            namaTipe = $(this).data('nama-tipe-politeknik');
-                            break;
-                    }
-                    $(this).find('.nama-kelompok').text(namaKelompok);
-                    $(this).find('.nama-tipe').text(namaTipe);
-                });
-            });
+            
 
             // Button create post event
             $('body').on('click', '#btn-detail-kelompok', function() {
@@ -148,6 +188,49 @@
                 "autoWidth": false,
                 "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
             }).buttons().container().appendTo('#tbl_kelompok_wrapper .col-md-6:eq(0)');
+        });
+    </script>
+    <script>
+     $('body').on('click', '#btn-create-kelompok', function() {
+    $('#createKelompokModal').modal('show'); // Show the modal for adding a new Kelompok
+});
+
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#form-create-kelompok').on('submit', function(e) {
+                e.preventDefault(); // Prevent the default form submission
+    
+                $.ajax({
+                    url: $(this).attr('action'), // Get the form action URL
+                    type: 'POST',
+                    data: $(this).serialize(), // Serialize the form data
+                    success: function(response) {
+                        // Show success message with SweetAlert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.message, // Success message from the server
+                        }).then(() => {
+                            location.reload(); // Reload the page after closing the alert
+                        });
+                    },
+                    error: function(xhr) {
+                        // Show error messages with SweetAlert
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessage = '';
+                        $.each(errors, function(key, value) {
+                            errorMessage += value[0] + '\n'; // Concatenate all error messages
+                        });
+    
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Errors',
+                            text: errorMessage, // Show validation errors
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

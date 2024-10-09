@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama_tipe_mikael')->nullable();
             $table->string('nama_tipe_politeknik')->nullable();
 
-            $table->string('kode_tipe')->comment('untuk kode FA'); 
+            $table->string('kode_tipe')->comment('untuk kode FA')->nullable(); 
             $table->timestamps();
         });
     }

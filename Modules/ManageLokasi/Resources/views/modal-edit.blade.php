@@ -3,43 +3,32 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">UBAH DATA LOKASI </h5>
+                <h5 class="modal-title" id="exampleModalLabel">UBAH DATA LOKASI</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <input type="hidden" id="id_lokasi">
-                <div class="form-group">
-                    <label for="nama-lokasi-yayasan" class="control-label">Nama Lokasi Yayasan</label>
-                    <input type="text" value="{{$lokasi->nama_lokasi_yayasan}}" class="form-control" id="nama-lokasi-yayasan">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-lokasi-yayasan"></div>
+            <form action="{{ route('manage-lokasi.update', $lokasi->id_lokasi) }}" method="POST" id="form-edit">
+                @csrf
+                @method('PUT') <!-- Method override to PUT for updating -->
+                <input type="hidden" id="id_lokasi" name="id_lokasi" value="{{ $lokasi->id_lokasi }}">
+                
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama-lokasi-yayasan" class="control-label">Nama Lokasi</label>
+                        <input type="text" name="nama_lokasi" value="{{ $lokasi->nama_lokasi_yayasan }}" class="form-control" id="nama-lokasi-yayasan">
+                        @if ($errors->has('nama_lokasi'))
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ $errors->first('nama_lokasi') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
-            
-                <div class="form-group">
-                    <label for="nama-lokasi-mikael" class="control-label">Nama Lokasi Mikael</label>
-                    <input type="text" value="{{$lokasi->nama_lokasi_mikael}}" class="form-control" id="nama-lokasi-mikael">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-lokasi-mikael"></div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">SIMPAN</button>
                 </div>
-            
-                <div class="form-group">
-                    <label for="nama-lokasi-politeknik" class="control-label">Nama Lokasi Politeknik</label>
-                    <input type="text" value="{{$lokasi->nama_lokasi_politeknik}}" class="form-control" id="nama-lokasi-politeknik">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-lokasi-politeknik"></div>
-                </div>
-                {{-- <div class="form-group">
-                    <label>Tipe</label>
-                    <select name="id_tipe" id="idtipe-edit" class="form-control select2" style="width: 100%;" required>
-                        <option value="">- Pilih Tipe -</option>
-                        @foreach ($tipe as $tp)
-                            <option value="{{ $tp->id_tipe }}">{{ $tp->nama_tipe }}</option>
-                        @endforeach
-                    </select>
-                </div> --}}
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="update">SIMPAN</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>

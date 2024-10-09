@@ -3,31 +3,42 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">UBAH DATA TIPE </h5>
+                <h5 class="modal-title" id="exampleModalLabel">Ubah Data Tipe</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+
             <div class="modal-body">
-                <input type="hidden" id="id_tipe">
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Tipe Yayasan</label>
-                    <input type="text" placeholder="{{$tipe->nama_tipe_yayasan}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
-                </div>
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Tipe Mikael</label>
-                    <input type="text" placeholder="{{$tipe->nama_tipe_mikael}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
-                </div>
-                <div class="form-group">
-                    <label for="nama-edit" class="control-label">Tipe Politeknik</label>
-                    <input type="text" placeholder="{{$tipe->nama_tipe_politeknik}}" class="form-control" id="nama-edit">
-                    <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="update">SIMPAN</button>
+                @if (session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                <form action="{{ route('manage-tipe.update', $tipe->id_tipe) }}" method="POST" id="form-edit">
+                    @csrf
+                    @method('PUT')
+
+                    <input type="hidden" name="id_tipe" value="{{ $tipe->id_tipe }}">
+
+                    <div class="form-group">
+                        <label for="nama-edit" class="control-label">Nama Tipe</label>
+                        <input type="text" name="nama_tipe" placeholder="{{ $tipe->nama_tipe_yayasan }}" class="form-control" id="nama-edit" required>
+                        @if ($errors->has('nama_tipe'))
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ $errors->first('nama_tipe') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

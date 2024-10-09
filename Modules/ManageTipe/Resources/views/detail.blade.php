@@ -26,7 +26,7 @@
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <h3 class="m-0 text-center" id="nama_tipe"><i class="fas fa-building"></i>
-                                    {{ $tipe->nama_tipe }}</h3>
+                                    {{ $tipe->nama_tipe_yayasan }}</h3>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <div class="row">
@@ -82,12 +82,9 @@
                             </thead>
                             <tbody>
                                 @foreach ($kelompok as $kl)
-                                    <tr id="index_{{ $kl->id_kelompok }}"
-                                        data-nama-kelompok-yayasan="{{ $kl->nama_kelompok_yayasan }}"
-                                        data-nama-kelompok-smkmikael="{{ $kl->nama_kelompok_mikael }}"
-                                        data-nama-kelompok-politeknik="{{ $kl->nama_kelompok_politeknik }}">
+                                    <tr id="index_{{ $kl->id_kelompok }}">
                                         <td>{{ $loop->iteration }}</td>
-                                        <td class="nama-kelompok">{{ $kl->nama_kelompok }}</td>
+                                        <td class="nama-kelompok">{{ $kl->nama_kelompok_yayasan }}</td>
                                         <td class="text-center lead">
                                             <span class="badge bg-pink">{{ $kl->kode_kelompok }}</span>
                                         </td>

@@ -26,7 +26,7 @@
                         <div class="row mb-2">
                             <div class="col-sm-6">
                                 <h3 class="m-0 text-center" id="nama_lokasi"><i class="fas fa-building"></i>
-                                    {{ $lokasi->nama_lokasi }}
+                                    {{ $lokasi->nama_lokasi_yayasan }}
                                 </h3>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
@@ -39,7 +39,7 @@
                                     </div>
                                     @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
+                                        <a href="javascript:void(0)" id="btn-edit-lokasi" title="Ubah Lokasi"
                                             data-di="{{ $lokasi->id_lokasi}}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
@@ -55,7 +55,7 @@
                 <!-- Main content -->
                 <div class="card card-primary-outline">
                     <div class="card-header">
-                        <h3 class="card-title">Ruang</h3>
+                        <h3 class="card-title">Lokasi</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -63,28 +63,22 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Ruang</th>
-                                    <th>Kode Ruang</th>
+                                    <th>Nama Lokasi</th>
+                                    <th>Kode Lokasi</th>
                                     <th class="w-1"><i class="fas fa-bars"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($ruang as $rg)
-                                    <tr id="index_{{ $rg->id_ruang }}" data-iteration="{{ $loop->iteration }}">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $rg->nama_ruang }}</td>
+                                    <tr id="index_">
+                                        <td></td>
+                                        <td>{{ $lokasi->nama_lokasi_yayasan }}</td>
                                         <td class="text-center lead">
-                                            <span class="badge badge-danger">{{ $rg->kode_ruang }}</span>
+                                            <span class="badge badge-danger">{{ $lokasi->kode_lokasi }}</span>
                                         </td>
                                         <td>
-                                            <a href="javascript:void(0)" id="btn-detail-ruang"
-                                                data-di = "{{ $rg->id_ruang }}" title="Detail Ruang"
-                                                class="btn btn-sm btn-light">
-                                                <i class="far fa-folder-open"></i> Detail
-                                            </a>
+                                           
                                         </td>
                                     </tr>
-                                @endforeach
                             </tbody>
                             <tfoot>
                                 <tr>

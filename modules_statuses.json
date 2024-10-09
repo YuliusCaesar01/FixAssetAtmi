@@ -14,5 +14,6 @@
     "ManageAset": true,
     "ManagePermintaanFA": true,
     "ManageFixaset": true,
-    "ManagePermintaanNFA": true
+    "ManagePermintaanNFA": true,
+    "ManageUserGuide": true
 }

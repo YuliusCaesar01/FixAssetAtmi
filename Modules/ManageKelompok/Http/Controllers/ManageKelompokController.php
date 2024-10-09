@@ -48,32 +48,37 @@ class ManageKelompokController extends Controller
      */
     public function store(Request $request)
     {
+        // Define the validation rules
         $validator = Validator::make($request->all(), [
-            'nama_kelompok' => 'required',
-            'id_tipe' => 'required'
+            'nama_kelompok' => 'required|string|max:255|unique:kelompok,nama_kelompok_yayasan', // Ensure unique nama_kelompok in kelompok table
+            'tipe_kelompok' => 'required|exists:tipes,id_tipe', // Ensure tipe_kelompok exists in the tipe table
         ]);
 
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
+           // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
+    }
+
+        try {
+            // Create a new Kelompok without kode_kelompok
+            $kelompok = Kelompok::create([
+                'nama_kelompok_yayasan' => $request->nama_kelompok,
+                'id_tipe' => $request->tipe_kelompok,
+            ]);
+
+            // Generate kode_kelompok from the id
+            $kode_kelompok = str_pad($kelompok->id_kelompok, 3, '0', STR_PAD_LEFT); // Pad with zeros to make it 3 digits
+
+            // Update the Kelompok with the generated kode_kelompok
+            $kelompok->update(['kode_kelompok' => $kode_kelompok]);
+
+            // Return a successful response
+            return redirect()->back()->with('success', 'Data kelompok telah ditambahkan!');
+
+        } catch (\Exception $e) {
+            // Handle any unexpected errors
+            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }
-
-        //kode tipe bertambah sesuai nomor max di tabel
-        $kode_max = Kelompok::where('id_tipe', $request->id_tipe)->max('kode_kelompok');
-        $kode_baru = str_pad($kode_max + 1, 3, '0', STR_PAD_LEFT);
-
-        $kelompok = Kelompok::create([
-            'nama_kelompok' => $request->nama_kelompok,
-            'kode_kelompok' => $kode_baru,
-            'id_tipe'       => $request->id_tipe,
-        ]);
-
-        //return response 
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Kelompok Berhasil Disimpan.',
-            'data'    => $kelompok
-        ]);
     }
 
     /**
@@ -109,30 +114,22 @@ class ManageKelompokController extends Controller
      */
     public function update(Request $request, $id_kelompok)
     {
+        // Mencari data kelompok berdasarkan ID
         $kelompok = Kelompok::findOrFail($id_kelompok);
-        //define validation rules
-        $validator = Validator::make($request->all(), [
-            'nama_kelompok' => 'required',
+    
+        // Validasi input
+        $request->validate([
+            'nama_kelompok' => 'required|string|max:255',
         ]);
-
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        //update KELOMPOK
+    
+        // Update data kelompok
         $kelompok->update([
             'nama_kelompok' => $request->nama_kelompok,
         ]);
+        return redirect()->back()->with('success', 'Data jenis telah diupdate!');
 
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Kelompok Berhasil Diubah.',
-            'data'    => $kelompok
-        ]);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      * @param int $id
@@ -140,6 +137,19 @@ class ManageKelompokController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // Find the record by its ID
+        $record = Kelompok::find($id);
+        
+        // Check if the record exists
+        if ($record) {
+            // Delete the record
+            $record->delete();
+            
+            // Redirect back with a success message
+            return redirect()->back()->with('success', 'Data telah dihapus.');
+        }
+    
+        // If the record doesn't exist, redirect back with an error message
+        return redirect()->back()->with('error', 'Data tidak ditemukan.');
     }
 }

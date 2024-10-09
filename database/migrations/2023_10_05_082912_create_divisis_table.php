@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id_divisi');
             $table->integer('id_institusi')->unsigned();
             $table->string('nama_divisi');
-            $table->string('kode_divisi')->comment('kode untuk FA');
+            $table->string('kode_divisi')->comment('kode untuk FA')->nullable();
             $table->timestamps();
             $table->foreign('id_institusi')->references('id_institusi')->on('institusis')->onDelete('cascade');
         });

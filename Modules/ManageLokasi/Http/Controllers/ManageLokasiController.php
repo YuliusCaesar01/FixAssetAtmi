@@ -46,33 +46,33 @@ class ManageLokasiController extends Controller
      */
     public function store(Request $request)
     {
-        //define validation rules
+        // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'nama_lokasi' => 'required',
+            'nama_lokasi' => 'required|string|unique:lokasis,nama_lokasi_yayasan',
+            'keterangan_lokasi' => 'required|string',
         ]);
-
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
-        }
-
-        //kode lokasi bertambah sesuai nomor max di tabel
-        $kode_max = lokasi::max('kode_lokasi');
-        $kode_baru = $kode_max + 1;
-
-        //create lokasi
-        $lokasi = lokasi::create([
-            'nama_lokasi' => $request->nama_lokasi,
-            'kode_lokasi' => $kode_baru,
-        ]);
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Lokasi Berhasil Disimpan.',
-            'data'    => $lokasi
-        ]);
+    
+        // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
     }
-
+        // Create a new location record
+        $lokasi = Lokasi::create([
+            'nama_lokasi_yayasan' => $request->nama_lokasi,
+            'keterangan_lokasi' => $request->keterangan_lokasi,
+            'kode_lokasi' => '' // Temporary default value
+        ]);
+    
+        // Generate kode_lokasi based on the ID
+        $kodeLokasi = str_pad($lokasi->id_lokasi, 2, '0', STR_PAD_LEFT); // Pad with leading zeros if needed
+    
+        // Update the record with the generated kode_lokasi
+        $lokasi->update(['kode_lokasi' => $kodeLokasi]);
+    
+        // Redirect back with a success message
+        return redirect()->back()->with('success', 'Data lokasi telah ditambahkan!');
+    }
+    
     /**
      * Show the specified resource.
      * @param int $id
@@ -104,9 +104,30 @@ class ManageLokasiController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id_lokasi)
+    public function update(Request $request, $id)
     {
-       dd('okay');
+        // Validasi input
+        $validatedData = $request->validate([
+            'nama_lokasi' => [
+                'required',
+                'string',
+                'max:255',
+                // Menambahkan aturan unik dengan mengecualikan ID lokasi saat ini
+                'unique:lokasis,nama_lokasi_yayasan,' . $id . ',id_lokasi', // Ganti 'lokasis' dengan nama tabel yang sesuai
+            ],
+        ]);
+
+        // Cari lokasi berdasarkan ID
+        $lokasi = Lokasi::findOrFail($id);
+
+        // Update data lokasi
+        $lokasi->nama_lokasi_yayasan = $validatedData['nama_lokasi'];
+        
+        // Simpan perubahan ke database
+        $lokasi->save();
+
+        return redirect()->back()->with('success', 'Data jenis telah diupdate!');
+
     }
 
     /**

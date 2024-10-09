@@ -135,7 +135,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item {{ $menu == 'Dashboard' || $menu == 'BukuManual' ? 'menu-open' : '' }}">
+                <li class="nav-item {{ $menu == 'Dashboard' || $menu == 'ManualBook' ? 'menu-open' : '' }}">
                     <a href="{{ route('dashboard') }}" class="nav-link {{ $menu == 'Dashboard' ? 'active' : '' }}">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
@@ -145,7 +145,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="" class="nav-link {{ $menu == 'ManualBook' ? 'active' : '' }}">
+                            <a href="{{ route('guides.index') }}" class="nav-link {{ $menu == 'ManualBook' ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>Manual Book</p>
                             </a>
@@ -251,7 +251,18 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                         </li>
                     </ul>
                 </li>
-               
+                @if(auth()->user()->role_id == 19 || auth()->user()->role_id == 1)
+
+                <li class="nav-item">
+                    <a href="{{ route('manage-user.index', ['type' => 'fixaset']) }}" 
+                       class="nav-link {{ $menu == 'fixasetuser' ? 'active' : '' }}" 
+                       aria-label="Manage Users">
+                        <i class="nav-icon fas fa-users" style="font-size: 1.2rem;"></i> <!-- Ganti ikon -->
+                        <p class="ml-2">Users</p>
+                    </a>
+                </li>
+                @endif
+                
             </ul>
         </nav>
     </div>
@@ -265,6 +276,16 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                     {{ session('success') }}
                 </div>
             @endif
+            @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
             <div class="modal-header">
                 <h5 class="modal-title" id="editModalLabel">Edit User Details</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">

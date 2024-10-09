@@ -20,9 +20,9 @@ class ManageInstitusiController extends Controller
     protected  $menu = 'Institusi';
     public function index()
     {
-        //$menu = 'Institusi';
-        $data = Institusi::get();
+        $data = Institusi::take(3)->get(); // Mengambil hanya 3 entri
         return view('manageinstitusi::index')->with(['institusi' => $data, 'menu' => $this->menu]);
+        
     }
 
     public function detail(string $id_institusi)
@@ -53,11 +53,10 @@ class ManageInstitusiController extends Controller
             'nama_institusi' => 'required',
         ]);
 
-        //check validation 
-        if ($validator->fails()) {
-            return response()->json($validator->error(), 422);
-        }
-
+         // Check if validation fails
+    if ($validator->fails()) {
+        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
+    }
         //kode institusi bertambah sesuai nomor max di tabel
         $kode_max = Institusi::max('kode_institusi');
         $kode_baru = $kode_max + 1;

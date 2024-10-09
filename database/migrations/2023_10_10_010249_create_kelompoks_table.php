@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nama_kelompok_yayasan')->nullable();
             $table->string('nama_kelompok_mikael')->nullable();
             $table->string('nama_kelompok_politeknik')->nullable();
-            $table->string('kode_kelompok');
+            $table->string('kode_kelompok')->nullable(); 
             $table->timestamps();
             $table->foreign('id_tipe')->references('id_tipe')->on('tipes')->onDelete('cascade');
         });
