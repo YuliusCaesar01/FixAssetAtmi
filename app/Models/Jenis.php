@@ -18,7 +18,8 @@ class Jenis extends Model
         'nama_jenis_yayasan',
         'nama_jenis_mikael',
         'nama_jenis_politeknik',
-        'kode_jenis'
+        'kode_jenis',
+        'foto_jenis'
     ];
 
     public function kelompok(): BelongsTo

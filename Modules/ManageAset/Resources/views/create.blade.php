@@ -67,7 +67,6 @@
                                                         <option value="2">SMK Mikael</option>
                                                         <option value="3">Politeknik</option>
                                                     </select>
-                                                    
                                                 </div>
                                             </div>
                                             
@@ -78,9 +77,13 @@
                                                     <label>Lokasi</label>
                                                     <select id="lokasi" name="id_lokasi" class="form-control select2" style="width: 100%;" required>
                                                         <option value="">- Pilih Lokasi -</option>
+                                                        @foreach($lokasi as $item)
+                                                            <option value="{{ $item->id_lokasi }}">{{ $item->nama_lokasi_yayasan }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
+                                            
                                             
                                             <div class="col-6">
                                                 <div class="form-group">
@@ -89,32 +92,45 @@
                                                         <option value="">- Pilih Ruang -</option>
                                                     </select>
                                                 </div>
-                                        </div>
+                                            </div>
                                         <div class="row">
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label>Tipe</label>
-                                                    <select id="tipe" name="id_tipe" class="form-control select2" style="width: 100%;" required>
-                                                        <option value="">- Pilih Tipe -</option>
-                                                    </select>
+                                            <div class="row">
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Tipe</label>
+                                                        <select id="tipe" name="id_tipe" class="form-control select2" style="width: 100%;" required>
+                                                            <option value="">- Pilih Tipe -</option>
+                                                            @foreach($tipe as $item)
+                                                                <option value="{{ $item->id_tipe }}">{{ $item->nama_tipe_yayasan }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <div class="form-group">
+                                                        <label>Kelompok</label>
+                                                        <select id="kelompok" name="id_kelompok" class="form-control select2" style="width: 100%;" required>
+                                                            <option value="">- Pilih Kelompok -</option>
+                                                            @foreach($kelompok as $item)
+                                                                <option value="{{ $item->id_kelompok }}">{{ $item->nama_kelompok_yayasan }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <div class="form-group">
-                                                    <label>Kelompok</label>
-                                                    <select id="kelompok" name="id_kelompok" class="form-control select2" style="width: 100%;" required >
-                                                        <option value="">- Pilih Kelompok -</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="col-4">
                                                 <div class="form-group">
                                                     <label>Jenis</label>
-                                                    <select id="jenis" name="id_jenis" class="form-control select2" style="width: 100%;" data-placeholder="- Pilih Jenis -" required >
+                                                    <select id="jenis" name="id_jenis" class="form-control select2" style="width: 100%;" data-placeholder="- Pilih Jenis -" required>
                                                         <option value="">- Pilih Jenis -</option>
+                                                        @foreach($jenis as $item)
+                                                            <option value="{{ $item->id_jenis }}">{{ $item->nama_jenis_yayasan }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
+                                            
                                         </div>
                                         
                                         <div class="row">
@@ -225,115 +241,25 @@
     </div>
 @endsection
 @section('scripttambahan')
-    <!-- InputMask -->
-    <script>
-      
-    
-        const ruangYayasan = [
-            @foreach ($ruang as $rg)
-                { id: '{{ $rg->id_ruang }}', nama: '{{ $rg->nama_ruang_yayasan }}' },
-            @endforeach
-        ];
-    
-        const ruangMikael = [
-            @foreach ($ruang as $rg)
-                { id: '{{ $rg->id_ruang }}', nama: '{{ $rg->nama_ruang_mikael }}' },
-            @endforeach
-        ];
-    
-        const ruangPoliteknik = [
-            @foreach ($ruang as $rg)
-                { id: '{{ $rg->id_ruang }}', nama: '{{ $rg->nama_ruang_politeknik }}' },
-            @endforeach
-        ];
-    
-      
-        document.getElementById('instansi').addEventListener('change', function () {
-            const instansi = this.value;
-            const lokasiSelect = document.getElementById('lokasi');
-            const ruangSelect = document.getElementById('ruang');
-            const tipeSelect = document.getElementById('tipe');
-            const kelompokSelect = document.getElementById('kelompok');
-            const jenisSelect = document.getElementById('jenis');
-    
-            // Update Lokasi
-            lokasiSelect.innerHTML = '<option value="">- Pilih Lokasi -</option>';
-            let lokasiOptions = [];
-    
-          
-                lokasiOptions = lokasiYayasan;
-          
-            lokasiOptions.forEach(function (lokasi) {
-                const option = document.createElement('option');
-                option.value = lokasi.id;
-                option.textContent = lokasi.nama;
-                lokasiSelect.appendChild(option);
-            });
-    
-            // Update Ruang
-            ruangSelect.innerHTML = '<option value="">- Pilih Ruang -</option>';
-            let ruangOptions = [];
-    
-            if (instansi === '1') {
-                ruangOptions = ruangYayasan;
-            } else if (instansi === '2') {
-                ruangOptions = ruangMikael;
-            } else if (instansi === '3') {
-                ruangOptions = ruangPoliteknik;
-            }
-    
-            ruangOptions.forEach(function (ruang) {
-                const option = document.createElement('option');
-                option.value = ruang.id;
-                option.textContent = ruang.nama;
-                ruangSelect.appendChild(option);
-            });
-    
-            // Update Tipe
-            tipeSelect.innerHTML = '<option value="">- Pilih Tipe -</option>';
-            let tipeOptions = [];
-    
-                tipeOptions = tipeYayasan;
-            
-    
-            tipeOptions.forEach(function (tipe) {
-                const option = document.createElement('option');
-                option.value = tipe.id;
-                option.textContent = tipe.nama;
-                tipeSelect.appendChild(option);
-            });
-    
+<script>
+$(document).ready(function() {
+    $('#instansi').change(function() {
+        var instansiId = $(this).val(); // Ambil nilai instansi yang dipilih
+        var ruangOptions = ''; // Variabel untuk menyimpan opsi ruang
 
-    
-            // Update Kelompok
-            kelompokSelect.innerHTML = '<option value="">- Pilih Kelompok -</option>';
-            let kelompokOptions = [];
-    
-                kelompokOptions = kelompokYayasan;
-           
-    
-            kelompokOptions.forEach(function (kelompok) {
-                const option = document.createElement('option');
-                option.value = kelompok.id;
-                option.textContent = kelompok.nama;
-                kelompokSelect.appendChild(option);
-            });
-    
-            // Update Jenis
-            jenisSelect.innerHTML = '<option value="">- Pilih Jenis -</option>';
-            let jenisOptions = [];
-    
-                jenisOptions = jenisYayasan;
-          
-    
-            jenisOptions.forEach(function (jenis) {
-                const option = document.createElement('option');
-                option.value = jenis.id;
-                option.textContent = jenis.nama;
-                jenisSelect.appendChild(option);
-            });
-        });
-    </script>
+        if (instansiId == 1) { // Jika Yayasan dipilih
+            ruangOptions += '@foreach($ruang as $rg)<option value="{{ $rg->id_ruang }}">{{ $rg->nama_ruang_yayasan }}</option>@endforeach';
+        } else if (instansiId == 2) { // Jika SMK Mikael dipilih
+            ruangOptions += '@foreach($ruang as $rg)<option value="{{ $rg->id_ruang }}">{{ $rg->nama_ruang_mikael }}</option>@endforeach';
+        } else if (instansiId == 3) { // Jika Politeknik dipilih
+            ruangOptions += '@foreach($ruang as $rg)<option value="{{ $rg->id_ruang }}">{{ $rg->nama_ruang_politeknik }}</option>@endforeach';
+        }
+
+        // Kosongkan dropdown ruang dan tambahkan opsi baru
+        $('#ruang').html(ruangOptions);
+    });
+});
+</script>
     <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <!-- Summernote -->

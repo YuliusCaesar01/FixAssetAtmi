@@ -3,7 +3,7 @@
 
 <head>
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <title>@yield('title') Sarpras</title>
+  <title>@yield('title') FixAsset ATMI</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -13,6 +13,9 @@
     header("Access-Control-Allow-Origin: *");
 
     @endphp
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet"
         type="text/css">
     <!-- Ionicons -->
@@ -80,6 +83,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
   <style>
+    .product-image {
+    width: 100%;               /* Set width to 100% */
+    height: auto;             /* Maintain aspect ratio */
+    max-height: 475px;        /* Set a maximum height */
+    object-fit: cover;        /* Ensures the image covers the area without distortion */
+}
+
     chatgpt-sidebar,
     chatgpt-sidebar-popups {
         display: none !important; /* Menyembunyikan elemen */

@@ -14,7 +14,8 @@ class Institusi extends Model
     protected $fillable = [
         'id_institusi',
         'nama_institusi',
-        'kode_institusi'
+        'kode_institusi',
+        'foto_institusi',
     ];
 
     public function divisi(): HasMany

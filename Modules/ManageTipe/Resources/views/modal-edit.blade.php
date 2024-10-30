@@ -19,7 +19,7 @@
                     </div>
                 @endif
 
-                <form action="{{ route('manage-tipe.update', $tipe->id_tipe) }}" method="POST" id="form-edit">
+                <form action="{{ route('manage-tipe.update', $tipe->id_tipe) }}" method="POST" id="form-edit" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -27,10 +27,21 @@
 
                     <div class="form-group">
                         <label for="nama-edit" class="control-label">Nama Tipe</label>
-                        <input type="text" name="nama_tipe" placeholder="{{ $tipe->nama_tipe_yayasan }}" class="form-control" id="nama-edit" required>
+                        <input type="text" name="nama_tipe" placeholder="{{ $tipe->nama_tipe }}" class="form-control @error('nama_tipe') is-invalid @enderror" id="nama-edit" value="{{ old('nama_tipe', $tipe->nama_tipe) }}" required>
+                        
                         @if ($errors->has('nama_tipe'))
                             <div class="alert alert-danger mt-2" role="alert">
                                 {{ $errors->first('nama_tipe') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image-edit" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image-edit" name="image" accept="image/*">
+                        @if ($errors->has('image'))
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ $errors->first('image') }}
                             </div>
                         @endif
                     </div>
@@ -43,6 +54,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     $(document).ready(function() {

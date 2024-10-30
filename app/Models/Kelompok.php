@@ -18,7 +18,8 @@ class Kelompok extends Model
         'nama_kelompok_yayasan',
         'nama_kelompok_mikael',
         'nama_kelompok_politeknik',
-        'kode_kelompok'
+        'kode_kelompok',
+        'foto_kelompok'
     ];
 
     public function tipe(): BelongsTo

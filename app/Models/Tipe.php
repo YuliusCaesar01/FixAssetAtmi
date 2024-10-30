@@ -18,7 +18,8 @@ class Tipe extends Model
         'nama_tipe_yayasan',
         'nama_tipe_mikael',
         'nama_tipe_politeknik',
-        'kode_tipe'
+        'kode_tipe',
+        'foto_tipe'
     ];
 
     public function kelompok(): HasMany

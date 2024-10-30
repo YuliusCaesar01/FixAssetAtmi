@@ -15,10 +15,8 @@ return new class extends Migration
             $table->increments('id_jenis');
             $table->unsignedInteger('id_kelompok');
             $table->string('nama_jenis_yayasan')->nullable();
-            $table->string('nama_jenis_mikael')->nullable();
-            $table->string('nama_jenis_politeknik')->nullable();
-
-            $table->string('kode_jenis')->nullable();  
+            $table->string('kode_jenis')->nullable();
+            $table->string('foto_jenis')->nullable();  
             $table->timestamps();
             $table->foreign('id_kelompok')->references('id_kelompok')->on('kelompoks')->onDelete('cascade');
         });

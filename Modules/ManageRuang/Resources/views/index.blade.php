@@ -161,7 +161,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#form-create-kelompok').on('submit', function(e) {
+            $('#form-create-ruang').on('submit', function(e) {
                 e.preventDefault(); // Prevent the default form submission
     
                 $.ajax({

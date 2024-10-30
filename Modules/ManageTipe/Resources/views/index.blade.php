@@ -101,7 +101,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">TAMBAH DATA TIPE</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -115,13 +115,20 @@
                 </div>
             @endif
             <div class="modal-body">
-                <form id="form-tipe" method="POST" action="/tipe/managetipe">
+                <form id="form-tipe" method="POST" action="/tipe/managetipe" enctype="multipart/form-data">
                     @csrf <!-- Include CSRF token for Laravel -->
                     <input type="hidden" id="id_tipe" name="id_tipe">
                     <div class="form-group">
-                        <label for="nama_tipe" class="control-label">Tipe Barang Yayasan</label>
+                        <label for="nama_tipe" class="control-label">Nama Tipe Barang</label>
                         <input type="text" class="form-control @error('nama_tipe') is-invalid @enderror" id="nama_tipe" name="nama_tipe" value="{{ old('nama_tipe') }}">
                         @error('nama_tipe')
+                            <div class="alert alert-danger mt-2" role="alert">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="image" class="control-label">Upload Gambar</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                        @error('image')
                             <div class="alert alert-danger mt-2" role="alert">{{ $message }}</div>
                         @enderror
                     </div>
@@ -180,6 +187,40 @@
             }
         });
     });
+
+    
+    // // Handle form submission for creating kelompok
+    // $(document).ready(function() {
+    //     $('#form-tipe').on('submit', function(e) {
+    //         e.preventDefault(); // Prevent the default form submission
+    //         $.ajax({
+    //             url: $(this).attr('action'), // Get the form action URL
+    //             type: 'POST',
+    //             data: $(this).serialize(), // Serialize the form data
+    //             success: function(response) {
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Success',
+    //                     text: response.message,
+    //                 }).then(() => {
+    //                     location.reload(); // Reload the page after closing the alert
+    //                 });
+    //             },
+    //             error: function(xhr) {
+    //                 let errors = xhr.responseJSON.errors;
+    //                 let errorMessage = '';
+    //                 $.each(errors, function(key, value) {
+    //                     errorMessage += value[0] + '\n'; // Concatenate all error messages
+    //                 });
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Validation Errors',
+    //                     text: errorMessage,
+    //                 });
+    //             }
+    //         });
+    //     });
+    // });
       // Detail button event
       $('body').on('click', '#btn-detail-tipe', function() {
                 let kode = $(this).data('di');

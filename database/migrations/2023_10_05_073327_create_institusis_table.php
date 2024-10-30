@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('institusis', function (Blueprint $table) {
             $table->increments('id_institusi');
             $table->string('nama_institusi');
+            $table->string('foto_institusi')->nullable();  
             $table->string('kode_institusi')->nullable(); 
             $table->timestamps();
         });

@@ -112,7 +112,7 @@ if ($.fn.DataTable.isDataTable('#tbl_lokasi')) {
 
     // Handle form submission for creating kelompok
     $(document).ready(function() {
-        $('#form-create-kelompok').on('submit', function(e) {
+        $('#form-create-lokasi').on('submit', function(e) {
             e.preventDefault(); // Prevent the default form submission
             $.ajax({
                 url: $(this).attr('action'), // Get the form action URL

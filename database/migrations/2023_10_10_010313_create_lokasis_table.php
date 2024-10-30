@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('lokasis', function (Blueprint $table) {
             $table->increments('id_lokasi');
             $table->string('nama_lokasi_yayasan')->nullable();
-            $table->string('nama_lokasi_mikael')->nullable();
-            $table->string('nama_lokasi_politeknik')->nullable();
             $table->string('keterangan_lokasi');
+            $table->string('foto_lokasi')->nullable();  
             $table->string('kode_lokasi')->nullable();
             $table->timestamps();
         });

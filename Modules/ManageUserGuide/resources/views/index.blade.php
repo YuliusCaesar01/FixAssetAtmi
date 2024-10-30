@@ -50,7 +50,7 @@
                     <h1 class="m-0 text-primary">User Guide</h1>
                 </div>
                 <div class="col-6 text-right">
-                    <a href="http://localhost:8080/pdfs/manualbook.pdf" class="btn btn-sm btn-info" download>
+                    <a href="{{ asset('pdfs/manualbook.pdf') }}" class="btn btn-sm btn-info" download>
                         <i class="fas fa-download"></i> Download User Guide
                     </a>
                     
@@ -78,57 +78,61 @@
                 </div>
 
                 <div class="card-body tab-content">
-                    <div id="overview" class="tab-pane fade show active">
-                        <h6 class="font-weight-bold">Welcome to the User Guide</h6>
-                        <p>This user guide provides comprehensive information on how to use our application effectively. Below, you will find sections detailing the features and functionalities available.</p>
+                    <div id="overview" class="tab-pane fade show active p-4 bg-light border rounded">
+                        <h6 class="font-weight-bold text-primary mb-3">Welcome to the User Guide</h6>
+                        <p class="mb-4">This user guide provides comprehensive information on how to use our application effectively. Below, you will find sections detailing the features and functionalities available.</p>
+                        
+                        
                     </div>
+                    
 
                     <div id="getting-started" class="tab-pane fade">
                         <h6 class="font-weight-bold text-primary">Getting Started</h6>
-                        <p class="mb-4">Follow these simple steps to get started with our application:</p>
+                        <p class="mb-4">Memulai dengan langkah sederhana untuk aplikasi FixedAsset:</p>
                         
                         <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1"><i class="fas fa-user-plus"></i> Sign Up</h5>
-                                    <small>Step 1</small>
-                                </div>
-                                <p class="mb-1">Create an account by filling in the required details.</p>
-                            </a>
+                         
                             <a href="#" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1"><i class="fas fa-sign-in-alt"></i> Log In</h5>
-                                    <small>Step 2</small>
+                                    <small>Step 1</small>
                                 </div>
-                                <p class="mb-1">Log in using your credentials to access your dashboard.</p>
+                                <p class="mb-1">Log in dengan akun yang sudah ada.</p>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1"><i class="fas fa-tachometer-alt"></i> Navigate the Dashboard</h5>
+                                    <h5 class="mb-1"><i class="fas fa-tachometer-alt"></i> Melihat bagian Dashboard</h5>
+                                    <small>Step 2</small>
+                                </div>
+                                <p class="mb-1">Explorasi data Informasi jumlah Fixed Asset.</p>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1"><i class="fas fa-box"></i> Menuju pada FixAsset</h5>
                                     <small>Step 3</small>
                                 </div>
-                                <p class="mb-1">Explore various features available on your dashboard.</p>
+                                <p class="mb-1">Melihat dan Melakukan Aksi pada Data list Fixed Asset dan Pengajuannya.</p>
                             </a>
                         </div>
                     </div>
                     
                     <div id="faq" class="tab-pane fade">
                         <h6 class="font-weight-bold text-primary">Frequently Asked Questions</h6>
-                        <p class="mb-4">Here are some common questions users may have:</p>
+                        <p class="mb-4">Ini adalah pertanyaan yang sering ditanyakan:</p>
                     
                         <div class="accordion" id="faqAccordion">
                             <div class="card mb-2">
                                 <div class="card-header" id="headingOne">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <i class="fas fa-question-circle"></i> How do I reset my password?
+                                            <i class="fas fa-question-circle"></i> Bagaimana cara saya ganti password/profil?
                                         </button>
                                     </h5>
                                 </div>
                     
                                 <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqAccordion">
                                     <div class="card-body">
-                                        Click on "Forgot Password" on the login page and follow the instructions.
+                                        klik  foto profil pada pojok kiri atas dan klik edit (bergambar pensil)
                                     </div>
                                 </div>
                             </div>
@@ -137,13 +141,13 @@
                                 <div class="card-header" id="headingTwo">
                                     <h5 class="mb-0">
                                         <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                            <i class="fas fa-question-circle"></i> Where can I find support?
+                                            <i class="fas fa-question-circle"></i> Bagaimana saya mengajukan fixedasset?
                                         </button>
                                     </h5>
                                 </div>
                                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
                                     <div class="card-body">
-                                        You can reach out through the "Contact Support" section below.
+                                        Anda dapat mengajukan fixed asset pada kolom kirim permintaan Fixed Asset lalu klik tanda (+)/plus diatas table
                                     </div>
                                 </div>
                             </div>
@@ -156,15 +160,23 @@
                     
                     
 
-                    <div id="contact-support" class="tab-pane fade">
-                        <h6 class="font-weight-bold">Contact Support</h6>
-                        <p>If you need further assistance, please reach out to our support team:</p>
-                        <ul>
-                            <li>Email: <a href="mailto:support@example.com">support@example.com</a></li>
-                            <li>Phone: +1 (123) 456-7890</li>
-                            <li>Live Chat: Available on our website during business hours.</li>
+                    <div id="contact-support" class="tab-pane fade p-4 bg-light border rounded">
+                        <h6 class="font-weight-bold text-primary mb-3">Contact Support</h6>
+                        <p class="mb-4">Jika anda membutuhkan bantuan lebih lanjut anda dapat menghubungi kami:</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-envelope text-primary"></i>
+                                <strong>Email:</strong> 
+                                <a href="mailto:atmi@example.com" class="text-decoration-none">fixaset@example.com</a>
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-phone-alt text-primary"></i>
+                                <strong>Phone:</strong> +62 456-7890
+                            </li>
+                           
                         </ul>
                     </div>
+                    
                 </div>
             </div>
         </div>

@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('tipes', function (Blueprint $table) {
             $table->increments('id_tipe');
             $table->string('nama_tipe_yayasan')->nullable();
-            $table->string('nama_tipe_mikael')->nullable();
-            $table->string('nama_tipe_politeknik')->nullable();
-
             $table->string('kode_tipe')->comment('untuk kode FA')->nullable(); 
+            $table->string('foto_tipe')->nullable();  
             $table->timestamps();
         });
     }

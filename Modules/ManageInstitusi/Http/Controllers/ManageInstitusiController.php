@@ -108,28 +108,45 @@ class ManageInstitusiController extends Controller
     public function update(Request $request, $id_institusi)
     {
         $institusi = Institusi::findOrFail($id_institusi);
-        //define validation rules
+    
+        // Define validation rules
         $validator = Validator::make($request->all(), [
             'nama_institusi' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:5048',
         ]);
-
-        //check validation 
+    
+        // Check validation 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
+    
+        // Update institusi name
+        $institusi->nama_institusi = $request->nama_institusi;
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+    
+            // Check if the image is valid
+            if ($image->isValid()) {
+                $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
+                $imagePath = public_path('foto/fixasetlist');
+                $image->move($imagePath, $imageName);
+                $institusi->foto_institusi = 'foto/fixasetlist/' . $imageName;
+            } else {
+                return response()->json(['success' => false, 'message' => 'Uploaded image is not valid.']);
+            }
+        }
+    
+        // Save changes to the database
+        $institusi->save();
+    
+        return redirect()->back()->with('success', 'Data Institusi berhasil diupdate!');
 
-        //create INSTITUSI
-        $institusi->update([
-            'nama_institusi' => $request->nama_institusi,
-        ]);
-
-        //return response
-        return response()->json([
-            'success' => true,
-            'message' => 'Data Institusi Berhasil Diubah.',
-            'data'    => $institusi
-        ]);
     }
+    
+    
+    
 
     /**
      * Remove the specified resource from storage.

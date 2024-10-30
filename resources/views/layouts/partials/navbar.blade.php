@@ -24,7 +24,7 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
         <a href="index3.html" class="nav-link">Home</a>
         </li>
         <li class="nav-item d-none d-sm-inline-block">
-        <a href="#" class="nav-link">Contact</a>
+        <a href="{{ route('guides.index') }}" class="nav-link">Contact</a>
         </li>
         </ul>
 
@@ -532,25 +532,7 @@ document.addEventListener('DOMContentLoaded', function () {
        
     </script>
 
-<script>
-    const eventSource = new EventSource('http://localhost:8080/main/main/notifications/sse');
 
-    eventSource.onmessage = function(event) {
-    const data = JSON.parse(event.data); // Parsing data JSON
-    
-
-    const countElement = document.getElementById('notificationCount');
-    countElement.textContent = data.count; // Update span text
-
-    // Display logic
-    if (data.count > 0) {
-        countElement.style.display = 'inline'; // Show
-    } else {
-        countElement.style.display = 'none'; // Hide
-    }
-};
-
-</script>
 
 
     

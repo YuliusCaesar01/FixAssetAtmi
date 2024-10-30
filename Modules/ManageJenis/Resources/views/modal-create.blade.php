@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">TAMBAH DATA JENIS</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -16,9 +16,9 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+            @endif
             <div class="modal-body">
-                <form action="{{ route('manage-jenis.store') }}" method="POST" id="form-create-jenis">
+                <form action="{{ route('manage-jenis.store') }}" method="POST" id="form-create-jenis" enctype="multipart/form-data">
                     @csrf <!-- CSRF token for security -->
                     <input type="hidden" id="id_jenis" name="id_jenis">
 
@@ -44,6 +44,15 @@
                             <div class="alert alert-danger mt-2">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="form-group">
+                        <label for="image" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -52,6 +61,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     $(document).ready(function() {

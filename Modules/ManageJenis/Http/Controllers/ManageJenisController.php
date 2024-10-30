@@ -19,7 +19,7 @@ class ManageJenisController extends Controller
 
     public function index()
     {
-        $data = Jenis::orderBy('id_kelompok')->get();
+        $data = Jenis::orderBy('id_jenis', 'asc')->orderBy('id_kelompok')->get();
         $kelompok = Kelompok::get();
         return view('managejenis::index')->with(['jenis' => $data, 'kelompok' => $kelompok, 'menu' => $this->menu]);
     }
@@ -57,8 +57,11 @@ class ManageJenisController extends Controller
     if ($validator->fails()) {
         return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
     }
+           $idToUse = Jenis::max('id_jenis') + 1;
+   
          // Create a new record in the jenis table
-         $jenis = Jenis::create([
+          $jenis = Jenis::create([
+             'id_jenis' => $idToUse,
              'id_kelompok' => $request->id_kelompok,
              'nama_jenis_yayasan' => $request->nama_jenis_yayasan,
              'kode_jenis' => '' // Initial empty value for kode_jenis

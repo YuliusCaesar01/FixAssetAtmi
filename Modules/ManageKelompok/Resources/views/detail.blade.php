@@ -55,6 +55,14 @@
                 </div>
                 <!-- /.content-header -->
 
+                 <!-- Display the image -->
+                 <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        
+                        <img src="{{ asset('boxs.png') }}" alt="Descriptive Alt Text" width="400" height="auto">
+                    
+                    </div>
+                </div>
                 <!-- Main content -->
                 <div class="card card-primary-outline">
                     <div class="card-header">

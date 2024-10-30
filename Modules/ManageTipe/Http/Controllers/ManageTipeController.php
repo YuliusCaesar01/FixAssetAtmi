@@ -48,28 +48,39 @@ class ManageTipeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama_tipe' => 'required|unique:tipes,nama_tipe_yayasan'
+            'nama_tipe' => 'required|unique:tipes,nama_tipe_yayasan',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image if provided
         ]);
-
-   
-         // Check if validation fails
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
-    }
-
-        //kode tipe bertambah sesuai nomor max di tabel
-        $kode_max = Tipe::max('kode_tipe');
+    
+        // Check if validation fails
+        if ($validator->fails()) {
+            dd('error');// Redirect back with errors and input
+        }
+    
+        // Generate new kode_tipe
+        $kode_max = Tipe::max('kode_tipe') ?? 0; // Ensure $kode_max is initialized
         $kode_baru = str_pad($kode_max + 1, 2, '0', STR_PAD_LEFT);
-
-        //create TIPE
+    
+        // Handle image upload
+        $path = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = public_path('foto/fixasetlist'); // Change to your desired path
+            $image->move($imagePath, $imageName);
+            $path = 'foto/fixasetlist/' . $imageName; // Store image path
+        }
+    
+        // Create new Tipe
         $tipe = Tipe::create([
             'nama_tipe_yayasan' => $request->nama_tipe,
             'kode_tipe' => $kode_baru,
+            'foto_tipe' => $path // Ensure this column exists in the database
         ]);
-
+    
         return back()->with('success', 'Tipe data created successfully!');
-
     }
+    
 
     /**
      * Show the specified resource.
@@ -103,27 +114,46 @@ class ManageTipeController extends Controller
      * @return Renderable
      */
     public function update(Request $request, $id_tipe)
-    {
-        $tipe = Tipe::findOrFail($id_tipe);
-    
-        // Validasi input
-        $request->validate([
-            'nama_tipe' => [
-                'required',
-                'string',
-                'max:255',
-                Rule::unique('tipes', 'nama_tipe_yayasan')->ignore($id_tipe, 'id_tipe'), // Use Rule::unique for uniqueness validation
-            ],
-        ]);
-    
-        // Update tipe
-        $tipe->update([
-            'nama_tipe_yayasan' => $request->nama_tipe,
-        ]);
-    
-        // Redirect ke halaman index dengan pesan sukses
-        return back()->with('success', 'Data Tipe Berhasil Diubah.');
+{
+    // Find the tipe by id_tipe
+    $tipe = Tipe::findOrFail($id_tipe);
+
+    // Validate input
+    $request->validate([
+        'nama_tipe' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('tipes', 'nama_tipe_yayasan')->ignore($id_tipe, 'id_tipe'), // Use 'id_tipe' for uniqueness validation
+        ],
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image if provided
+    ]);
+
+    // Update tipe
+    $tipe->nama_tipe_yayasan = $request->nama_tipe;
+
+    // Handle image upload if provided
+    if ($request->hasFile('image')) {
+        // Remove old image if necessary (optional)
+        // if ($tipe->foto_tipe && file_exists(public_path($tipe->foto_tipe))) {
+        //     unlink(public_path($tipe->foto_tipe));
+        // }
+
+        $image = $request->file('image');
+        $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
+        $imagePath = public_path('foto/fixasetlist');
+        $image->move($imagePath, $imageName);
+        $tipe->foto_tipe = 'foto/fixasetlist/' . $imageName; // Update the path in the model
     }
+
+    // Save changes to the database
+    $tipe->save();
+
+    // Redirect to the index page with a success message
+    return back()->with('success', 'Data Tipe Berhasil Diubah.');
+}
+
+    
     
     /**
      * Remove the specified resource from storage.

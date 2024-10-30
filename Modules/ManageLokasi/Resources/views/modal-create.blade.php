@@ -4,21 +4,21 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">TAMBAH DATA LOKASI</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="modal-body">
-                <form action="{{ route('manage-lokasi.store') }}" method="POST" id="form-create-lokasi">
+                <form action="{{ route('manage-lokasi.store') }}" method="POST" id="form-create-lokasi" enctype="multipart/form-data">
                     @csrf <!-- CSRF token for security -->
                     <input type="hidden" id="id_lokasi" name="id_lokasi">
 
@@ -34,6 +34,15 @@
                         <label for="keterangan-lokasi-yayasan" class="control-label">Keterangan Lokasi</label>
                         <input type="text" class="form-control @error('keterangan_lokasi') is-invalid @enderror" id="keterangan-lokasi-yayasan" name="keterangan_lokasi" required value="{{ old('keterangan_lokasi') }}">
                         @error('keterangan_lokasi')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
                             <div class="alert alert-danger mt-2">{{ $message }}</div>
                         @enderror
                     </div>

@@ -83,6 +83,37 @@ class ManageAsetController extends Controller
         $lokasi = Lokasi::all();
         $code = $kode_fa;
       // Define the base URL for your asset detail page
+            // Define the URL or text to encode in the QR code
+            $baseUrl = route('aset.detailbarcode', ['kode_fa' => $kode_fa]);
+            $fullUrl = $baseUrl;
+
+            // Create a new QR code instance
+            $qrCode = new QrCode($fullUrl);
+
+            // Set the size of the QR code (in pixels)
+            $qrCode->setSize(200); // 200x200 pixels
+
+            // Set the margin around the QR code
+            $qrCode->setMargin(10); // 10 pixels margin
+
+            // Generate the QR code
+            $writer = new PngWriter();
+            $qrCodeImage = $writer->write($qrCode)->getString();
+
+            // Encode QR code image in Base64 for embedding in HTML
+            $base64QrCode = base64_encode($qrCodeImage);
+
+        return view("manageaset::detail", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code]);
+    }
+
+public function detailbarcode($kode_fa)
+    {
+        $fa = FixedAsset::where('kode_fa', $kode_fa)->first();
+        $institusi = Institusi::all();
+        $tipe = Tipe::all();
+        $lokasi = Lokasi::all();
+        $code = $kode_fa;
+      // Define the base URL for your asset detail page
 // Define the URL or text to encode in the QR code
 $baseUrl = url('/aset/manageaset/detail/'. $kode_fa );
 $fullUrl = $baseUrl;
@@ -103,9 +134,8 @@ $qrCodeImage = $writer->write($qrCode)->getString();
 // Encode QR code image in Base64 for embedding in HTML
 $base64QrCode = base64_encode($qrCodeImage);
 
-        return view("manageaset::detail", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code]);
+        return view("manageaset::barcodepage", compact('fa', 'tipe', 'lokasi', 'institusi'), ['menu' => $this->menu,'barcode' => $base64QrCode, 'code' => $code]);
     }
-
     /**
      * Show the form for creating a new resource.
      * @return Renderable

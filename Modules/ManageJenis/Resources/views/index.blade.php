@@ -32,7 +32,6 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tipe <i class="fas fa-chevron-right"></i> Kelompok</th>
                                         <th>Nama Jenis</th>
                                         <th>Kode Jenis</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
@@ -41,20 +40,9 @@
                                 <tbody>
                                     @foreach ($jenis as $jn)
                                         <tr id="index_{{ $jn->id_jenis }}" data-iteration="{{ $loop->iteration }}"
-                                            data-nama-jenis-yayasan="{{ $jn->nama_jenis_yayasan }}"
-                                            data-nama-jenis-smkmikael="{{ $jn->nama_jenis_mikael }}"
-                                            data-nama-jenis-politeknik="{{ $jn->nama_jenis_politeknik }}"
-                                            data-nama-tipe-yayasan="{{ $jn->kelompok->tipe->nama_tipe_yayasan }}"
-                                            data-nama-tipe-smkmikael="{{ $jn->kelompok->tipe->nama_tipe_mikael }}"
-                                            data-nama-tipe-politeknik="{{ $jn->kelompok->tipe->nama_tipe_politeknik }}"
-                                            data-nama-kelompok-yayasan="{{ $jn->kelompok->nama_kelompok_yayasan }}"
-                                            data-nama-kelompok-smkmikael="{{ $jn->kelompok->nama_kelompok_mikael }}"
-                                            data-nama-kelompok-politeknik="{{ $jn->kelompok->nama_kelompok_politeknik }}">
+                                             >
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>
-                                                <span class="nama-tipe">{{ $jn->kelompok->tipe->nama_tipe_yayasan }}</span>
-                                                <i class="fas fa-chevron-right"></i> <span class="nama-kelompok">{{ $jn->kelompok->nama_kelompok_yayasan }}</span>
-                                            </td>
+                                          
                                             <td class="nama-jenis">{{ $jn->nama_jenis_yayasan }}</td>
                                             <td class="text-center lead">
                                                 <span class="badge badge-warning">{{ $jn->kode_jenis }}</span>
@@ -84,7 +72,6 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tipe <i class="fas fa-chevron-right"></i> Kelompok</th>
                                         <th>Nama Jenis</th>
                                         <th>Kode Jenis</th>
                                         <th><i class="fas fa-bars"></i></th>
@@ -166,7 +153,7 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#form-create-kelompok').on('submit', function(e) {
+            $('#form-create-jenis').on('submit', function(e) {
                 e.preventDefault(); // Prevent the default form submission
     
                 $.ajax({

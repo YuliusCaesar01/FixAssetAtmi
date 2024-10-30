@@ -99,25 +99,27 @@
             <!-- /.content -->
         </div>
     </div>
-   <!-- Modal Create Kelompok -->
+<!-- Modal Create Kelompok -->
 <div class="modal fade" id="createKelompokModal" tabindex="-1" aria-labelledby="createKelompokLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="createKelompokLabel">Create Kelompok</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             @if($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="modal-body">
-                <form id="form-create-kelompok" action="{{ route('manage-kelompok.store') }}" method="POST">
+                <form id="form-create-kelompok" action="{{ route('manage-kelompok.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf <!-- Include CSRF token for security -->
 
                     <div class="mb-3">
@@ -142,7 +144,16 @@
                             <div class="alert alert-danger mt-2">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+
+                    <div class="mb-3">
+                        <label for="imageKelompok" class="form-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="imageKelompok" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <button type="submit" class="btn btn-primary">Create</button>
                 </form>
             </div>

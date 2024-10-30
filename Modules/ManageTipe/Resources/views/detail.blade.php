@@ -50,7 +50,14 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-
+            <!-- Display the image -->
+            <div class="row mb-4">
+                <div class="col-12 text-center">
+                    
+                    <img src="{{ $tipe->foto_tipe ? asset('foto/fixasetlist/' . basename($tipe->foto_tipe)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+                
+                </div>
+            </div>
                 <!-- Main content -->
                 <div class="card card-primary-outline">
                     <div class="card-header">
@@ -58,15 +65,7 @@
                             <div class="col-6">
                                 <h3 class="card-title">Kelompok</h3>
                             </div>
-                            <div class="col-6">
-                                <div class="float-right">
-                                    <select class="form-control form-control-sm" id="mode-selector">
-                                        <option value="yayasan">Yayasan</option>
-                                        <option value="smkmikael">SMK Mikael</option>
-                                        <option value="politeknik">Politeknik</option>
-                                    </select>
-                                </div>
-                            </div>
+                          
                         </div>
                     </div>
                     <!-- /.card-header -->

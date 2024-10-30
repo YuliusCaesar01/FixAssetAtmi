@@ -22,7 +22,8 @@ class Ruang extends Model
         'nama_ruang_mikael',
         'nama_ruang_politeknik',
 
-        'kode_ruang'
+        'kode_ruang',
+        'foto_ruang'
     ];
 
     public function lokasi(): BelongsTo

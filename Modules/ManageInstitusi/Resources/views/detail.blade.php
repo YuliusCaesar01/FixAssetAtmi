@@ -38,7 +38,7 @@
                                     </div>
                                     @if(auth()->user()->role_id == 19)
                                     <div class="col-6">
-                                        <a href="javascript:void(0)" id="btn-edit-tipe" title="Ubah Tipe"
+                                        <a href="javascript:void(0)" id="btn-edit-institusi" title="Ubah Tipe"
                                             data-di="{{ $ins->id_institusi }}" class="btn btn-sm btn-secondary float-right">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
@@ -50,7 +50,12 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-
+                <!-- Display the image -->
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        <img src="{{ $ins->foto_institusi ? asset('foto/fixasetlist/' . basename($ins->foto_institusi)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+                    </div>
+                </div>
 
                 <!-- Main content -->
                 <div class="card card-primary-outline">

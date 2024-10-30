@@ -12,6 +12,7 @@ use Modules\ManagePermintaanFA\app\Http\Controllers\ManagePermintaanFAController
 use Modules\ManageAset\Http\Controllers\ManageAsetController;
 use Modules\ManageRuang\Http\Controllers\ManageRuangController;
 use Modules\ManageTipe\Http\Controllers\ManageTipeController;
+use Modules\ManageInstitusi\Http\Controllers\ManageInstitusiController;
 use Modules\ManageLokasi\Http\Controllers\ManageLokasiController;
 use Modules\ManageKelompok\Http\Controllers\ManageKelompokController;
 use Modules\ManageJenis\Http\Controllers\ManageJenisController;
@@ -55,7 +56,8 @@ Route::get('password/reset/{token}', function ($token) {
 // Route to handle the password reset form submission
 Route::post('password/reset', [ManageUserController::class, 'reset'])->name('password.update');
 
-   
+Route::get('/aset/manageaset/detailbarcode/{kode_fa}', [ManageAsetController::class, 'detailbarcode'])
+->name('aset.detailbarcode');
 
 Route::redirect('/', '/auth/login'); //link utama langsung mengarahkan ke login
 Route::prefix('auth')->middleware('guest')->group(function () {
@@ -77,6 +79,8 @@ Route::prefix('main')->middleware("auth")->group(function () {
     Route::resource('manage-kelompok', ManageKelompokController::class);
     Route::resource('manage-jenis', ManageJenisController::class);
     Route::resource('manage-ruang', ManageRuangController::class);
+    Route::resource('manage-institusi', ManageInstitusiController::class);
+
     Route::get('managepermintaannfa/approve', [ManagePermintaanNFAController::class, 'approve'])->name('managepermintaannfa.approve');
 
     //staff only

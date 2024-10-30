@@ -51,7 +51,14 @@
                     </div><!-- /.container-fluid -->
                 </div>
                 <!-- /.content-header -->
-
+                <!-- Display the image -->
+                <div class="row mb-4">
+                    <div class="col-12 text-center">
+                        
+                        <img src="{{ $lokasi->foto_lokasi ? asset('foto/fixasetlist/' . basename($lokasi->foto_lokasi)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+                    
+                    </div>
+                </div>
                 <!-- Main content -->
                 <div class="card card-primary-outline">
                     <div class="card-header">

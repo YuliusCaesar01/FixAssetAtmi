@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">TAMBAH DATA RUANG</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -19,10 +19,10 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+            @endif
             <div class="modal-body">
                 <!-- Start Form -->
-                <form action="{{ route('manage-ruang.store') }}" method="POST">
+                <form action="{{ route('manage-ruang.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <!-- Form fields -->
                     <div class="form-group">
@@ -49,6 +49,15 @@
                         @enderror
                     </div>
 
+                    <div class="form-group">
+                        <label for="image" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-primary">SIMPAN</button>
                     </div>
@@ -58,7 +67,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- JavaScript for AJAX Request -->
 <script>
@@ -70,5 +78,10 @@ $(document).ready(function() {
 
   
 });
+document.querySelectorAll('.close-modal, .close').forEach(function (button) {
+        button.addEventListener('click', function () {
+            $('#editModal').modal('hide');
+        });
+    });
 </script>
 

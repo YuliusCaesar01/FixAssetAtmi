@@ -380,11 +380,18 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ route('managepermintaanfa.detail', $pfa->id_permintaan_fa) }}" id="btn-detail-lokasi"
-                                                   class="btn btn-sm btn-light" title="Detail Permintaan">
-                                                    <i class="far fa-folder-open">&nbsp;View</i>
-                                                </a>
-                                            </td>
+                                              <a href="{{ route('managepermintaanfa.detail', $pfa->id_permintaan_fa) }}" id="btn-detail-lokasi"
+                                                 class="btn btn-sm btn-light" title="Detail Permintaan">
+                                                  <i class="far fa-folder-open">&nbsp;View</i>
+                                              </a>
+                                            {{-- @if($pfa->status == 'menunggu')
+                                              <a href="" id="btn-detail-lokasi"
+                                                class="btn btn-sm btn-light" title="Detail Permintaan">
+                                                 <i class="fas fa-edit">&nbsp;Edit</i>
+                                             </a>
+                                             @endif --}}
+                                          </td>
+                                          
                                         </tr>
 
 <!-- Modal -->

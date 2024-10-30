@@ -76,7 +76,8 @@
                                         
                                         
                                                                             </a>
-                                    <button class="btn btn-secondary" onclick="printQRCode()">Print QR Code</button>
+                                                                            <a href="{{ route('aset.detailbarcode', ['kode_fa' => $fa->kode_fa]) }}" class="btn btn-info">AfterScan</a>
+                                                                            <button class="btn btn-secondary" onclick="printQRCode()">Print QR Code</button>
                                 </div>
                             </div>
                         </div>
@@ -254,6 +255,7 @@
             printWindow.print();
         }
     </script>
+  
 @endsection
 
 

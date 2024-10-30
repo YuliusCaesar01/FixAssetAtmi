@@ -1,7 +1,6 @@
 @extends('layouts.layout_main')
 @section('title', 'Data Detail Ruang')
 @section('content')
-    <!-- Content Wrapper. Contatipe page content -->
     <div class="content-wrapper">
         <div class="content-header">
             <div class="container-fluid">
@@ -20,7 +19,6 @@
         </div>
         <section class="content">
             <div class="container-fluid">
-                <!-- Content Header (Page header) -->
                 <div class="content-header">
                     <div class="container-fluid">
                         <div class="row mb-2">
@@ -29,8 +27,7 @@
                                     <span class="badge bg-purple">{{ $ruang->kode_ruang }}</span>
                                     <b>{{ $ruang->nama_ruang }}</b>
                                 </h4>
-                                
-                            </div><!-- /.col -->
+                            </div>
                             <div class="col-sm-6">
                                 <div class="row">
                                     <div class="col-6">
@@ -51,8 +48,18 @@
                                     </div>
                                     @endif
                                 </div>
-                            </div><!-- /.col -->
-                        </div><!-- /.row -->
+                            </div>
+                        </div>
+
+                        <!-- Display the image -->
+                        <div class="row mb-4">
+                            <div class="col-12 text-center">
+                                <img src="{{ $ruang->foto_ruang ? asset('foto/fixasetlist/' . basename($ruang->foto_ruang)) : asset('boxs.png') }}" class="product-image" alt="Foto Barang Aset">
+
+                              
+                            </div>
+                        </div>
+
                         <div class="card-body">
                             <table class="table table-striped table-sm" id="tbl_lokasi">
                                 <thead>
@@ -65,21 +72,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr id="index_"  >
-                                            <td class="text-center lead">
-                                                <span class="badge bg-yellow">{{ $ruang->kode_ruang }} </span>
-                                            </td>
-                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_yayasan }}</td>
-                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_mikael }}</td>
-                                            <td class="nama-lokasi">{{ $ruang->nama_ruang_politeknik }}</td>
-                                            <td>
-                                              
-                                            </td>
-                                        </tr>
+                                    <tr id="index_">
+                                        <td class="text-center lead">
+                                            <span class="badge bg-yellow">{{ $ruang->kode_ruang }}</span>
+                                        </td>
+                                        <td class="nama-lokasi">{{ $ruang->nama_ruang_yayasan }}</td>
+                                        <td class="nama-lokasi">{{ $ruang->nama_ruang_mikael }}</td>
+                                        <td class="nama-lokasi">{{ $ruang->nama_ruang_politeknik }}</td>
+                                        <td></td>
+                                    </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th>Kode Lokasi</th>
+                                        <th>Kode Ruang</th>
                                         <th>Nama Ruang Yayasan</th>
                                         <th>Nama Ruang Mikael</th>
                                         <th>Nama Ruang Politeknik</th>
@@ -88,12 +93,11 @@
                                 </tfoot>
                             </table>
                         </div>
-                    </div><!-- /.container-fluid -->
+                    </div>
                 </div>
-                <!-- /.content-header -->
             </div>
         </section>
     </div>
-    @include('manageruang::modal-edit')
 
+    @include('manageruang::modal-edit')
 @endsection

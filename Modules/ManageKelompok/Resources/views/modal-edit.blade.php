@@ -8,15 +8,26 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('manage-kelompok.update', $kelompok->id_kelompok) }}" method="POST" id="form-edit">
+            <form action="{{ route('manage-kelompok.update', $kelompok->id_kelompok) }}" method="POST" id="form-edit" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Method PUT untuk update -->
                 <input type="hidden" id="id_kelompok" name="id_kelompok" value="{{ $kelompok->id_kelompok }}">
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="nama-edit" class="control-label">Nama Kelompok</label>
-                        <input type="text" name="nama_kelompok" placeholder="{{ $kelompok->nama_kelompok_yayasan }}" class="form-control" id="nama-edit">
-                        <div class="alert alert-danger mt-2 d-none" role="alert" id="alert-nama-edit"></div>
+                        <input type="text" name="nama_kelompok" placeholder="{{ $kelompok->nama_kelompok }}" class="form-control @error('nama_kelompok') is-invalid @enderror" id="nama-edit" value="{{ old('nama_kelompok', $kelompok->nama_kelompok) }}" required>
+                        @error('nama_kelompok')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image-edit" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image-edit" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <div class="modal-footer">

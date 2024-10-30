@@ -48,38 +48,58 @@ class ManageRuangController extends Controller
     {
         // Validate the incoming request data
         $validator = Validator::make($request->all(), [
-            'nama_yayasan' => 'required|string|unique:ruangs,nama_ruang_yayasan',
-            'nama_mikael' => 'required|string|unique:ruangs,nama_ruang_mikael',
-            'nama_politeknik' => 'required|string|unique:ruangs,nama_ruang_politeknik',
+            'nama_yayasan' => 'nullable|string|unique:ruangs,nama_ruang_yayasan',
+            'nama_mikael' => 'nullable|string|unique:ruangs,nama_ruang_mikael',
+            'nama_politeknik' => 'nullable|string|unique:ruangs,nama_ruang_politeknik',
+            'image' => 'nullable|image|max:2048', // Validate the image
         ]);
     
-          // Check if validation fails
-    if ($validator->fails()) {
-        return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
-    }
+        // Check if validation fails
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
+        }
+    
+        // Determine the next ID to use
+        $idToUse = Ruang::max('id_ruang') + 1;
+    
+        // Initialize image path
+        $imagePath = null;
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = public_path('foto/fixasetlist/' . $imageName); // Set the path
+    
+            // Move the uploaded file to the specified path
+            $image->move(public_path('foto/fixasetlist'), $imageName);
+        }
+    
         // Create the record
         $ruang = Ruang::create([
+            'id_ruang' => $idToUse,
             'nama_ruang_yayasan' => $request->nama_yayasan,
             'nama_ruang_mikael' => $request->nama_mikael,
             'nama_ruang_politeknik' => $request->nama_politeknik,
-            // 'kode_ruang' is not included yet
+            'foto_ruang' => $imagePath, // Save the image path
         ]);
-    
-
     
         // Generate the kode_ruang with leading zeros based on the ID
         $kodeRuang = str_pad($ruang->id_ruang, 3, '0', STR_PAD_LEFT);
     
-        // Debugging: Log the generated kode_ruang
-        \Log::info('Generated kode_ruang: ' . $kodeRuang);
+        // Check and assign default values if fields are null
+        $ruang->nama_ruang_yayasan = $ruang->nama_ruang_yayasan ?? 'ruangyayasan' . $kodeRuang;
+        $ruang->nama_ruang_mikael = $ruang->nama_ruang_mikael ?? 'ruangmikael' . $kodeRuang;
+        $ruang->nama_ruang_politeknik = $ruang->nama_ruang_politeknik ?? 'ruangpoliteknik' . $kodeRuang;
     
-        // Update the created record with the generated kode_ruang
-        $ruang->update(['kode_ruang' => $kodeRuang]);
+        // Update the record with the generated kode_ruang and default names
+        $ruang->update([
+            'kode_ruang' => $kodeRuang,
+        ]);
     
         // Redirect back with success message
         return redirect()->back()->with('success', 'Data Ruang telah ditambahkan sukses!');
     }
-    
     
 
     /**
@@ -120,26 +140,38 @@ class ManageRuangController extends Controller
             'nama_ruang_yayasan' => 'required|string|max:255',
             'nama_ruang_mikael' => 'required|string|max:255',
             'nama_ruang_politeknik' => 'required|string|max:255',
+            'gambar_ruang' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validasi gambar
         ]);
-
+    
         // Jika validasi gagal, kembalikan kesalahan
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
+    
         // Temukan ruang berdasarkan ID
         $ruang = Ruang::findOrFail($id);
-
+    
+        // Handle image upload
+        if ($request->hasFile('gambar_ruang')) {
+            $image = $request->file('gambar_ruang');
+            $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
+            $imagePath = public_path('foto/fixasetlist');
+            $image->move($imagePath, $imageName);
+    
+            // Update the image path in the database
+            $ruang->foto_ruang = 'foto/fixasetlist/' . $imageName;
+        }
+    
         // Update data ruang
         $ruang->update([
             'nama_ruang_yayasan' => $request->nama_ruang_yayasan,
             'nama_ruang_mikael' => $request->nama_ruang_mikael,
             'nama_ruang_politeknik' => $request->nama_ruang_politeknik,
         ]);
-
-        return redirect()->back()->with('success', 'Data ruang berhasil diupdate sukses!');
-
+    
+        return redirect()->back()->with('success', 'Data ruang berhasil diupdate!');
     }
+    
 
     /**
      * Remove the specified resource from storage.

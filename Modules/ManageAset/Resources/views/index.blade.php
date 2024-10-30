@@ -74,16 +74,38 @@
                                                     @endif
                                                 @endrole
                                                 <!-- Tombol Delete -->
+                                              
                                                 @role('pimpinanunitkarya')
-                                                <form action="{{ route('manageaset.destroy', $ast->id_fa) }}" method="POST" style="display:inline;">
+                                                <form action="{{ route('manageaset.destroy', $ast->id_fa) }}" method="POST" style="display:inline;" id="delete-form-{{ $ast->id_fa }}">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                    <button type="button" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                        onclick="confirmDelete('{{ $ast->id_fa }}')">
                                                         <i class="fa fa-trash"></i> Delete
                                                     </button>
                                                 </form>
                                                 @endrole
+                                                
+                                                <script>
+                                                    function confirmDelete(id) {
+                                                        Swal.fire({
+                                                            title: 'Apakah Anda yakin?',
+                                                            text: "Aset ini akan dihapus!",
+                                                            icon: 'warning',
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: '#d33',
+                                                            cancelButtonColor: '#3085d6',
+                                                            confirmButtonText: 'Ya, hapus!',
+                                                            cancelButtonText: 'Batal'
+                                                        }).then((result) => { 
+                                                            if (result.isConfirmed) {
+                                                                document.getElementById('delete-form-' + id).submit();
+                                                            }
+                                                        });
+                                                    }
+                                                </script>
+                                                
+                                                
                                             </td>
                                         </tr>
                                     @endforeach

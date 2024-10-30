@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('manage-lokasi.update', $lokasi->id_lokasi) }}" method="POST" id="form-edit">
+            <form action="{{ route('manage-lokasi.update', $lokasi->id_lokasi) }}" method="POST" id="form-edit" enctype="multipart/form-data">
                 @csrf
                 @method('PUT') <!-- Method override to PUT for updating -->
                 <input type="hidden" id="id_lokasi" name="id_lokasi" value="{{ $lokasi->id_lokasi }}">
@@ -23,6 +23,32 @@
                             </div>
                         @endif
                     </div>
+
+                    <div class="form-group">
+                        <label for="keterangan-lokasi-yayasan" class="control-label">Keterangan Lokasi</label>
+                        <input type="text" name="keterangan_lokasi" value="{{ $lokasi->keterangan_lokasi }}" class="form-control" id="keterangan-lokasi-yayasan">
+                        @if ($errors->has('keterangan_lokasi'))
+                            <div class="alert alert-danger mt-2" role="alert">
+                                {{ $errors->first('keterangan_lokasi') }}
+                            </div>
+                        @endif
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image" class="control-label">Upload Gambar (optional)</label>
+                        <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" accept="image/*">
+                        <small>Gambar Minimal 2 Mb</small>
+                        @error('image')
+                            <div class="alert alert-danger mt-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    @if ($lokasi->image)
+                        <div class="form-group">
+                            <label for="current-image" class="control-label">Gambar Saat Ini</label>
+                            <img src="{{ asset('storage/' . $lokasi->image) }}" alt="Current Image" class="img-fluid mb-2" style="max-width: 100%;">
+                        </div>
+                    @endif
                 </div>
                 
                 <div class="modal-footer">
@@ -32,6 +58,7 @@
         </div>
     </div>
 </div>
+
 
 <script>
     $(document).ready(function() {
