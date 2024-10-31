@@ -56,16 +56,15 @@
                                                     <i class="far fa-folder-open"></i> Detail
                                                 </a>
                                                 @role('manageraset')
-                                                <form action="{{ route('manage-lokasi.destroy', $lok->id_lokasi ) }}" method="POST" style="display:inline;">
+                                                <form id="delete-user-form-{{ $lok->id_lokasi }}" action="{{ route('manage-lokasi.destroy', $lok->id_lokasi ) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" title="Delete Aset"
+                                                    <button type="button" class="btn btn-sm btn-danger" title="Delete Aset"
                                                         style="font-size: 0.7rem; padding: 0.25rem 0.5rem;" 
-                                                        onclick="return confirm('Apakah Anda yakin ingin menghapus aset ini?')">
+                                                        onclick="confirmDelete('{{ $lok->id_lokasi }}')">
                                                         <i class="fa fa-trash"></i> Delete
                                                     </button>
                                                 </form>
-                                                
                                                 @endrole
                                             </td>
                                         </tr>
@@ -156,6 +155,29 @@ if ($.fn.DataTable.isDataTable('#tbl_lokasi')) {
                     }
                 });
             });
+            function confirmDelete(id) { 
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Submit the form to delete the asset
+            document.getElementById('delete-user-form-' + id).submit();
+            
+            // Show success message
+            Swal.fire(
+                'Deleted!',
+                'The asset has been deleted.',
+                'success'
+            );
+        }
+    });
+}
 </script>
 
 @endsection

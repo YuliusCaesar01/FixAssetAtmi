@@ -322,43 +322,48 @@ dd('error');
     }
 
     public function changeEmail(Request $request)
-    {
-        // Validate the request
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'old_email' => 'required|email|exists:users,email',
-            'new_email' => 'required|email|unique:users,email',
-            'ttd' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // optional signature upload
-        ]);
-    
-        // Check if validation fails
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-    
-        // Update email
-        $user = Auth::user();
-        $user->email = $request->new_email;
-    
-        // Optionally, handle the uploaded signature
-        if ($request->hasFile('ttd')) {
-            // Define the path where you want to save the uploaded file
-            $destinationPath = public_path('signatures'); // Public directory
-            
-            // Generate a unique file name for the uploaded file
-            $fileName = time() . '_' . $request->file('ttd')->getClientOriginalName();
-            
-            // Move the uploaded file to the public directory
-            $request->file('ttd')->move($destinationPath, $fileName);
-            
-            // Save the file path to the user's record
-            $user->ttd = 'signatures/' . $fileName; // Assuming you want to store the relative path
-        }
-    
-        $user->save();
-    
-        return redirect()->back()->with('success', 'Email has been changed successfully!');
+{
+    // Validate the request
+    $validator = Validator::make($request->all(), [
+        'user_id' => 'required|exists:users,id',
+        'old_email' => 'required|email|exists:users,email',
+        'new_email' => 'nullable|email|unique:users,email', // Change to nullable
+        'ttd' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // optional signature upload
+    ]);
+
+    // Check if validation fails
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
     }
+
+    // Update email if new_email is provided
+    $user = Auth::user();
+    
+    // Only update email if new_email is not null
+    if ($request->filled('new_email')) {
+        $user->email = $request->new_email;
+    }
+
+    // Optionally, handle the uploaded signature
+    if ($request->hasFile('ttd')) {
+        // Define the path where you want to save the uploaded file
+        $destinationPath = public_path('signatures'); // Public directory
+
+        // Generate a unique file name for the uploaded file
+        $fileName = time() . '_' . $request->file('ttd')->getClientOriginalName();
+
+        // Move the uploaded file to the public directory
+        $request->file('ttd')->move($destinationPath, $fileName);
+
+        // Save the file path to the user's record
+        $user->ttd = 'signatures/' . $fileName; // Assuming you want to store the relative path
+    }
+
+    $user->save();
+
+    return redirect()->back()->with('success', 'Email has been changed successfully!');
+}
+
     
     
     /**
@@ -366,8 +371,28 @@ dd('error');
      * @param int $id
      * @return Renderable
      */
-    public function destroy($id)
-    {
-        //
+    public function deleteUser($id) {
+        // Find the user by ID
+        $user = User::find($id);
+    
+        // Check if the user exists
+        if (!$user) {
+            return redirect()->back()->with('error', 'Data Akun Not Found!');
+        }
+    
+        // Find the user details associated with the user
+        $userDetail = UserDetail::where('id_userdetail', $id)->first();
+    
+        // If user details exist, delete them
+        if ($userDetail) {
+            $userDetail->delete();
+        }
+    
+        // Delete the user
+        $user->delete();
+    
+        return redirect()->back()->with('success', 'Data Akun Terhapus!');
     }
+    
+    
 }

@@ -47,57 +47,61 @@ class ManageKelompokController extends Controller
      * @return Renderable
      */
     public function store(Request $request)
-    {
-        // Define the validation rules
-        $validator = Validator::make($request->all(), [
-            'nama_kelompok' => 'required|string|max:255|unique:kelompoks,nama_kelompok_yayasan', // Ensure unique nama_kelompok in kelompok table
-            'tipe_kelompok' => 'required|exists:tipes,id_tipe',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
-            // Ensure tipe_kelompok exists in the tipe table
-        ]);
+{
+    // Define the validation rules
+    $validator = Validator::make($request->all(), [
+        'nama_kelompok' => 'required|string|max:255|unique:kelompoks,nama_kelompok_yayasan', // Ensure unique nama_kelompok in kelompok table
+        'tipe_kelompok' => 'required|exists:tipes,id_tipe',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image
+    ]);
 
-           // Check if validation fails
+    // Check if validation fails
     if ($validator->fails()) {
+        // Log the detailed validation errors
+        \Log::error('Validation errors:', $validator->errors()->toArray());
+
+        // Optionally dump the errors
+        // dd($validator->errors()->toArray());
+
         return back()->withErrors($validator)->withInput(); // Redirect back with errors and input
     }
 
-        try {
-            $idToUse = Kelompok::max('id_kelompok') + 1;
-            // Create a new Kelompok without kode_kelompok
-               // Handle image upload
-         if ($request->hasFile('image')) {
+    try {
+        $idToUse = Kelompok::max('id_kelompok') + 1;
+
+        // Handle image upload
+        $imagePath = null; // Initialize imagePath
+        if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = 'image_' . time() . '.' . $image->getClientOriginalExtension();
-            $imagePath = public_path('foto/fixasetlist/' . $imageName); // Set the path
-    
+            $imagePath = 'foto/fixasetlist/' . $imageName; // Set the relative path
+
             // Move the uploaded file to the specified path
             $image->move(public_path('foto/fixasetlist'), $imageName);
         }
-    
-            $kelompok = Kelompok::create([
-                'id_kelompok' => $idToUse,
-                'nama_kelompok_yayasan' => $request->nama_kelompok,
-                'id_tipe' => $request->tipe_kelompok,
-                'foto_kelompok' => $imagePath // Ensure the database column exists
 
-            ]);
+        $kelompok = Kelompok::create([
+            'id_kelompok' => $idToUse,
+            'nama_kelompok_yayasan' => $request->nama_kelompok,
+            'id_tipe' => $request->tipe_kelompok,
+            'foto_kelompok' => $imagePath // Ensure the database column exists
+        ]);
 
-            // Generate kode_kelompok from the id
-            $kode_kelompok = str_pad($kelompok->id_kelompok, 2, '0', STR_PAD_LEFT); // Pad with zeros to make it 3 digits
+        // Generate kode_kelompok from the id
+        $kode_kelompok = str_pad($kelompok->id_kelompok, 2, '0', STR_PAD_LEFT); // Pad with zeros to make it 2 digits
 
-            
-      
-            // Update the Kelompok with the generated kode_kelompok
-            $kelompok->update(['kode_kelompok' => $kode_kelompok]);
+        // Update the Kelompok with the generated kode_kelompok
+        $kelompok->update(['kode_kelompok' => $kode_kelompok]);
 
-            // Return a successful response
-            return redirect()->back()->with('success', 'Data kelompok telah ditambahkan!');
+        // Return a successful response
+        return redirect()->back()->with('success', 'Data kelompok telah ditambahkan!');
 
-        } catch (\Exception $e) {
-            // Handle any unexpected errors
-            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
-        }
+    } catch (\Exception $e) {
+        // Handle any unexpected errors
+        return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
     }
+}
+
 
     /**
      * Show the specified resource.
