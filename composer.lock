@@ -46,9 +46,9 @@
             ],
             "authors": [
                 {
-                    "name": "Ben Scholzen 'DASPRiD'",
-                    "email": "mail@dasprids.de",
-                    "homepage": "https://dasprids.de/",
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
                     "role": "Developer"
                 }
             ],
@@ -151,9 +151,11 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "KyleKatarn",
-                    "email": "kylekatarnls@gmail.com"
+                  {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "Types to use Carbon in Doctrine",
@@ -221,20 +223,12 @@
                 "MIT"
             ],
             "authors": [
+            
                 {
-                    "name": "Nils Adermann",
-                    "email": "naderman@naderman.de",
-                    "homepage": "http://www.naderman.de"
-                },
-                {
-                    "name": "Jordi Boggiano",
-                    "email": "j.boggiano@seld.be",
-                    "homepage": "http://seld.be"
-                },
-                {
-                    "name": "Rob Bast",
-                    "email": "rob.bast@gmail.com",
-                    "homepage": "http://robbast.nl"
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "Semver library that offers utilities, version constraint parsing and validation.",
@@ -297,10 +291,10 @@
                 "BSD-2-Clause"
             ],
             "authors": [
-                {
-                    "name": "Ben Scholzen 'DASPRiD'",
-                    "email": "mail@dasprids.de",
-                    "homepage": "https://dasprids.de/",
+                 {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
                     "role": "Developer"
                 }
             ],
@@ -355,25 +349,11 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Dragonfly Development Inc.",
-                    "email": "info@dflydev.com",
-                    "homepage": "http://dflydev.com"
-                },
-                {
-                    "name": "Beau Simensen",
-                    "email": "beau@dflydev.com",
-                    "homepage": "http://beausimensen.com"
-                },
-                {
-                    "name": "Carlos Frutos",
-                    "email": "carlos@kiwing.it",
-                    "homepage": "https://github.com/cfrutos"
-                },
-                {
-                    "name": "Colin O'Dell",
-                    "email": "colinodell@gmail.com",
-                    "homepage": "https://www.colinodell.com"
+                 {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "Given a deep data structure, access data by dot notation.",
@@ -426,25 +406,11 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Benjamin Eberlei",
-                    "email": "kontakt@beberlei.de"
-                },
-                {
-                    "name": "Jonathan Wage",
-                    "email": "jonwage@gmail.com"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                 {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP Doctrine Inflector is a small library that can perform string manipulations with regard to upper/lowercase and singular/plural forms of words.",
@@ -517,16 +483,10 @@
             ],
             "authors": [
                 {
-                    "name": "Guilherme Blanco",
-                    "email": "guilhermeblanco@gmail.com"
-                },
-                {
-                    "name": "Roman Borschel",
-                    "email": "roman@code-factory.org"
-                },
-                {
-                    "name": "Johannes Schmitt",
-                    "email": "schmittjoh@gmail.com"
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "PHP Doctrine Lexer parser library that can be used in Top-Down, Recursive Descent Parsers.",
@@ -597,9 +557,10 @@
             ],
             "authors": [
                 {
-                    "name": "Chris Tankersley",
-                    "email": "chris@ctankersley.com",
-                    "homepage": "https://github.com/dragonmantank"
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
@@ -736,8 +697,10 @@
             ],
             "authors": [
                 {
-                    "name": "Jeroen van den Enden",
-                    "email": "info@endroid.nl"
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "Endroid QR Code",
@@ -862,14 +825,10 @@
                 "BSD-3-Clause"
             ],
             "authors": [
-                {
-                    "name": "Neuman Vong",
-                    "email": "neuman+pear@twilio.com",
-                    "role": "Developer"
-                },
-                {
-                    "name": "Anant Narayanan",
-                    "email": "anant@php.net",
+                 {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
                     "role": "Developer"
                 }
             ],
@@ -988,10 +947,11 @@
                 "MIT"
             ],
             "authors": [
-                {
-                    "name": "Graham Campbell",
-                    "email": "hello@gjcampbell.co.uk",
-                    "homepage": "https://github.com/GrahamCampbell"
+                 {
+                    "name": "Daniel",
+                    "email": "danieldeniss92@gmail.com",
+                    "homepage": "",
+                    "role": "Developer"
                 }
             ],
             "description": "An Implementation Of The Result Type",
