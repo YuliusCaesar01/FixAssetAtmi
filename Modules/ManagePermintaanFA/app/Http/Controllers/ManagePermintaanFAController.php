@@ -252,6 +252,8 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         'id_kelompok' => 'required',
         'status_transaksi' => 'required',
         'id_jenis' => 'required',
+        'unit_asal' => 'nullable|string', // Unit Asal hanya wajib jika status Pemindahan
+        'jumlah_unit' => 'required|integer|min:1', // Validasi jumlah unit
         'file_pdf' => 'nullable|file|mimes:pdf|max:2048',
     ]);
 
@@ -272,6 +274,8 @@ return view("managepermintaanfa::detail", compact('permintaan'), ['menu' => $thi
         'id_jenis' => $validatedData['id_jenis'],
         'unit_pemohon' => $request->unit_pemohon,
         'unit_tujuan' => $request->unit_tujuan,
+        'unit_asal' => $validatedData['unit_asal'],
+        'jumlah_unit' => $validatedData['jumlah_unit'],
         'id_institusi' => $divisi->id_institusi,
         'id_user' => $user->id,
         'nama_barang' => $validatedData['nama_barang'],

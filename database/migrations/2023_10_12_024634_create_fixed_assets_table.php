@@ -23,12 +23,14 @@ return new class extends Migration
             $table->string('no_permintaan')->nullable();
             $table->year('tahun_diterima')->nullable();
             $table->string('foto_barang')->nullable();
+            $table->string('jumlah_unit')->nullable();
+            $table->string('unit_asal')->nullable();
             $table->string('kode_fa')->nullable();
             $table->string('nama_barang')->nullable();
             $table->text('des_barang')->nullable();
             
             // Perbaiki nilai default
-            $table->enum('status_transaksi', ['Pengadaan Baru', 'Penjualan', 'Pemindahan'])
+            $table->enum('status_transaksi', ['Pengadaan Baru', 'Perbaikan', 'Penjualan', 'Pemindahan'])
                   ->nullable()
                   ->default('Pengadaan Baru');
             $table->enum('status_barang', ['baik(100%)', 'cukup(50%)', 'rusak'])

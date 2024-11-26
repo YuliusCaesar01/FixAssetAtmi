@@ -21,7 +21,14 @@ class Kelompok extends Model
         'kode_kelompok',
         'foto_kelompok'
     ];
-
+   // Automatically generate kode_kelompok when creating
+   protected static function booted()
+   {
+       static::creating(function ($kelompok) {
+           // Format ID: pad to 2 digits
+           $kelompok->kode_kelompok = str_pad($kelompok->id_kelompok ?? Kelompok::max('id_kelompok') + 1, 2, '0', STR_PAD_LEFT);
+       });
+   }
     public function tipe(): BelongsTo
     {
         return $this->belongsTo(Tipe::class, 'id_tipe');

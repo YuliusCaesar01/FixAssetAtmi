@@ -21,6 +21,20 @@ class Tipe extends Model
         'kode_tipe',
         'foto_tipe'
     ];
+    public static function boot()
+    {
+        parent::boot();
+
+        // Event saat membuat data baru
+        static::creating(function ($tipe) {
+            // Ambil ID terakhir dan hitung kode_tipe berikutnya
+            $lastKode = self::max('kode_tipe');
+            $nextKode = $lastKode ? str_pad((int)$lastKode + 1, 3, '0', STR_PAD_LEFT) : '001';
+
+            // Set kode_tipe dengan kode berikutnya
+            $tipe->kode_tipe = $nextKode;
+        });
+    }
 
     public function kelompok(): HasMany
     {

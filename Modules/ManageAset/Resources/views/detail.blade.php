@@ -103,14 +103,29 @@
                             </div>
                             <div class="tab-pane fade" id="product-history" role="tabpanel"
                                 aria-labelledby="product-history-tab">
-                                Vivamus rhoncus nisl sed venenatis luctus. Sed condimentum risus ut tortor feugiat laoreet.
-                                Suspendisse potenti. Donec et finibus sem, ut commodo lectus. Cras eget neque dignissim,
-                                placerat orci interdum, venenatis odio. Nulla turpis elit, consequat eu eros ac, consectetur
-                                fringilla urna. Duis gravida ex pulvinar mauris ornare, eget porttitor enim vulputate.
-                                Mauris hendrerit, massa nec aliquam cursus, ex elit euismod lorem, vehicula rhoncus nisl
-                                dui sit amet eros. Nulla turpis lorem, dignissim a sapien eget, ultrices venenatis dolor.
-                                Curabitur vel turpis at magna elementum hendrerit vel id dui. Curabitur a ex ullamcorper,
-                                ornare velit vel, tincidunt ipsum.
+                                <dl class="row">
+                                    
+                                    <dt class="col-sm-4">STATUS :</dt>
+                                    <dd class="col-sm-8">: {{ $fa->status_transaksi}}</dd>
+                                    <br>
+                                    @if($fa->no_permintaan != null)
+                                    <dt class="col-sm-4">Pengajuan ID</dt>
+                                    <dd class="col-sm-4">: {{ $fa->no_permintaan }}</dd>
+                                    @endif
+                                    <br>
+                                    <dt class="col-sm-4">Jumlah Unit</dt>
+                                    <dd class="col-sm-4">: {{ $fa->jumlah_unit }}</dd>
+                                    <br>
+                                    @if($fa->unit_asal != null)
+                                    <dt class="col-sm-4">Unit Asal Aset</dt>
+                                    <dd class="col-sm-8">: {{ ucfirst($fa->unit_asal) }}</dd>
+                                   
+                              
+                                    @endif
+                                   
+                                    
+                                
+                                </dl>
                             </div>
                             
                         </div>

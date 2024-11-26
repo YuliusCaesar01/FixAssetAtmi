@@ -195,6 +195,8 @@ $base64QrCode = base64_encode($qrCodeImage);
                 'id_tipe' => 'required|integer',
                 'id_kelompok' => 'required|integer',
                 'id_jenis' => 'required|integer',
+                'unit_asal' => 'nullable|string', // Unit Asal hanya wajib jika status Pemindahan
+                'jumlah_unit' => 'required|integer|min:1', // Validasi jumlah unit
                 'nama_barang' => 'required|string|max:255',
                 'tahun_diterima' => 'required|integer',
                 'no_permaintaan' => 'required|string|max:255',
@@ -244,6 +246,8 @@ $base64QrCode = base64_encode($qrCodeImage);
         
             // Simpan data ke dalam database
             FixedAsset::create([
+                'unit_asal' => $request->unit_asal,
+                 'jumlah_unit' => $request->jumlah_unit,
                 'id_fa' => $idFa,
                 'status_fa' => $status_fa,
                 'kode_fa' => $kode_fa,
@@ -297,24 +301,25 @@ $base64QrCode = base64_encode($qrCodeImage);
                 foreach ($item as $row) {
                     // Validasi jumlah kolom
                     if (count($row) < 11) {
-                        // Skip row or handle the error if there are not enough columns
-                        continue;
+                        continue; // Skip jika kolom kurang
+                    }
+
+                    // Tentukan institusi berdasarkan $row[1]
+                    $institusi = '';
+                    if ($row[1] == 'YKBS') {
+                        $institusi = 'Yayasan Karya Bhakti Ska';
                     }
 
                     // Temukan entitas di database
-                    $id_lokasi = Lokasi::where('nama_lokasi', $row[0])->first();
-                    $id_institusi = Institusi::where('nama_institusi', $row[1])->first();
-                    $id_kelompok = Kelompok::where('nama_kelompok', $row[2])->first();
-                    $id_jenis = Jenis::where('nama_jenis', $row[3])->first();
-                    $id_ruang = Ruang::where('nama_ruang', $row[4])->first();
-                    $id_tipe = Tipe::where('nama_tipe', $row[5])->first();
+                    $id_lokasi = Lokasi::where('nama_lokasi_yayasan', $row[0])->first();
+                    $id_institusi = Institusi::where('nama_institusi', $institusi)->first();
+                    $id_kelompok = Kelompok::where('nama_kelompok_yayasan', $row[2])->first();
+                    $id_jenis = Jenis::where('nama_jenis_yayasan', $row[3])->first();
+                    $id_ruang = Ruang::where('nama_ruang_yayasan', $row[4])->first();
+                    $id_tipe = Tipe::where('nama_tipe_yayasan', $row[5])->first();
 
-                    // Cek apakah semua entitas ditemukan
                     if (!$id_lokasi || !$id_institusi || !$id_kelompok || !$id_jenis || !$id_ruang || !$id_tipe) {
-                        // Jika ada entitas yang tidak ditemukan, log atau tampilkan pesan kesalahan
-                        // Misalnya, log atau beri tahu admin tentang data yang tidak valid
-                        // Skipping the row
-                        continue;
+                        continue; // Skip jika entitas tidak ditemukan
                     }
 
                     $idFa = Str::random(32);
@@ -327,12 +332,15 @@ $base64QrCode = base64_encode($qrCodeImage);
                         ->count();
 
                     $no_urut = str_pad($kode_max + 1, 3, '0', STR_PAD_LEFT);
-                    $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." .  $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut;
+                    $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." . $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut;
                     $status_fa = auth()->user()->hasRole('superadmin') ? 1 : 0;
                     $status_transaksi = $row[9] === 'Pemindahan Baru' ? 'Pemindahan' : $row[9];
 
+                    // Validasi dan konversi tahun_diterima
+                    $tahun_diterima = is_numeric($row[6]) && strlen($row[6]) == 4 ? (int)$row[6] : null;
+
                     // Simpan data ke database
-                    $aset = FixedAsset::create([
+                    FixedAsset::create([
                         "id_fa" => $idFa,
                         "id_institusi" => $id_institusi->id_institusi,
                         "id_divisi" => auth()->user()->id_divisi,
@@ -341,13 +349,12 @@ $base64QrCode = base64_encode($qrCodeImage);
                         "id_jenis" => $id_jenis->id_jenis,
                         "id_lokasi" => $id_lokasi->id_lokasi,
                         "id_ruang" => $id_ruang->id_ruang,
-                        "nama_barang" => $row[7] ?? 'Unknown',
+                        "nama_barang" => $row[8] ?? '',
                         "foto_barang" => '',
-                        "tahun_diterima" => $row[6] ?? 'Unknown',
+                        "tahun_diterima" => $tahun_diterima,
                         "des_barang" => $row[8] ?? 'No description',
                         "no_permintaan" => '',
                         "status_transaksi" => $status_transaksi,
-                        "status_barang" => $row[10] ?? 'Unknown',
                         "id_user" => auth()->user()->id,
                         "kode_fa" => $kode_fa,
                         "status_fa" => $status_fa
@@ -363,6 +370,7 @@ $base64QrCode = base64_encode($qrCodeImage);
         return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
 }
+
 
     /**
      * Show the specified resource.

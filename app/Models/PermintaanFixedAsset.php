@@ -35,6 +35,7 @@ class PermintaanFixedAsset extends Model
         'alasan_permintaan',
         'unit_pemohon',
         'unit_tujuan',
+        'unit_asal',
         'harga_permintaan',
         'valid_fixaset',
         'valid_fixaset_timestamp',
@@ -50,6 +51,7 @@ class PermintaanFixedAsset extends Model
         'pdf_bukti_1',
     'nama_barang',
     'merk_barang',
+    'jumlah_unit',
     'file_pengesahan_bast',
     'file_pengajuan_fa',
     ];

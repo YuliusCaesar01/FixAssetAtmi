@@ -15,7 +15,7 @@ class FixedAsset extends Model
     protected $fillable = [
         'id_fa', 'id_institusi', 'id_divisi', 'id_tipe', 'id_kelompok', 'id_jenis', 'id_lokasi',
         'id_ruang', 'no_permintaan', 'tahun_diterima', 'kode_fa', 'nama_barang', 'foto_barang', 'des_barang', 'status_transaksi',
-        'status_barang', 'id_user', 'status_fa'
+        'status_barang', 'id_user', 'status_fa', 'jumlah_unit'
     ];
 
     public function institusi(): BelongsTo

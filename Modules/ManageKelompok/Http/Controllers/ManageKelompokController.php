@@ -19,7 +19,7 @@ class ManageKelompokController extends Controller
     protected $menu = 'Kelompok';
     public function index()
     {
-        $data = Kelompok::orderBy('id_tipe')->get();
+        $data = Kelompok::all();
         $tipe = Tipe::all();
         return view('managekelompok::index')->with(['kelompok' => $data, 'tipe' => $tipe, 'menu' => $this->menu]);
     }
@@ -28,8 +28,7 @@ class ManageKelompokController extends Controller
     {
         $kelompok = Kelompok::findOrFail($id_kelompok);
         $tipe = $kelompok->tipe;
-        $jenis = Jenis::where('id_kelompok', $id_kelompok)->get();
-        return view("managekelompok::detail")->with(['kelompok' => $kelompok, 'tipe' => $tipe, 'jenis' => $jenis, 'menu' => $this->menu]);
+        return view("managekelompok::detail")->with(['kelompok' => $kelompok, 'tipe' => $tipe, 'menu' => $this->menu]);
     }
 
     /**

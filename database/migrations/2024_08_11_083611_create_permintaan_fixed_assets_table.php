@@ -36,6 +36,7 @@ return new class extends Migration
             $table->string('tindak_lanjut')->nullable();
             $table->string('perkiraan_harga')->nullable();
             $table->string('perolehan_harga')->nullable();
+            $table->string('jumlah_unit')->nullable();
             $table->bigInteger('no_pengesahan_bast')->nullable();
             $table->string('file_pdf', 2048)->nullable(); // New column for PDF files
             $table->string('pdf_bukti_1' , 2048)->nullable();

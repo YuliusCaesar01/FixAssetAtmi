@@ -173,13 +173,36 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Status Transaksi Barang</label>
-                                                    <select id="status_transaksi" class="form-control"
-                                                        name="status_transaksi" style="width: 100%;" required>
+                                                    <select id="status_transaksi" class="form-control" name="status_transaksi" style="width: 100%;" required>
                                                         <option value="Pengadaan Baru">Pengadaan Baru</option>
                                                         <option value="Penjualan">Penjualan</option>
                                                         <option value="Pemindahan">Pemindahan</option>
-                                                        <option value="Pemindahan">Perbaikan</option>
+                                                        <option value="Perbaikan">Perbaikan</option>
                                                     </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-6" id="unit-asal-group" style="display: none;">
+                                                <div class="form-group">
+                                                    <label for="unit_asal">Unit Asal</label>
+                                                    <input type="text" class="form-control" name="unit_asal" id="unit_asal" placeholder="Masukkan Unit Asal">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="jumlah_unit" class="col-sm-2 col-form-label">
+                                                    Jumlah Unit
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <input 
+                                                        type="number" 
+                                                        class="form-control jumlah_unit" 
+                                                        id="jumlah_unit" 
+                                                        name="jumlah_unit" 
+                                                        required 
+                                                        placeholder="Masukkan jumlah unit ..." 
+                                                        min="1"
+                                                    >
+                                                    <div class="invalid-feedback">Jumlah unit wajib diisi dan harus berupa angka.</div>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -260,6 +283,22 @@ $(document).ready(function() {
     });
 });
 </script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const statusTransaksi = document.getElementById('status_transaksi');
+        const unitAsalGroup = document.getElementById('unit-asal-group');
+
+        statusTransaksi.addEventListener('change', function () {
+            if (this.value === 'Pemindahan') {
+                unitAsalGroup.style.display = 'block'; // Tampilkan input Unit Asal
+            } else {
+                unitAsalGroup.style.display = 'none'; // Sembunyikan input Unit Asal
+                document.getElementById('unit_asal').value = ''; // Reset nilai input
+            }
+        });
+    });
+</script>
+
     <script src="{{ asset('plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('plugins/inputmask/jquery.inputmask.min.js') }}"></script>
     <!-- Summernote -->

@@ -89,6 +89,24 @@
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
+                                                    <label for="jumlah_unit" class="col-sm-2 col-form-label">
+                                                        Jumlah Unit
+                                                    </label>
+                                                    <div class="col-sm-10">
+                                                        <input 
+                                                            type="number" 
+                                                            class="form-control jumlah_unit" 
+                                                            id="jumlah_unit" 
+                                                            name="jumlah_unit" 
+                                                            required 
+                                                            placeholder="Masukkan jumlah unit ..." 
+                                                            min="1"
+                                                        >
+                                                        <div class="invalid-feedback">Jumlah unit wajib diisi dan harus berupa angka.</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group row">
                                                     <label for="stts_trans" class="col-sm-2 col-form-label">
                                                         Status Transaksi Barang
                                                     </label>
@@ -101,6 +119,22 @@
                                                             <option value="Perbaikan">Perbaikan</option>
                                                         </select>
                                                         <div class="invalid-feedback">Status transaksi wajib dipilih.</div>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="form-group row" id="unit-asal-group" style="display: none;">
+                                                    <label for="unit_asal" class="col-sm-2 col-form-label">
+                                                        Unit Asal
+                                                    </label>
+                                                    <div class="col-sm-10">
+                                                        <input 
+                                                            type="text" 
+                                                            class="form-control" 
+                                                            id="unit_asal" 
+                                                            name="unit_asal" 
+                                                            placeholder="Masukkan unit asal ..." 
+                                                        >
+                                                        <div class="invalid-feedback">Unit asal wajib diisi jika status Pemindahan.</div>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
@@ -261,7 +295,23 @@
     <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <!-- Select2 -->
     <script src="{{ asset('plugins/select2/js/select2.full.min.js') }}"></script>
-
+    <script>
+        // Ambil elemen select dan div input Unit Asal
+        const statusTransaksi = document.getElementById('stts_trans');
+        const unitAsalGroup = document.getElementById('unit-asal-group');
+    
+        // Tambahkan event listener pada select
+        statusTransaksi.addEventListener('change', function () {
+            // Periksa nilai yang dipilih
+            if (this.value === 'Pemindahan') {
+                // Tampilkan input Unit Asal
+                unitAsalGroup.style.display = 'flex';
+            } else {
+                // Sembunyikan input Unit Asal
+                unitAsalGroup.style.display = 'none';
+            }
+        });
+    </script>
     <script>
    document.addEventListener('DOMContentLoaded', function () {
     const kelompokSelect = document.getElementById('kelompok');

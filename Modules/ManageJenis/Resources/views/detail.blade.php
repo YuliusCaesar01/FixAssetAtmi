@@ -25,10 +25,10 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h4 class="m-0 text-center text-purple lead">Kelompok :
+                                {{-- <h4 class="m-0 text-center text-purple lead">Kelompok :
                                     <span class="badge bg-purple">{{ $kelompok->kode_kelompok }}</span>
                                     {{ $kelompok->nama_kelompok_yayasan }}
-                                </h4>
+                                </h4> --}}
                             </div><!-- /.col -->
                             <div class="col-sm-6">
                                 <div class="row">
@@ -67,7 +67,7 @@
                     <div class="card-header">
                         <div class="row">
                             <div class="col-6">
-                                <h3 class="card-title">Kelompok</h3>
+                                <h3 class="card-title">Jenis</h3>
                             </div>
                         
                         </div>
@@ -80,23 +80,16 @@
                                     <th>#</th>
                                     <th>Nama</th>
                                     <th>Kode</th>
-                                    <th><i class="fas fa-bars"></i></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr id="index_{{ $kelompok->id_kelompok }}">
-                                    <td>{{ $kelompok->id_kelompok }}</td>
-                                    <td class="nama-kelompok">{{ $kelompok->nama_kelompok_yayasan }}</td>
+                                <tr id="index_{{ $jenis->id_jenis }}">
+                                    <td>{{ $jenis->id_jenis }}</td>
+                                    <td class="nama-kelompok">{{ $jenis->nama_jenis_yayasan }}</td>
                                     <td class="text-center lead">
-                                        <span class="badge badge-warning">{{ $kelompok->kode_kelompok }}</span>
+                                        <span class="badge badge-warning">{{ $jenis->kode_jenis }}</span>
                                     </td>
-                                    <td>
-                                        <a href="javascript:void(0)" id="btn-detail-jenis"
-                                            data-di="{{ $kelompok->id_kelompok }}" title="Detail Jenis"
-                                            class="btn btn-sm btn-light">
-                                            <i class="far fa-folder-open"></i> Detail
-                                        </a>
-                                    </td>
+                                   
                                 </tr>
                             </tbody>
                             <tfoot>
@@ -104,7 +97,6 @@
                                     <th>#</th>
                                     <th>Nama</th>
                                     <th>Kode </th>
-                                    <th><i class="fas fa-bars"></i></th>
                                 </tr>
                             </tfoot>
                         </table>

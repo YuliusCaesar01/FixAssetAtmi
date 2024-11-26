@@ -39,7 +39,6 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tipe</th>
                                         <th>Nama</th>
                                         <th>Kode Kelompok</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
@@ -47,15 +46,9 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($kelompok as $kl)
-                                        <tr id="index_{{ $kl->id_kelompok }}" data-iteration="{{ $loop->iteration }}"
-                                            data-nama-tipe-yayasan="{{ $kl->tipe->nama_tipe_yayasan }}"
-                                            data-nama-tipe-smkmikael="{{ $kl->tipe->nama_tipe_mikael }}"
-                                            data-nama-tipe-politeknik="{{ $kl->tipe->nama_tipe_politeknik }}"
-                                            data-nama-kelompok-yayasan="{{ $kl->nama_kelompok_yayasan }}"
-                                            data-nama-kelompok-smkmikael="{{ $kl->nama_kelompok_mikael }}"
-                                            data-nama-kelompok-politeknik="{{ $kl->nama_kelompok_politeknik }}">
+                                        <tr id="index_{{ $kl->id_kelompok }}" data-iteration="{{ $loop->iteration }}">
+                                            
                                             <td>{{ $loop->iteration }}</td>
-                                            <td class="nama-tipe">{{ $kl->tipe->nama_tipe_yayasan }}</td>
                                             <td class="nama-kelompok">{{ $kl->nama_kelompok_yayasan }}</td>
                                             <td class="text-center lead">
                                                 <span class="badge bg-pink">{{ $kl->kode_kelompok }}</span>
@@ -85,7 +78,6 @@
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
-                                        <th>Tipe</th>
                                         <th>Nama</th>
                                         <th>Kode Kelompok</th>
                                         <th><i class="fas fa-bars"></i></th>

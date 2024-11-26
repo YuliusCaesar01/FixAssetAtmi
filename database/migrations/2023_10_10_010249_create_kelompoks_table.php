@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('kelompoks', function (Blueprint $table) {
             $table->increments('id_kelompok');
-            $table->unsignedInteger('id_tipe');
             $table->string('nama_kelompok_yayasan')->nullable();
             $table->string('kode_kelompok')->nullable();
             $table->string('foto_kelompok')->nullable();   
             $table->timestamps();
-            $table->foreign('id_tipe')->references('id_tipe')->on('tipes')->onDelete('cascade');
         });
     }
 

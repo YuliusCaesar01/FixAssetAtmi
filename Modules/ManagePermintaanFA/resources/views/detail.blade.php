@@ -190,12 +190,14 @@ $managerasetuser = User::where('role_id', 19)->first();
                             <div class="tab-pane fade tab-background" id="additional-info" role="tabpanel"
                                 aria-labelledby="additional-info-tab">
                                 <dl class="row">
-
+                                    <dt class="col-sm-4">Jumlah Unit</dt>
+                                    <dd class="col-sm-8">: {{ $permintaan->jumlah_unit }}</dd>
                                     @if($permintaan->perkiraan_harga != null)
                                     <dt class="col-sm-4">Perkiraan Harga</dt>
                                     <dd class="col-sm-8">: Rp {{ number_format($permintaan->perkiraan_harga, 0, ',', '.') }}</dd>                                    
                                     <dt class="col-sm-4">Tindak Lanjut</dt>
                                     <dd class="col-sm-8">: {{ ucfirst($permintaan->tindak_lanjut) }}</dd>
+                                    
                                     <dt class="col-sm-4">Perolehan Harga</dt>
                                       @if($permintaan->perolehan_harga)
                                       <dd class="col-sm-8">: Rp {{ number_format($permintaan->perolehan_harga, 0, ',', '.') }}</dd>

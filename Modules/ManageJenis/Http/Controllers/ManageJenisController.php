@@ -19,7 +19,7 @@ class ManageJenisController extends Controller
 
     public function index()
     {
-        $data = Jenis::orderBy('id_jenis', 'asc')->orderBy('id_kelompok')->get();
+        $data = Jenis::orderBy('id_jenis', 'asc')->get();
         $kelompok = Kelompok::get();
         return view('managejenis::index')->with(['jenis' => $data, 'kelompok' => $kelompok, 'menu' => $this->menu]);
     }

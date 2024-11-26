@@ -21,7 +21,19 @@ class Jenis extends Model
         'kode_jenis',
         'foto_jenis'
     ];
+// Automatically set kode_jenis before creating
+public static function boot()
+{
+    parent::boot();
 
+    static::creating(function ($jenis) {
+        $lastJenis = self::latest('id_jenis')->first();
+        $nextId = $lastJenis ? $lastJenis->id_jenis + 1 : 1;
+
+        // Format as 3-digit code
+        $jenis->kode_jenis = str_pad($nextId, 3, '0', STR_PAD_LEFT);
+    });
+}
     public function kelompok(): BelongsTo
     {
         return $this->belongsTo(Kelompok::class, 'id_kelompok');

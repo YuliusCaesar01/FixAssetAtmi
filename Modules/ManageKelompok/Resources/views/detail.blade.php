@@ -25,8 +25,8 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h4 class="m-0 text-center text-purple lead">Tipe :
-                                    <span class="badge bg-purple">{{ $tipe->kode_tipe }}</span> {{ $tipe->nama_tipe }}
+                                <h4 class="m-0 text-center text-purple lead">Kelompok :
+                                    <span class="badge bg-purple">{{ $kelompok->kode_kelompok }}</span> {{ $kelompok->nama_kelompok }}
                                 </h4>
                             </div><!-- /.col -->
                             <div class="col-sm-6">
@@ -79,35 +79,26 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Jenis</th>
-                                    <th>Kode Jenis</th>
-                                    <th><i class="fas fa-bars"></i></th>
+                                    <th>Nama Kelompok</th>
+                                    <th>Kode Kelompok</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($jenis as $jn)
-                                    <tr id="index_{{ $jn->id_jenis }}">
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td class="nama-jenis">{{ $jn->nama_jenis_yayasan }}</td>
+                                    <tr id="index_{{ $kelompok->id_kelompok }}">
+                                        <td></td>
+                                        <td class="nama-jenis">{{ $kelompok->nama_kelompok_yayasan }}</td>
                                         <td class="text-center lead">
-                                            <span class="badge badge-warning">{{ $jn->kode_jenis }}</span>
+                                            <span class="badge badge-warning">{{ $kelompok->kode_kelompok }}</span>
                                         </td>
-                                        <td>
-                                            <a href="javascript:void(0)" id="btn-detail-jenis"
-                                                data-di="{{ $jn->id_jenis }}" title="Detail Jenis"
-                                                class="btn btn-sm btn-light">
-                                                <i class="far fa-folder-open"></i> Detail
-                                            </a>
-                                        </td>
+                                       
                                     </tr>
-                                @endforeach
+                                
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <th>#</th>
-                                    <th>Nama Jenis</th>
-                                    <th>Kode Jenis</th>
-                                    <th><i class="fas fa-bars"></i></th>
+                                    <th>Nama Kelompok</th>
+                                    <th>Kode Kelompok</th>
                                 </tr>
                             </tfoot>
                         </table>
