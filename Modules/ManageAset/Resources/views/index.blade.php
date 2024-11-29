@@ -44,6 +44,7 @@
                                         <th>Nama Aset</th>
                                         <th>Tahun</th>
                                         <th>Transaksi</th>
+                                        <th>Jumlah Aset</th>
                                         <th>Kondisi</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
                                     </tr>
@@ -58,6 +59,7 @@
                                             <td>{{ $ast->nama_barang }}</td>
                                             <td>{{ $ast->tahun_diterima }}</td>
                                             <td>{{ $ast->status_transaksi }}</td>
+                                            <td><span class="badge bg-secondary">{{ $ast->jumlah_unit  }} </span></td>
                                             <td>{{ $ast->status_barang }}</td>
                                             <td>
                                                 <a href="{{ route('manageaset.detail', $ast->kode_fa) }}"
@@ -117,6 +119,7 @@
                                         <th>Nama Aset</th>
                                         <th>Tahun</th>
                                         <th>Transaksi</th>
+                                        <th>Jumlah Aset</th>
                                         <th>Kondisi</th>
                                         <th class="w-1"><i class="fas fa-bars"></i></th>
                                     </tr>

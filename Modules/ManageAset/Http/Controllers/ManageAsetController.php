@@ -323,16 +323,14 @@ $base64QrCode = base64_encode($qrCodeImage);
                     }
 
                     $idFa = Str::random(32);
-                    $kode_max = FixedAsset::where('id_institusi', $id_institusi->id_institusi)
-                        ->where('id_tipe', $id_tipe->id_tipe)
-                        ->where('id_kelompok', $id_kelompok->id_kelompok)
-                        ->where('id_jenis', $id_jenis->id_jenis)
-                        ->where('id_lokasi', $id_lokasi->id_lokasi)
-                        ->where('id_ruang', $id_ruang->id_ruang)
-                        ->count();
-
-                    $no_urut = str_pad($kode_max + 1, 3, '0', STR_PAD_LEFT);
-                    $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." . $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut;
+                  
+                    $jumlah =  str_pad($row[12] + 1, 3, '0', STR_PAD_LEFT);
+                    $no_urut = str_pad(1, 3, "0", STR_PAD_LEFT);
+                    if ($jumlah == $no_urut){
+                        $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." . $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut;
+                    }else{
+                        $kode_fa = $id_lokasi->kode_lokasi . "." . $id_institusi->kode_institusi . "." . $id_kelompok->kode_kelompok . "." . $id_jenis->kode_jenis . "." . $id_ruang->kode_ruang . "." . $id_tipe->kode_tipe . "-" . $no_urut . "-" . $jumlah;
+                    }
                     $status_fa = auth()->user()->hasRole('superadmin') ? 1 : 0;
                     $status_transaksi = $row[9] === 'Pemindahan Baru' ? 'Pemindahan' : $row[9];
 
