@@ -46,10 +46,9 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
                                    role="button" 
                                    style="position: relative;">
                                     <i class="fas fa-bell"></i>
-                                    <span class="notification-count" 
+                              <span class="notification-count" 
                                     id="notificationCount" 
                                     style="position: absolute; top: -2px; right: -8px; background-color: red; color: white; border-radius: 50%; padding: 0px 5px; font-size: 10px; display: {{ $unreadCount > 0 ? 'inline' : 'none' }};">
-                                  
                               </span>
                               
                                 </a>
@@ -69,7 +68,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
             </a>
         </li>
         <span id="notificationCount" style="display: none;">0</span>
-
         <li class="nav-item icon-button">
             <a class="nav-link material-icons {{ $menu == 'notifprofile' ? 'active' : '' }}" 
                onclick="removeSpan()" 
