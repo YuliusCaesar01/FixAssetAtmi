@@ -9,7 +9,7 @@ $role = Auth::user()->getRoleNames()->first(); // Assuming the user has only one
 
 $userdetail = Userdetail::where('id_user', Auth::id())->first();
 
- $unreadCount = Notification::where('id_user_penerima', auth()->user()->id)
+$unreadCount = Notification::where('id_user_penerima', auth()->user()->id)
                                 ->where('read_at', null) // Assuming you have a read_at column
                                 ->count();
 
@@ -17,16 +17,16 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
-        <li class="nav-item">
+  <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
+     </li>
+     <li class="nav-item d-none d-sm-inline-block">
         <a href="index3.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
+     </li>
+     <li class="nav-item d-none d-sm-inline-block">
         <a href="{{ route('guides.index') }}" class="nav-link">Contact</a>
-        </li>
-        </ul>
+    </li>
+    </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
@@ -84,8 +84,6 @@ $userdetail = Userdetail::where('id_user', Auth::id())->first();
           
             </a>
         </li>
-        
-        
         
         <li class="nav-item icon-button">
             <a class="nav-link" href="{{ route('logout') }}" role="button">
