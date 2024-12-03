@@ -12,13 +12,27 @@
                             <h1 class="m-0">Data Jenis</h1>
                         </div><!-- /.col -->
                         @if(auth()->user()->role_id == 19)
-
+                        
                         <div class="col-6">
                             <a href="javascript:void(0)" class="btn btn-sm btn-info float-right" id="btn-create-kelompok">
                                 <i class="fas fa-plus"></i> Jenis
                             </a>
                         </div>
                         @endif
+                        <h5 class="card-title">Import Data Jenis</h5>
+                <form action="{{ route('managejenis.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="file" class="form-control" id="excel_file" name="excel_file" accept=".xlsx,.xls,.csv" required>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Import Excel
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Allowed file types: .xlsx, .xls, .csv (Max: 2MB)
+                            </small>
                     </div><!-- /.row -->
                 </div><!-- /.container-fluid -->
             </div>
@@ -26,7 +40,6 @@
             <div class="content">
                 <div class="container-fluid">
                     <div class="card">
-                       
                         <div class="card-body">
                             <table id="tbl_jenis" class="table table-striped table-sm">
                                 <thead>
@@ -151,6 +164,22 @@
             }).buttons().container().appendTo('#tbl_jenis_wrapper .col-md-6:eq(0)');
         });
     </script>
+    <!-- flash message handling for import results -->
+    @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
+    @if($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <script>
         $(document).ready(function() {
             $('#form-create-jenis').on('submit', function(e) {

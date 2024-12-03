@@ -8,6 +8,9 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use Modules\ManageJenis\Imports\JenisImport;
+use Illuminate\Support\Facades\DB;
 
 class ManageJenisController extends Controller
 {
@@ -17,6 +20,58 @@ class ManageJenisController extends Controller
      */
     protected $menu = 'Jenis';
 
+    public function showImportForm()
+    {
+        return view('managejenis::import');
+    }
+
+    public function import(Request $request)
+    {
+        // Validate the uploaded file
+        $request->validate([
+            'excel_file' => 'required|mimes:xlsx,xls,csv|max:2048'
+        ]);
+
+        try {
+            // Begin a database transaction
+            DB::beginTransaction();
+
+            // Import the Excel file
+            Excel::import(new JenisImport, $request->file('excel_file'));
+
+            // Commit the transaction
+            DB::commit();
+
+            // Redirect back with success message
+            return redirect()->route('managejenis.index')
+                ->with('success', 'Data Jenis berhasil diimpor!');
+        } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
+            // Rollback the transaction in case of validation errors
+            DB::rollBack();
+
+            // Get validation failures
+            $failures = $e->failures();
+
+            // Prepare error messages
+            $errorMessages = [];
+            foreach ($failures as $failure) {
+                $errorMessages[] = "Baris {$failure->row()}: " . implode(', ', $failure->errors());
+            }
+
+            // Redirect back with errors
+            return redirect()->route('managejenis.index')
+                ->withErrors($errorMessages)
+                ->withInput();
+        } catch (\Exception $e) {
+            // Rollback the transaction for any other errors
+            DB::rollBack();
+
+            // Redirect back with a generic error message
+            return redirect()->route('managejenis.index')
+                ->with('error', 'Gagal mengimpor data: ' . $e->getMessage());
+        }
+    }
+    
     public function index()
     {
         $data = Jenis::orderBy('id_jenis', 'asc')->get();

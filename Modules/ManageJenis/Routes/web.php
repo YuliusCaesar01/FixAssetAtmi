@@ -25,4 +25,6 @@ Route::prefix('jenis')->middleware('auth')->group(function () {
         'destroy' => 'managejenis.destroy',
     ]);
     Route::get('managejenis/detail/{id_jenis}', 'ManagejenisController@detail')->name('managejenis.detail');
+    // import
+    Route::post('managejenis/import', [ManageJenisController::class, 'import'])->name('managejenis.import');
 });
